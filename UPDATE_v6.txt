@@ -1,0 +1,8 @@
+TTL React Sandbox v6
+- 改為 Accordion 商品列，移除滿版 DetailPanel 作為主交互
+- 站內 Video Modal / Media Bottom Sheet / Lightbox
+- 主頁左右不再整體滑動；促銷焦點與熱銷主推改橫向滑動
+- 促銷專區補回狀態與分類篩選
+- Sticky 分類列加入 ScrollSpy 對齊
+- Loader / Toast / Seen video state / FAB menu / Promo balloon
+- 返回 UX：overlay -> 商品列 -> 促銷專區 -> 型錄
