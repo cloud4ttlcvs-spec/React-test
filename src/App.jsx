@@ -17,9 +17,9 @@ import {
   Settings2,
   Share2,
   Sparkles,
-  Star,
   Type,
   X,
+  Share,
 } from 'lucide-react'
 import { useAppStore } from './store/useAppStore'
 
@@ -38,7 +38,6 @@ const CATEGORY_META = [
   { key: '其他', label: '其他', anchor: 'sec-other' },
 ]
 
-// 完美還原台酒品牌色與延伸主題
 const THEMES = [
   {
     key: 'ttl-classic',
@@ -155,7 +154,6 @@ function normalizeCategory(raw) {
   return '其他'
 }
 
-
 function getPromoGroups(promo) {
   const source = promo.relatedProducts || []
   const groups = [...new Set(source.map((item) => item?.group).filter(Boolean).filter((group) => group !== '其他'))]
@@ -187,10 +185,6 @@ function getYouTubeEmbed(url) {
   if (!url) return ''
   const match = String(url).match(/(?:v=|youtu\.be\/|embed\/)([A-Za-z0-9_-]{6,})/)
   return match ? `https://www.youtube.com/embed/${match[1]}?rel=0&modestbranding=1&playsinline=1` : ''
-}
-
-function currency(value) {
-  return new Intl.NumberFormat('zh-TW', { style: 'currency', currency: 'TWD', maximumFractionDigits: 0 }).format(Number(value || 0))
 }
 
 function placeholderSvg(label = 'TTL Bio-Tech') {
@@ -286,6 +280,44 @@ function SafeImage({ src, alt, className, fallbackLabel, contain = false }) {
       loading="lazy"
       decoding="async"
     />
+  )
+}
+
+// iOS PWA 安裝提示 (精準還原 HTML 設計)
+function IosInstallPrompt() {
+  const [show, setShow] = useState(false)
+  
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase()) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+    const isInStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches
+    
+    if (isIos && !isInStandalone) {
+      const timer = setTimeout(() => setShow(true), 1500)
+      return () => clearTimeout(timer)
+    }
+  }, [])
+
+  if (!show) return null
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0, y: 20, x: '-50%' }}
+        animate={{ opacity: 1, y: 0, x: '-50%' }}
+        exit={{ opacity: 0, y: 20, x: '-50%' }}
+        className="fixed bottom-[calc(30px+env(safe-area-inset-bottom))] left-1/2 z-[100] flex w-[90%] max-w-[360px] flex-col items-center rounded-2xl bg-[#263238]/95 p-5 text-center text-white shadow-2xl backdrop-blur-md"
+      >
+        <button onClick={() => setShow(false)} className="absolute right-2 top-2 p-2 text-[#90a4ae] active:text-white">
+          <X className="h-5 w-5" />
+        </button>
+        <p className="text-[15px] leading-relaxed">
+          點擊工具列上的 <Share className="mx-1 mb-1 inline h-[22px] w-[22px] text-[#4fc3f7] drop-shadow-[0_0_5px_rgba(79,195,247,0.6)]" /> 分享按鈕<br />
+          並選擇 <b className="border-b border-white/30 font-bold text-white">「加入主畫面」</b>
+        </p>
+        <p className="mt-2 text-[12px] text-[#b0bec5]">以獲得最佳 Web App 操作體驗</p>
+      </motion.div>
+    </AnimatePresence>
   )
 }
 
@@ -749,7 +781,6 @@ function PromoDrawer({ promo, onClose, onOpenProduct }) {
   )
 }
 
-
 function PromoCenterPanel({ open, items, statusFilter, setStatusFilter, groupFilter, setGroupFilter, onOpenPromo, onClose }) {
   if (!open) return null
   const availableGroups = ['all', ...CATEGORY_META.filter((item) => item.key !== 'all' && item.key !== '其他').map((item) => item.key)]
@@ -840,7 +871,8 @@ export default function App() {
   const [loading, setLoading] = useState(true)
   const [progress, setProgress] = useState(8)
   const [stage, setStage] = useState('準備啟動系統...')
-  const [keyword, setKeyword] = useState('')
+  const [inputValue, setInputValue] = useState('') // 用於搜尋框的即時輸入
+  const [keyword, setKeyword] = useState('')       // 經過防抖後的實際搜尋詞
   const [activeCategory, setActiveCategory] = useState('all')
   const [activeTag, setActiveTag] = useState('')
   const [settingsOpen, setSettingsOpen] = useState(false)
@@ -867,6 +899,14 @@ export default function App() {
   useBodyLock(Boolean(activeModal || promoDrawer || promoCenterOpen || settingsOpen))
 
   useEffect(() => { hydrateSeenVideos() }, [hydrateSeenVideos])
+
+  // 實作搜尋防抖 (Debounce)，優化低階裝置輸入體驗
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setKeyword(inputValue)
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [inputValue])
 
   useEffect(() => {
     let cancelled = false
@@ -946,12 +986,6 @@ export default function App() {
     }))
   }, [normalizedProducts, enrichedPromotions])
 
-  const allTags = useMemo(() => {
-    const counter = new Map()
-    productsWithPromos.forEach((item) => item.tags.forEach((tag) => counter.set(tag, (counter.get(tag) || 0) + 1)))
-    return [...counter.entries()].sort((a, b) => b[1] - a[1]).slice(0, 15).map(([tag]) => tag)
-  }, [productsWithPromos])
-
   const filteredProducts = useMemo(() => {
     const q = keyword.trim().toLowerCase()
     return productsWithPromos.filter((item) => {
@@ -999,6 +1033,7 @@ export default function App() {
         const restoreCode = tagReturnCode
         setActiveTag('')
         setKeyword('')
+        setInputValue('')
         setActiveCategory('all')
         if (restoreCode) {
           setExpandedCardId(restoreCode)
@@ -1029,6 +1064,7 @@ export default function App() {
   }, [])
 
   const clearFilters = useCallback(() => {
+    setInputValue('')
     setKeyword('')
     setActiveTag('')
     setActiveCategory('all')
@@ -1038,6 +1074,7 @@ export default function App() {
   const applyTagFilter = useCallback((code, tag) => {
     setTagReturnCode(code)
     setActiveTag(tag)
+    setInputValue('')
     setKeyword('')
     setActiveCategory('all')
     setExpandedCardId(code)
@@ -1073,10 +1110,11 @@ export default function App() {
       `}</style>
 
       {loading && <LoaderOverlay progress={progress} stage={stage} />}
+      <IosInstallPrompt />
 
       <div className="mx-auto max-w-4xl pb-[calc(100px+env(safe-area-inset-bottom))]">
-        {/* 精確還原 Sticky Header */}
-        <header className="sticky top-0 z-30 bg-white/90 px-4 pb-2 pt-4 shadow-sm backdrop-blur-md">
+        {/* 精確還原 Sticky Header，加入瀏海適配 env(safe-area-inset-top) */}
+        <header className="sticky top-0 z-30 bg-white/90 px-4 pb-2 pt-[calc(1rem+env(safe-area-inset-top))] shadow-sm backdrop-blur-md">
           <div className="flex items-center justify-between">
             <div className="text-center w-full flex-1">
               <h1 className="text-[20px] font-black leading-none text-[var(--primary)]">TTL Bio-tech 健康美學</h1>
@@ -1090,12 +1128,12 @@ export default function App() {
           <div className="mx-auto mt-3 w-full max-w-[600px] relative">
             <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
             <input 
-              value={keyword} 
-              onChange={(e) => setKeyword(e.target.value)} 
+              value={inputValue} 
+              onChange={(e) => setInputValue(e.target.value)} 
               placeholder="搜尋產品名稱、關鍵字..." 
               className="h-[44px] w-full rounded-full border border-slate-200 bg-slate-50 pl-10 pr-10 text-[15px] font-bold text-slate-700 outline-none focus:border-[var(--primary)] focus:bg-white focus:ring-2 focus:ring-[var(--primary-soft)] transition"
             />
-            {(keyword || activeTag) && (
+            {(inputValue || activeTag) && (
               <button onClick={clearFilters} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-slate-200 p-1 text-slate-500 hover:bg-slate-300">
                 <X className="h-4 w-4" />
               </button>
