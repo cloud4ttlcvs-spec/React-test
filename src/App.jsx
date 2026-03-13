@@ -21,6 +21,12 @@ import {
   Type,
   X,
   Share,
+  Youtube,
+  Facebook,
+  Instagram,
+  Globe,
+  Store,
+  MessageCircle
 } from 'lucide-react'
 import { useAppStore } from './store/useAppStore'
 
@@ -39,7 +45,7 @@ const CATEGORY_META = [
   { key: '其他', label: '其他', anchor: 'sec-other' },
 ]
 
-// 佈景主題設定：加入專屬的活潑促銷色 (Promo Color)
+// 佈景主題設定：優化粉藍色調，並新增優雅紫
 const THEMES = [
   {
     key: 'ttl-classic',
@@ -55,7 +61,7 @@ const THEMES = [
       '--primary': '#00897b',
       '--primary-strong': '#00695c',
       '--primary-soft': '#e0f2f1',
-      '--promo': '#00bfa5',       // 活潑的亮湖水綠
+      '--promo': '#00bfa5',       
       '--promo-soft': '#e0f2f1',
       '--chip': '#eceff1',
       '--highlight': '#ffeb3b',
@@ -78,7 +84,7 @@ const THEMES = [
       '--primary': '#c74d7c',
       '--primary-strong': '#a12d61',
       '--primary-soft': '#ffe2ec',
-      '--promo': '#eb5986',       // 使用者指定的玫瑰金專屬活潑促銷色
+      '--promo': '#eb5986',       
       '--promo-soft': '#fce4ec',
       '--chip': '#fff2f7',
       '--highlight': '#ffeb3b',
@@ -89,25 +95,48 @@ const THEMES = [
   },
   {
     key: 'ttl-blue',
-    label: '清新藍',
+    label: '粉嫩藍',
     colors: {
-      '--bg': '#f6fbff',
-      '--bg-soft': '#eef7ff',
+      '--bg': '#f4f8fb',
+      '--bg-soft': '#edf4f8',
       '--surface': '#ffffff',
-      '--surface-soft': '#f8fbff',
-      '--border': '#d9e8f6',
-      '--text': '#1f3145',
-      '--muted': '#60758a',
-      '--primary': '#3b82f6',
-      '--primary-strong': '#1d4ed8',
-      '--primary-soft': '#dbeafe',
-      '--promo': '#0ea5e9',       // 活潑的亮天藍色
-      '--promo-soft': '#e0f2fe',
-      '--chip': '#eef5ff',
+      '--surface-soft': '#f6fafd',
+      '--border': '#dbe6ee',
+      '--text': '#2c3e50',
+      '--muted': '#647a8f',
+      '--primary': '#6ba3d6',       // 舒服柔和的粉藍色
+      '--primary-strong': '#4a82b5',
+      '--primary-soft': '#e4eff7',
+      '--promo': '#f59e0b',         // 活潑的琥珀橘
+      '--promo-soft': '#fef3c7',
+      '--chip': '#eaf1f6',
       '--highlight': '#fff59d',
       '--highlight-text': '#d81b60',
       '--price': '#ef4444',
-      '--shadow': 'rgba(59, 130, 246, 0.12)',
+      '--shadow': 'rgba(107, 163, 214, 0.12)',
+    },
+  },
+  {
+    key: 'ttl-purple',
+    label: '優雅紫',
+    colors: {
+      '--bg': '#f8f6fc',
+      '--bg-soft': '#f2eefa',
+      '--surface': '#ffffff',
+      '--surface-soft': '#f9f8fd',
+      '--border': '#e2dcf2',
+      '--text': '#352b47',
+      '--muted': '#6b5e84',
+      '--primary': '#9b7ad6',       // 優雅的紫色
+      '--primary-strong': '#7a55be',
+      '--primary-soft': '#eee8f9',
+      '--promo': '#f43f5e',         // 活潑的玫瑰紅
+      '--promo-soft': '#ffe4e6',
+      '--chip': '#f0ebf8',
+      '--highlight': '#fff59d',
+      '--highlight-text': '#c2185b',
+      '--price': '#e11d48',
+      '--shadow': 'rgba(155, 122, 214, 0.12)',
     },
   },
 ]
@@ -397,7 +426,6 @@ function PromoCarousel({ items, onOpenPromo }) {
           return (
             <CarouselCard key={promo.promoId}>
               <button onClick={() => onOpenPromo(promo)} className="flex h-full w-full flex-col text-left">
-                {/* 強制鎖定高度為 h-[120px] 配合 object-cover，避免被直式海報撐破版面變成醜陋的長條 */}
                 <div className="relative h-[120px] w-full shrink-0 bg-slate-100 overflow-hidden">
                   {promoImage ? <img src={promoImage} alt={promo.title} className="h-full w-full object-cover" /> : <div className="flex h-full items-center justify-center text-slate-400"><BadgePercent className="h-10 w-10" /></div>}
                   <div className={`absolute left-2 top-2 rounded-full border px-2.5 py-0.5 text-[10px] font-bold shadow-sm backdrop-blur-sm ${statusMeta.className}`}>
@@ -410,8 +438,15 @@ function PromoCarousel({ items, onOpenPromo }) {
                 <div className="flex flex-1 flex-col p-3">
                   <h3 className="line-clamp-2 text-[15px] font-black leading-tight text-[var(--text)]">{promo.shortTitle || promo.title}</h3>
                   <p className="mt-1.5 line-clamp-2 flex-1 text-xs leading-relaxed text-[var(--muted)]">{promo.content}</p>
-                  <div className="mt-2 flex flex-wrap gap-1.5">
-                    {getPromoGroups(promo).slice(0,3).map((group) => (
+                  
+                  {/* 加入通路小圖示與群組 */}
+                  <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                    {promo.channel && (
+                      <span className="flex items-center gap-0.5 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-bold text-slate-500">
+                        <Store className="h-3 w-3" /> {promo.channel}
+                      </span>
+                    )}
+                    {getPromoGroups(promo).slice(0,2).map((group) => (
                       <span key={group} className="rounded-full px-2 py-0.5 text-[10px] font-bold" style={{ background: 'var(--promo-soft)', color: 'var(--promo)' }}>
                         {group}
                       </span>
@@ -451,7 +486,7 @@ function RankingCarousel({ items, onOpenProduct, subtitle = '依據實際銷售�
   )
 }
 
-function ProductRow({ product, scale, keyword, onOpenProductByCode, onApplyTagFilter }) {
+function ProductRow({ product, scale, keyword, onOpenProductByCode, onApplyTagFilter, onOpenPromo }) {
   const expandedCardId = useAppStore((state) => state.expandedCardId)
   const setExpandedCardId = useAppStore((state) => state.setExpandedCardId)
   const openLightbox = useAppStore((state) => state.openLightbox)
@@ -468,7 +503,6 @@ function ProductRow({ product, scale, keyword, onOpenProductByCode, onApplyTagFi
     const willExpand = expandedCardId !== product.code
     setExpandedCardId(product.code)
     if (willExpand) {
-      // 延遲到 280ms (動畫徹底結束後) 且動態抓取 Header 高度，保證對齊 100% 精準不再被切頭
       window.setTimeout(() => {
         const el = cardRef.current
         if (el) {
@@ -495,7 +529,6 @@ function ProductRow({ product, scale, keyword, onOpenProductByCode, onApplyTagFi
     if (!product.videoUrl) return
     markVideoSeen(product.code, product.videoUrl)
     
-    // 智慧判斷：如果不是標準 YouTube 或 mp4 格式，直接在外開視窗播放，避免黑屏卡死！
     const embedUrl = getYouTubeEmbed(product.videoUrl)
     const isMp4 = product.videoUrl.toLowerCase().endsWith('.mp4')
     
@@ -517,7 +550,9 @@ function ProductRow({ product, scale, keyword, onOpenProductByCode, onApplyTagFi
           NEW
         </div>
       )}
-      <button onClick={toggle} className="relative flex w-full items-center gap-3 p-3 text-left">
+      
+      {/* 將原本的 button 標籤改為 div，避免內部促銷標籤 (button) 產生嵌套衝突 */}
+      <div onClick={toggle} className="relative flex w-full cursor-pointer items-center gap-3 p-3 text-left">
         <div className="relative shrink-0 overflow-hidden rounded-lg border border-slate-100 bg-[#fcfcfc]" style={{ width: scalePreset.rowImage, height: scalePreset.rowImage }} onClick={(event) => { if (isExpanded) { event.stopPropagation(); openLightbox({ src: product.photo || placeholderSvg(product.name), title: product.name }) } }}>
           <SafeImage src={product.photo} alt={product.name} fallbackLabel={product.name} contain className="h-full w-full p-1" />
           {product.videoUrl && (
@@ -535,12 +570,17 @@ function ProductRow({ product, scale, keyword, onOpenProductByCode, onApplyTagFi
               </h3>
               <p className={`mt-0.5 line-clamp-2 font-bold text-[var(--primary)] ${scalePreset.title}`}><HighlightText text={product.title || product.spec || ''} keyword={keyword} /></p>
               {product.spec && product.spec !== product.title ? <p className="mt-0.5 text-[11px] text-[var(--muted)] line-clamp-1">{product.spec}</p> : null}
+              
               <div className="mt-1 flex flex-wrap gap-1.5">
                 {product.promos.map((promo) => (
-                  // 商品卡內的促銷 Tag 已改用對應的 Primary 色調配置，不再突兀
-                  <span key={promo.promoId} className="flex items-center gap-0.5 rounded border px-1.5 py-0.5 text-[10px] font-bold" style={{ borderColor: 'var(--primary)', background: 'var(--primary-soft)', color: 'var(--primary)' }}>
+                  <button 
+                    key={promo.promoId} 
+                    onClick={(e) => { e.stopPropagation(); onOpenPromo(promo); }}
+                    className="flex items-center gap-0.5 rounded border px-1.5 py-0.5 text-[10px] font-bold transition active:scale-95" 
+                    style={{ borderColor: 'var(--primary)', background: 'var(--primary-soft)', color: 'var(--primary)' }}
+                  >
                     <Gift className="h-3 w-3" />{promo.shortTitle || promo.title}
-                  </span>
+                  </button>
                 ))}
               </div>
             </div>
@@ -552,7 +592,7 @@ function ProductRow({ product, scale, keyword, onOpenProductByCode, onApplyTagFi
             </div>
           </div>
         </div>
-      </button>
+      </div>
 
       <AnimatePresence initial={false}>
         {isExpanded ? (
@@ -632,11 +672,18 @@ function MediaSheet() {
           </div>
           <div className="mt-3 max-h-[60vh] overflow-y-auto space-y-2 pb-4">
             {mediaSheetProduct.moreLinks.length ? mediaSheetProduct.moreLinks.map((item, index) => {
-              const IconTag = item.type === 'yt' ? PlayCircle : item.type === 'ig' ? ImageIcon : ExternalLink
+              // 智慧判定社群平台圖示與專屬顏色
+              let IconTag = Globe;
+              let iconColor = 'bg-slate-500';
+              if (item.type === 'yt') { IconTag = Youtube; iconColor = 'bg-[#ff0000]'; }
+              else if (item.type === 'fb') { IconTag = Facebook; iconColor = 'bg-[#1877f2]'; }
+              else if (item.type === 'ig') { IconTag = Instagram; iconColor = 'bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888]'; }
+              else if (item.type === 'line') { IconTag = MessageCircle; iconColor = 'bg-[#00c300]'; }
+              
               return (
                 <a key={`${item.url}-${index}`} href={item.url} target="_blank" rel="noreferrer" className="flex items-center justify-between rounded-xl bg-slate-50 p-3 text-[14px] font-bold text-[var(--text)] active:bg-slate-100">
                   <div className="flex items-center gap-3">
-                    <div className={`flex h-8 w-8 items-center justify-center rounded-full text-white shadow-sm ${item.type==='yt'?'bg-red-500':item.type==='fb'?'bg-blue-600':item.type==='ig'?'bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-500':'bg-slate-500'}`}>
+                    <div className={`flex h-8 w-8 items-center justify-center rounded-full text-white shadow-sm ${iconColor}`}>
                       <IconTag className="h-4 w-4" />
                     </div>
                     {item.label}
@@ -681,7 +728,6 @@ function VideoModal() {
             <div className={`relative ${isVertical ? 'mx-auto w-[min(100%,400px)] pt-[177.78%]' : 'w-full pt-[56.25%]'}`}>
               {embedUrl ? <iframe src={embedUrl} title={videoPayload.title} className="absolute inset-0 h-full w-full border-0 bg-black" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen playsInline /> : <video src={videoPayload.url} autoPlay controls className="absolute inset-0 h-full w-full bg-black object-contain" playsInline />}
             </div>
-            {/* 保險機制：在畫面下方提供極度顯眼的備用外部開啟按鈕 */}
             <div className="p-3 bg-black text-center border-t border-slate-800">
               <a href={videoPayload.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-sm text-slate-300 hover:text-white transition">
                 <span>影片若無法播放，請點此使用外部 App 開啟</span> <ExternalLink className="h-4 w-4"/>
@@ -759,12 +805,19 @@ function PromoDrawer({ promo, onClose, onOpenProduct }) {
     <AnimatePresence>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[74] bg-black/70 backdrop-blur-sm" onClick={onClose}>
         <motion.div initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }} transition={{ type: 'spring', stiffness: 260, damping: 24 }} onClick={(event) => event.stopPropagation()} className="absolute inset-x-0 bottom-0 mx-auto flex max-h-[90vh] w-full max-w-lg flex-col rounded-t-[24px] bg-white shadow-2xl">
-          <div className="flex shrink-0 items-center justify-between border-b border-slate-100 p-4">
+          <div className="flex shrink-0 items-start justify-between border-b border-slate-100 p-4 pb-3">
             <div>
-              <p className="text-[12px] font-bold text-[var(--primary)]">{promo.startDate} ~ {promo.endDate}</p>
-              <h3 className="mt-0.5 text-[20px] font-black text-[var(--text)]">{promo.title}</h3>
+              <div className="flex flex-wrap items-center gap-2 mb-1">
+                <p className="text-[12px] font-bold text-[var(--primary)]">{promo.startDate} ~ {promo.endDate}</p>
+                {promo.channel && (
+                  <span className="flex items-center gap-0.5 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-500">
+                    <Store className="h-3 w-3" /> {promo.channel}
+                  </span>
+                )}
+              </div>
+              <h3 className="text-[20px] font-black text-[var(--text)] leading-tight">{promo.title}</h3>
             </div>
-            <button onClick={onClose} className="rounded-full bg-slate-100 p-2 text-slate-500"><X className="h-6 w-6" /></button>
+            <button onClick={onClose} className="rounded-full bg-slate-100 p-2 text-slate-500 shrink-0"><X className="h-5 w-5" /></button>
           </div>
           <div className="flex-1 overflow-y-auto p-4 pb-[calc(20px+env(safe-area-inset-bottom))]">
             {getPromoImage(promo) && <div className="mb-4 overflow-hidden rounded-xl bg-black"><img src={getPromoImage(promo)} className="w-full object-contain max-h-[40vh]" alt="活動" /></div>}
@@ -826,7 +879,6 @@ function PromoCenterPanel({ open, items, statusFilter, setStatusFilter, groupFil
                 const promoImage = getPromoImage(promo)
                 return (
                   <button key={promo.promoId} onClick={() => onOpenPromo(promo)} className="overflow-hidden rounded-2xl border border-[var(--border)] bg-white text-left shadow-sm">
-                    {/* 統一設定高度，避免長短不一 */}
                     <div className="relative h-[130px] bg-slate-100 overflow-hidden">
                       {promoImage ? <img src={promoImage} alt={promo.title} className="h-full w-full object-cover" /> : <div className="flex h-full items-center justify-center text-slate-400"><BadgePercent className="h-9 w-9" /></div>}
                       <div className={`absolute left-2 top-2 rounded-full border px-2.5 py-0.5 text-[10px] font-bold shadow-sm backdrop-blur-sm ${statusMeta.className}`}>
@@ -839,7 +891,13 @@ function PromoCenterPanel({ open, items, statusFilter, setStatusFilter, groupFil
                         <span className="shrink-0 text-[10px] font-bold text-[var(--muted)]">{promo.endDate || promo.startDate}</span>
                       </div>
                       <p className="line-clamp-3 text-[12px] leading-relaxed text-[var(--muted)]">{promo.content}</p>
-                      <div className="flex flex-wrap gap-1.5">
+                      
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        {promo.channel && (
+                          <span className="flex items-center gap-0.5 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-bold text-slate-500">
+                            <Store className="h-3 w-3" /> {promo.channel}
+                          </span>
+                        )}
                         {getPromoGroups(promo).map((group) => (
                           <span key={group} className="rounded-full px-2 py-0.5 text-[10px] font-bold" style={{ background: 'var(--promo-soft)', color: 'var(--promo)' }}>
                             {group}
@@ -1095,7 +1153,7 @@ export default function App() {
         const y = el.getBoundingClientRect().top + window.scrollY - headerHeight - 10
         window.scrollTo({ top: y, behavior: 'smooth' })
       }
-    }, 280) // 280ms 讓展開動畫完整結束後再計算精準位置
+    }, 280) 
   }, [setExpandedCardId])
 
   return (
@@ -1118,8 +1176,9 @@ export default function App() {
               <h1 className="text-[20px] font-black leading-none text-[var(--primary)]">TTL Bio-tech 健康美學</h1>
               <p className="mt-1 text-[11px] font-bold text-[var(--muted)]">台酒生技 產品銷售輔助</p>
             </div>
-            <button className="absolute right-4 flex items-center gap-1 rounded-full border border-[var(--primary)] bg-[var(--primary-soft)] px-3 py-1.5 text-xs font-bold text-[var(--primary)] transition active:scale-95">
-              <Printer className="h-4 w-4" />列印
+            {/* 更改為極簡單純圖示的列印按鈕 */}
+            <button className="absolute right-4 flex h-[34px] w-[34px] items-center justify-center rounded-full border border-[var(--primary)] bg-[var(--primary-soft)] text-[var(--primary)] transition active:scale-95 shadow-sm">
+              <Printer className="h-[18px] w-[18px]" />
             </button>
           </div>
 
@@ -1166,7 +1225,15 @@ export default function App() {
               <div className="space-y-3">
                 {group.items.map((product) => (
                   <div id={`card-${product.code}`} key={product.code}>
-                    <ProductRow product={product} scale={scale} keyword={keyword} onOpenProductByCode={openProductByCode} onApplyTagFilter={applyTagFilter} />
+                    {/* 將 onOpenPromo 傳遞給 ProductRow */}
+                    <ProductRow 
+                      product={product} 
+                      scale={scale} 
+                      keyword={keyword} 
+                      onOpenProductByCode={openProductByCode} 
+                      onApplyTagFilter={applyTagFilter} 
+                      onOpenPromo={(promo) => { setPromoDrawer(promo); window.history.pushState({ ui: 'promo', promoId: promo.promoId }, '') }}
+                    />
                   </div>
                 ))}
               </div>
