@@ -858,7 +858,6 @@ function PromoDrawer({ promo, onClose, onNavigateToProduct }) {
             {getPromoImage(promo) && <div className="mb-4 overflow-hidden rounded-xl bg-black"><img src={getPromoImage(promo)} className="w-full object-contain max-h-[40vh]" alt="活動" /></div>}
             <p className="whitespace-pre-line text-[15px] leading-relaxed text-[var(--text)]">{promo.content}</p>
             
-            {/* 適用此活動的商品清單：使用專屬的跨層導航函數 */}
             {promo.relatedProducts && promo.relatedProducts.length > 0 && (
               <div className="mt-8 border-t border-slate-100 pt-5">
                 <h4 className="mb-3 flex items-center gap-1.5 text-[14px] font-bold text-[var(--primary)]">
@@ -1087,12 +1086,34 @@ export default function App() {
 
   const productMap = useMemo(() => new Map(normalizedProducts.map((item) => [item.code, item])), [normalizedProducts])
 
+  // ==========================================
+  // 【關鍵修正】把 channelLabels 陣列轉為 channel 字串
+  // ==========================================
   const enrichedPromotions = useMemo(() => {
-    return promotions.map((promo) => ({
-      ...promo,
-      img: getPromoImage(promo),
-      relatedProducts: (promo.relatedCodes || []).map((code) => productMap.get(code)).filter(Boolean),
-    }))
+    return promotions.map((promo) => {
+      let channelText = ''
+      
+      // 1. 優先使用 JSON 中的 channelLabels 陣列
+      if (Array.isArray(promo.channelLabels) && promo.channelLabels.length > 0) {
+        channelText = promo.channelLabels.join('、')
+      } 
+      // 2. 如果沒有 labels，降級看 ch 物件（防呆機制）
+      else if (promo.ch) {
+        const chs = []
+        if (promo.ch.show) chs.push('展售中心')
+        if (promo.ch.mart) chs.push('量販/特販')
+        if (promo.ch.eshop) chs.push('購物網')
+        if (promo.ch.office) chs.push('員購/內部')
+        channelText = chs.join('、')
+      }
+
+      return {
+        ...promo,
+        channel: channelText, // 綁定到 UI 依賴的 channel 屬性
+        img: getPromoImage(promo),
+        relatedProducts: (promo.relatedCodes || []).map((code) => productMap.get(code)).filter(Boolean),
+      }
+    })
   }, [promotions, productMap])
 
   const productsWithPromos = useMemo(() => {
@@ -1218,7 +1239,6 @@ export default function App() {
     }, 120)
   }, [setExpandedCardId, showToast])
 
-  // 統一從外部 (例如排行、促銷等) 開啟商品的方法，並注入 state
   const openProductByCode = useCallback((code) => {
     setExpandedCardId(code)
     if (typeof window !== 'undefined') window.history.pushState({ ui: 'card', code }, '')
@@ -1232,9 +1252,7 @@ export default function App() {
     }, 280) 
   }, [setExpandedCardId])
 
-  // 智慧跨層導航：處理從促銷抽屜直達商品的邏輯
   const navigateToProductFromPromo = useCallback((code) => {
-    // 判斷目前開啟了幾層 UI（用來決定 history.go 要退回幾步）
     let steps = 0;
     if (promoDrawer) steps++;
     if (promoCenterOpen) steps++;
@@ -1243,11 +1261,9 @@ export default function App() {
       window.history.go(-steps);
     }
     
-    // 強制關閉所有可能阻擋畫面的遮罩 Panel
     setPromoDrawer(null);
     setPromoCenterOpen(false);
     
-    // 等待轉場動畫，再精準滾動並展開商品
     setTimeout(() => {
       openProductByCode(code);
     }, 350);
