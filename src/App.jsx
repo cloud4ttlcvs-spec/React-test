@@ -13,6 +13,7 @@ import {
   Palette,
   PlayCircle,
   Printer,
+  RefreshCw,
   Search,
   Settings2,
   Share2,
@@ -38,6 +39,7 @@ const CATEGORY_META = [
   { key: '其他', label: '其他', anchor: 'sec-other' },
 ]
 
+// 精準還原 HTML 第一版色號
 const THEMES = [
   {
     key: 'ttl-classic',
@@ -53,8 +55,8 @@ const THEMES = [
       '--primary': '#00897b',
       '--primary-strong': '#00695c',
       '--primary-soft': '#e0f2f1',
-      '--promo': '#00897b',
-      '--promo-soft': '#dff5f1',
+      '--promo': '#ff9800',       // 原版橘色促銷色
+      '--promo-soft': '#fff3e0',
       '--chip': '#eceff1',
       '--highlight': '#ffeb3b',
       '--highlight-text': '#d81b60',
@@ -76,7 +78,7 @@ const THEMES = [
       '--primary': '#c74d7c',
       '--primary-strong': '#a12d61',
       '--primary-soft': '#ffe2ec',
-      '--promo': '#c74d7c',
+      '--promo': '#ff9800',
       '--promo-soft': '#ffe5ee',
       '--chip': '#fff2f7',
       '--highlight': '#ffeb3b',
@@ -99,36 +101,13 @@ const THEMES = [
       '--primary': '#3b82f6',
       '--primary-strong': '#1d4ed8',
       '--primary-soft': '#dbeafe',
-      '--promo': '#3b82f6',
-      '--promo-soft': '#e3f0ff',
+      '--promo': '#f97316',
+      '--promo-soft': '#ffedd5',
       '--chip': '#eef5ff',
       '--highlight': '#fff59d',
       '--highlight-text': '#d81b60',
       '--price': '#ef4444',
       '--shadow': 'rgba(59, 130, 246, 0.12)',
-    },
-  },
-  {
-    key: 'ttl-purple',
-    label: '優雅紫',
-    colors: {
-      '--bg': '#faf7ff',
-      '--bg-soft': '#f3eeff',
-      '--surface': '#ffffff',
-      '--surface-soft': '#fbf9ff',
-      '--border': '#e4ddf5',
-      '--text': '#342c46',
-      '--muted': '#6f6588',
-      '--primary': '#8b5cf6',
-      '--primary-strong': '#6d28d9',
-      '--primary-soft': '#ede9fe',
-      '--promo': '#8b5cf6',
-      '--promo-soft': '#f0ebff',
-      '--chip': '#f4f0ff',
-      '--highlight': '#fff59d',
-      '--highlight-text': '#c2185b',
-      '--price': '#e11d48',
-      '--shadow': 'rgba(139, 92, 246, 0.12)',
     },
   },
 ]
@@ -181,10 +160,11 @@ function parseMoreLinks(raw) {
   }).filter((item) => item.url)
 }
 
+// 支援 Shorts 與自動播放的 YouTube 解析器
 function getYouTubeEmbed(url) {
   if (!url) return ''
-  const match = String(url).match(/(?:v=|youtu\.be\/|embed\/)([A-Za-z0-9_-]{6,})/)
-  return match ? `https://www.youtube.com/embed/${match[1]}?rel=0&modestbranding=1&playsinline=1` : ''
+  const match = String(url).match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([A-Za-z0-9_-]{6,})/)
+  return match ? `https://www.youtube.com/embed/${match[1]}?autoplay=1&rel=0&modestbranding=1&playsinline=1` : ''
 }
 
 function placeholderSvg(label = 'TTL Bio-Tech') {
@@ -221,16 +201,15 @@ function useScrollSpy(ids) {
   }, [ids, setActiveSection])
 }
 
+// 修正鎖定畫面的 Bug，確保釋放後能正常滾動
 function useBodyLock(locked) {
   useEffect(() => {
     if (!locked) return undefined
-    const previous = document.body.style.overflow
     document.body.style.overflow = 'hidden'
-    return () => { document.body.style.overflow = previous }
+    return () => { document.body.style.overflow = '' }
   }, [locked])
 }
 
-// 完美的關鍵字高亮元件，保留原始設計的 mark 標籤感
 function HighlightText({ text, keyword }) {
   if (!keyword || !text) return <>{text}</>
   const parts = String(text).split(new RegExp(`(${keyword})`, 'gi'))
@@ -283,23 +262,18 @@ function SafeImage({ src, alt, className, fallbackLabel, contain = false }) {
   )
 }
 
-// iOS PWA 安裝提示 (精準還原 HTML 設計)
 function IosInstallPrompt() {
   const [show, setShow] = useState(false)
-  
   useEffect(() => {
     if (typeof window === 'undefined') return
     const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase()) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
     const isInStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches
-    
     if (isIos && !isInStandalone) {
       const timer = setTimeout(() => setShow(true), 1500)
       return () => clearTimeout(timer)
     }
   }, [])
-
   if (!show) return null
-
   return (
     <AnimatePresence>
       <motion.div
@@ -308,9 +282,7 @@ function IosInstallPrompt() {
         exit={{ opacity: 0, y: 20, x: '-50%' }}
         className="fixed bottom-[calc(30px+env(safe-area-inset-bottom))] left-1/2 z-[100] flex w-[90%] max-w-[360px] flex-col items-center rounded-2xl bg-[#263238]/95 p-5 text-center text-white shadow-2xl backdrop-blur-md"
       >
-        <button onClick={() => setShow(false)} className="absolute right-2 top-2 p-2 text-[#90a4ae] active:text-white">
-          <X className="h-5 w-5" />
-        </button>
+        <button onClick={() => setShow(false)} className="absolute right-2 top-2 p-2 text-[#90a4ae] active:text-white"><X className="h-5 w-5" /></button>
         <p className="text-[15px] leading-relaxed">
           點擊工具列上的 <Share className="mx-1 mb-1 inline h-[22px] w-[22px] text-[#4fc3f7] drop-shadow-[0_0_5px_rgba(79,195,247,0.6)]" /> 分享按鈕<br />
           並選擇 <b className="border-b border-white/30 font-bold text-white">「加入主畫面」</b>
@@ -427,8 +399,9 @@ function PromoCarousel({ items, onOpenPromo }) {
           return (
             <CarouselCard key={promo.promoId}>
               <button onClick={() => onOpenPromo(promo)} className="flex h-full w-full flex-col text-left">
-                <div className="relative aspect-[16/9] w-full bg-slate-100">
-                  {promoImage ? <SafeImage src={promoImage} alt={promo.title} fallbackLabel="活動圖片" className="h-full w-full object-cover" /> : <div className="flex h-full items-center justify-center text-slate-400"><BadgePercent className="h-10 w-10" /></div>}
+                {/* 限制比例並使用 object-contain 防止直式圖片撐爆版面 */}
+                <div className="relative aspect-[16/9] w-full shrink-0 bg-slate-100">
+                  {promoImage ? <SafeImage src={promoImage} alt={promo.title} fallbackLabel="活動圖片" className="h-full w-full object-contain mix-blend-multiply bg-black/5" /> : <div className="flex h-full items-center justify-center text-slate-400"><BadgePercent className="h-10 w-10" /></div>}
                   <div className={`absolute left-2 top-2 rounded-full border px-2.5 py-0.5 text-[10px] font-bold shadow-sm backdrop-blur-sm ${statusMeta.className}`}>
                     {statusMeta.label}
                   </div>
@@ -673,7 +646,11 @@ function VideoModal() {
   const videoPayload = useAppStore((state) => state.videoPayload)
   const closeModal = useAppStore((state) => state.closeModal)
   if (activeModal !== 'video' || !videoPayload) return null
+  
   const embedUrl = getYouTubeEmbed(videoPayload.url)
+  // 完美判斷 Shorts 以套用直式比例
+  const isVertical = /shorts\//i.test(videoPayload.url)
+
   return (
     <AnimatePresence>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[76] bg-black/80 backdrop-blur-sm" onClick={closeModal}>
@@ -691,8 +668,9 @@ function VideoModal() {
             </div>
           </div>
           <div className="bg-black">
-            <div className="relative w-full pt-[56.25%]">
-              {embedUrl ? <iframe src={embedUrl} title={videoPayload.title} className="absolute inset-0 h-full w-full border-0 bg-black" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen playsInline /> : <video src={videoPayload.url} controls className="absolute inset-0 h-full w-full bg-black object-contain" playsInline />}
+            {/* 根據直式或橫式套用正確的長寬比 */}
+            <div className={`relative ${isVertical ? 'mx-auto w-[min(100%,400px)] pt-[177.78%]' : 'w-full pt-[56.25%]'}`}>
+              {embedUrl ? <iframe src={embedUrl} title={videoPayload.title} className="absolute inset-0 h-full w-full border-0 bg-black" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen playsInline /> : <video src={videoPayload.url} autoPlay controls className="absolute inset-0 h-full w-full bg-black object-contain" playsInline />}
             </div>
           </div>
         </motion.div>
@@ -716,11 +694,14 @@ function LightboxModal() {
   )
 }
 
-function FabMenu({ onScrollTop, onGotoPromo, onGotoHot, onToggleSettings, onCollapseAll }) {
+function FabMenu({ onScrollTop, onGotoPromo, onToggleSettings, onCollapseAll }) {
   const fabOpen = useAppStore((state) => state.fabOpen)
   const toggleFab = useAppStore((state) => state.toggleFab)
   const closeFab = useAppStore((state) => state.closeFab)
+  
+  // 補回重新整理按鈕
   const actions = [
+    { key: 'refresh', label: '重新整理', icon: RefreshCw, onClick: () => window.location.reload() },
     { key: 'settings', label: '顯示設定', icon: Settings2, onClick: onToggleSettings },
     { key: 'collapse', label: '收合全部卡片', icon: LayoutGrid, onClick: onCollapseAll },
     { key: 'top', label: '回到最頂端', icon: ArrowUp, onClick: onScrollTop },
@@ -871,8 +852,8 @@ export default function App() {
   const [loading, setLoading] = useState(true)
   const [progress, setProgress] = useState(8)
   const [stage, setStage] = useState('準備啟動系統...')
-  const [inputValue, setInputValue] = useState('') // 用於搜尋框的即時輸入
-  const [keyword, setKeyword] = useState('')       // 經過防抖後的實際搜尋詞
+  const [inputValue, setInputValue] = useState('') 
+  const [keyword, setKeyword] = useState('')       
   const [activeCategory, setActiveCategory] = useState('all')
   const [activeTag, setActiveTag] = useState('')
   const [settingsOpen, setSettingsOpen] = useState(false)
@@ -900,7 +881,6 @@ export default function App() {
 
   useEffect(() => { hydrateSeenVideos() }, [hydrateSeenVideos])
 
-  // 實作搜尋防抖 (Debounce)，優化低階裝置輸入體驗
   useEffect(() => {
     const timer = setTimeout(() => {
       setKeyword(inputValue)
@@ -915,7 +895,6 @@ export default function App() {
         setLoading(true)
         setStage('載入商品主檔...')
         setProgress(20)
-        // 在真實環境應替換為實際 API
         const [mergedRes, promoRes, rankRes] = await Promise.allSettled([
           fetch(`${BASE_URL}merged-feed.json`),
           fetch(`${BASE_URL}promotions.json`),
@@ -1101,19 +1080,19 @@ export default function App() {
   }, [setExpandedCardId])
 
   return (
-    <div style={themeConfig.colors} className="min-h-screen overflow-x-hidden bg-[var(--bg)] text-[var(--text)] font-sans antialiased">
+    <div style={themeConfig.colors} className="min-h-screen bg-[var(--bg)] text-[var(--text)] font-sans antialiased">
       <style>{`
-        html, body { min-height: 100%; background: var(--bg); overscroll-behavior-y: none; overflow-x: hidden; }
+        html, body { min-height: 100%; background: var(--bg); }
+        body { margin: 0; padding: 0; overscroll-behavior-y: contain; transition: background-color 0.3s ease; }
         .promo-balloon { animation: pulseGlow 2s infinite; }
         @keyframes pulseGlow { 0% { box-shadow: 0 0 0 0 rgba(249,115,22,0.7); } 70% { box-shadow: 0 0 0 10px rgba(249,115,22,0); } 100% { box-shadow: 0 0 0 0 rgba(249,115,22,0); } }
-        *::-webkit-scrollbar { display: none; } /* 為了 App 質感隱藏滾動條 */
+        *::-webkit-scrollbar { display: none; }
       `}</style>
 
       {loading && <LoaderOverlay progress={progress} stage={stage} />}
       <IosInstallPrompt />
 
       <div className="mx-auto max-w-4xl pb-[calc(100px+env(safe-area-inset-bottom))]">
-        {/* 精確還原 Sticky Header，加入瀏海適配 env(safe-area-inset-top) */}
         <header className="sticky top-0 z-30 bg-white/90 px-4 pb-2 pt-[calc(1rem+env(safe-area-inset-top))] shadow-sm backdrop-blur-md">
           <div className="flex items-center justify-between">
             <div className="text-center w-full flex-1">
@@ -1188,7 +1167,7 @@ export default function App() {
       <LightboxModal />
       <PromoCenterPanel open={promoCenterOpen} items={enrichedPromotions} statusFilter={promoStatusFilter} setStatusFilter={setPromoStatusFilter} groupFilter={promoGroupFilter} setGroupFilter={setPromoGroupFilter} onOpenPromo={(promo) => { setPromoDrawer(promo); window.history.pushState({ ui: 'promo', promoId: promo.promoId }, '') }} onClose={() => setPromoCenterOpen(false)} />
       <PromoDrawer promo={promoDrawer} onClose={() => setPromoDrawer(null)} onOpenProduct={openProductByCode} />
-      <FabMenu onScrollTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })} onGotoPromo={() => { setPromoCenterOpen(true); window.history.pushState({ ui: 'promo-center' }, '') }} onGotoHot={() => scrollToId('hot')} onToggleSettings={() => { setSettingsOpen(true); window.history.pushState({ ui: 'settings' }, '') }} onCollapseAll={() => closeExpandedCard()} />
+      <FabMenu onScrollTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })} onGotoPromo={() => { setPromoCenterOpen(true); window.history.pushState({ ui: 'promo-center' }, '') }} onToggleSettings={() => { setSettingsOpen(true); window.history.pushState({ ui: 'settings' }, '') }} onCollapseAll={() => closeExpandedCard()} />
       <ToastMessage />
     </div>
   )
