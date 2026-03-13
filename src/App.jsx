@@ -26,7 +26,12 @@ import {
   Instagram,
   Globe,
   Store,
-  MessageCircle
+  MessageCircle,
+  Compass,
+  ArrowLeft,
+  Coffee,
+  Activity,
+  Droplets
 } from 'lucide-react'
 import { useAppStore } from './store/useAppStore'
 
@@ -104,10 +109,10 @@ const THEMES = [
       '--border': '#dbe6ee',
       '--text': '#2c3e50',
       '--muted': '#647a8f',
-      '--primary': '#6ba3d6',       // 舒服柔和的粉藍色
+      '--primary': '#6ba3d6',       
       '--primary-strong': '#4a82b5',
       '--primary-soft': '#e4eff7',
-      '--promo': '#f59e0b',         // 活潑的琥珀橘
+      '--promo': '#f59e0b',         
       '--promo-soft': '#fef3c7',
       '--chip': '#eaf1f6',
       '--highlight': '#fff59d',
@@ -127,10 +132,10 @@ const THEMES = [
       '--border': '#e2dcf2',
       '--text': '#352b47',
       '--muted': '#6b5e84',
-      '--primary': '#9b7ad6',       // 優雅的紫色
+      '--primary': '#9b7ad6',       
       '--primary-strong': '#7a55be',
       '--primary-soft': '#eee8f9',
-      '--promo': '#f43f5e',         // 活潑的玫瑰紅
+      '--promo': '#f43f5e',         
       '--promo-soft': '#ffe4e6',
       '--chip': '#f0ebf8',
       '--highlight': '#fff59d',
@@ -141,10 +146,11 @@ const THEMES = [
   },
 ]
 
+// 重構後的字體級距 (A 繼承原 A+，A+ 繼承原 A++，建立全新更大的 A++)
 const SCALE_PRESETS = {
-  'A': { rowImage: 65, detailImage: 96, name: 'text-[14px]', title: 'text-[12px]', price: 'text-[16px]', body: 'text-[13px]' },
-  'A+': { rowImage: 80, detailImage: 110, name: 'text-[16px]', title: 'text-[14px]', price: 'text-[18px]', body: 'text-[15px]' },
-  'A++': { rowImage: 100, detailImage: 120, name: 'text-[18px]', title: 'text-[16px]', price: 'text-[20px]', body: 'text-[16px]' },
+  'A': { rowImage: 80, detailImage: 110, name: 'text-[16px]', title: 'text-[14px]', price: 'text-[18px]', body: 'text-[15px]' },
+  'A+': { rowImage: 100, detailImage: 120, name: 'text-[18px]', title: 'text-[16px]', price: 'text-[20px]', body: 'text-[16px]' },
+  'A++': { rowImage: 120, detailImage: 130, name: 'text-[20px]', title: 'text-[18px]', price: 'text-[22px]', body: 'text-[18px]' },
 }
 
 const PROMO_STATUS_META = {
@@ -237,13 +243,21 @@ function useBodyLock(locked) {
   }, [locked])
 }
 
+// 支援多關鍵字的高亮系統
 function HighlightText({ text, keyword }) {
-  if (!keyword || !text) return <>{text}</>
-  const parts = String(text).split(new RegExp(`(${keyword})`, 'gi'))
+  const keywords = Array.isArray(keyword) ? keyword : [keyword].filter(Boolean)
+  if (!keywords.length || !text) return <>{text}</>
+  
+  const escapeRegExp = (string) => String(string).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  // 依長度遞減排序，避免部分字串重疊取代的問題
+  const sortedKeywords = [...keywords].sort((a, b) => b.length - a.length)
+  const regex = new RegExp(`(${sortedKeywords.map(escapeRegExp).join('|')})`, 'gi')
+  const parts = String(text).split(regex)
+  
   return (
     <>
       {parts.map((part, i) =>
-        part.toLowerCase() === keyword.toLowerCase() ? (
+        sortedKeywords.some(k => k.toLowerCase() === part.toLowerCase()) ? (
           <mark key={i} className="rounded-[2px] bg-[var(--highlight)] px-0.5 font-bold text-[var(--highlight-text)] shadow-sm">
             {part}
           </mark>
@@ -439,7 +453,6 @@ function PromoCarousel({ items, onOpenPromo }) {
                   <h3 className="line-clamp-2 text-[15px] font-black leading-tight text-[var(--text)]">{promo.shortTitle || promo.title}</h3>
                   <p className="mt-1.5 line-clamp-2 flex-1 text-xs leading-relaxed text-[var(--muted)]">{promo.content}</p>
                   
-                  {/* 加入通路小圖示與群組 */}
                   <div className="mt-2 flex flex-wrap items-center gap-1.5">
                     {promo.channel && (
                       <span className="flex items-center gap-0.5 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-bold text-slate-500">
@@ -551,7 +564,6 @@ function ProductRow({ product, scale, keyword, onOpenProductByCode, onApplyTagFi
         </div>
       )}
       
-      {/* 將原本的 button 標籤改為 div，避免內部促銷標籤 (button) 產生嵌套衝突 */}
       <div onClick={toggle} className="relative flex w-full cursor-pointer items-center gap-3 p-3 text-left">
         <div className="relative shrink-0 overflow-hidden rounded-lg border border-slate-100 bg-[#fcfcfc]" style={{ width: scalePreset.rowImage, height: scalePreset.rowImage }} onClick={(event) => { if (isExpanded) { event.stopPropagation(); openLightbox({ src: product.photo || placeholderSvg(product.name), title: product.name }) } }}>
           <SafeImage src={product.photo} alt={product.name} fallbackLabel={product.name} contain className="h-full w-full p-1" />
@@ -672,7 +684,6 @@ function MediaSheet() {
           </div>
           <div className="mt-3 max-h-[60vh] overflow-y-auto space-y-2 pb-4">
             {mediaSheetProduct.moreLinks.length ? mediaSheetProduct.moreLinks.map((item, index) => {
-              // 智慧判定社群平台圖示與專屬顏色
               let IconTag = Globe;
               let iconColor = 'bg-slate-500';
               if (item.type === 'yt') { IconTag = Youtube; iconColor = 'bg-[#ff0000]'; }
@@ -755,33 +766,61 @@ function LightboxModal() {
   )
 }
 
-function FabMenu({ onScrollTop, onGotoPromo, onToggleSettings, onCollapseAll }) {
+// 支援階層式導航選單的 FAB
+function FabMenu({ onScrollTop, onGotoPromo, onToggleSettings, onGotoSection }) {
   const fabOpen = useAppStore((state) => state.fabOpen)
   const toggleFab = useAppStore((state) => state.toggleFab)
   const closeFab = useAppStore((state) => state.closeFab)
   
-  const actions = [
-    { key: 'refresh', label: '重新整理', icon: RefreshCw, onClick: () => window.location.reload() },
-    { key: 'settings', label: '顯示設定', icon: Settings2, onClick: onToggleSettings },
-    { key: 'collapse', label: '收合全部卡片', icon: LayoutGrid, onClick: onCollapseAll },
-    { key: 'top', label: '回到最頂端', icon: ArrowUp, onClick: onScrollTop },
+  const [navMode, setNavMode] = useState(false)
+
+  // 當浮動選單關閉時，將模式恢復為主選單
+  useEffect(() => {
+    if (!fabOpen) {
+      const t = setTimeout(() => setNavMode(false), 300)
+      return () => clearTimeout(t)
+    }
+  }, [fabOpen])
+
+  const mainActions = [
+    { key: 'refresh', label: '重新整理', icon: RefreshCw, onClick: () => { closeFab(); window.location.reload(); } },
+    { key: 'settings', label: '顯示設定', icon: Settings2, onClick: () => { closeFab(); onToggleSettings(); } },
+    { key: 'nav', label: '分類導航', icon: Compass, onClick: () => setNavMode(true) },
+    { key: 'top', label: '回到最頂端', icon: ArrowUp, onClick: () => { closeFab(); onScrollTop(); } },
   ]
+
+  const navActions = [
+    { key: 'back', label: '返回', icon: ArrowLeft, onClick: () => setNavMode(false) },
+    { key: 'sec-drinks', label: '保健飲品', icon: Coffee, onClick: () => { closeFab(); onGotoSection('sec-drinks'); } },
+    { key: 'sec-health', label: '保健食品', icon: Activity, onClick: () => { closeFab(); onGotoSection('sec-health'); } },
+    { key: 'sec-beauty', label: '美容產品', icon: Sparkles, onClick: () => { closeFab(); onGotoSection('sec-beauty'); } },
+    { key: 'sec-cleaning', label: '清潔產品', icon: Droplets, onClick: () => { closeFab(); onGotoSection('sec-cleaning'); } },
+  ]
+
+  const actions = navMode ? navActions : mainActions
 
   return (
     <div className="fixed bottom-[calc(20px+env(safe-area-inset-bottom))] right-4 z-[72] flex flex-col items-end gap-3">
       <button onClick={onGotoPromo} className="promo-balloon flex h-[46px] w-[46px] items-center justify-center rounded-full text-white shadow-lg outline-none" style={{ background: 'var(--promo)' }}>
         <BadgePercent className="h-6 w-6" />
       </button>
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {fabOpen && (
-          <motion.div initial="hidden" animate="show" exit="hidden" variants={{ show: { transition: { staggerChildren: 0.05, delayChildren: 0.02 } }, hidden: { transition: { staggerChildren: 0.03, staggerDirection: -1 } } }} className="absolute bottom-16 right-0 flex flex-col items-end gap-2">
+          <motion.div 
+            key={navMode ? 'nav' : 'main'} 
+            initial="hidden" 
+            animate="show" 
+            exit="hidden" 
+            variants={{ show: { transition: { staggerChildren: 0.05, delayChildren: 0.02 } }, hidden: { transition: { staggerChildren: 0.03, staggerDirection: -1 } } }} 
+            className="absolute bottom-16 right-0 flex flex-col items-end gap-2"
+          >
             {actions.map((action) => {
               const Icon = action.icon
               return (
                 <motion.button
                   key={action.key}
                   variants={{ hidden: { opacity: 0, y: 20, scale: 0.8 }, show: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', stiffness: 300, damping: 20 } } }}
-                  onClick={() => { action.onClick(); closeFab() }}
+                  onClick={action.onClick}
                   className="flex h-[40px] items-center gap-2 whitespace-nowrap rounded-full border border-slate-200 bg-white px-4 text-[13px] font-bold text-slate-700 shadow-md"
                 >
                   {action.label}
@@ -1038,16 +1077,22 @@ export default function App() {
     }))
   }, [normalizedProducts, enrichedPromotions])
 
+  // 多關鍵字解析：支援全半形空白、逗號、全形逗號、頓號
+  const parsedKeywords = useMemo(() => {
+    return keyword.split(/[\s\u3000,，、]+/).filter(Boolean)
+  }, [keyword])
+
   const filteredProducts = useMemo(() => {
-    const q = keyword.trim().toLowerCase()
     return productsWithPromos.filter((item) => {
       const categoryOk = activeCategory === 'all' || item.group === activeCategory
       const tagOk = !activeTag || item.tags.includes(activeTag)
       const haystack = [item.name, item.title, item.content, item.code, ...item.tags].join(' ').toLowerCase()
-      const keywordOk = !q || haystack.includes(q)
+      // AND 邏輯：所有切割出的關鍵字都必須包含在內才顯示
+      const keywordOk = parsedKeywords.length === 0 || parsedKeywords.every(k => haystack.includes(k.toLowerCase()))
+      
       return categoryOk && tagOk && keywordOk
     })
-  }, [productsWithPromos, keyword, activeCategory, activeTag])
+  }, [productsWithPromos, parsedKeywords, activeCategory, activeTag])
 
   const groupedProducts = useMemo(() => {
     const groups = new Map()
@@ -1116,6 +1161,12 @@ export default function App() {
       window.scrollTo({ top: y, behavior: 'smooth' })
     }
   }, [])
+
+  const handleGotoSection = useCallback((anchorId) => {
+    const meta = CATEGORY_META.find(m => m.anchor === anchorId)
+    if (meta) setActiveCategory(meta.key)
+    scrollToId(anchorId)
+  }, [scrollToId])
 
   const clearFilters = useCallback(() => {
     setInputValue('')
@@ -1225,11 +1276,10 @@ export default function App() {
               <div className="space-y-3">
                 {group.items.map((product) => (
                   <div id={`card-${product.code}`} key={product.code}>
-                    {/* 將 onOpenPromo 傳遞給 ProductRow */}
                     <ProductRow 
                       product={product} 
                       scale={scale} 
-                      keyword={keyword} 
+                      keyword={parsedKeywords} 
                       onOpenProductByCode={openProductByCode} 
                       onApplyTagFilter={applyTagFilter} 
                       onOpenPromo={(promo) => { setPromoDrawer(promo); window.history.pushState({ ui: 'promo', promoId: promo.promoId }, '') }}
@@ -1253,7 +1303,7 @@ export default function App() {
       <LightboxModal />
       <PromoCenterPanel open={promoCenterOpen} items={enrichedPromotions} statusFilter={promoStatusFilter} setStatusFilter={setPromoStatusFilter} groupFilter={promoGroupFilter} setGroupFilter={setPromoGroupFilter} onOpenPromo={(promo) => { setPromoDrawer(promo); window.history.pushState({ ui: 'promo', promoId: promo.promoId }, '') }} onClose={() => setPromoCenterOpen(false)} />
       <PromoDrawer promo={promoDrawer} onClose={() => setPromoDrawer(null)} onOpenProduct={openProductByCode} />
-      <FabMenu onScrollTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })} onGotoPromo={() => { setPromoCenterOpen(true); window.history.pushState({ ui: 'promo-center' }, '') }} onToggleSettings={() => { setSettingsOpen(true); window.history.pushState({ ui: 'settings' }, '') }} onCollapseAll={() => closeExpandedCard()} />
+      <FabMenu onScrollTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })} onGotoPromo={() => { setPromoCenterOpen(true); window.history.pushState({ ui: 'promo-center' }, '') }} onToggleSettings={() => { setSettingsOpen(true); window.history.pushState({ ui: 'settings' }, '') }} onGotoSection={handleGotoSection} />
       <ToastMessage />
     </div>
   )
