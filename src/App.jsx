@@ -11,6 +11,7 @@ import {
   ExternalLink,
   SlidersHorizontal,
   RefreshCw,
+  BadgePercent,
 } from 'lucide-react'
 
 const CATEGORY_META = [
@@ -123,8 +124,26 @@ function toTags(raw) {
     .filter(Boolean)
 }
 
+
+function choosePromoBadge(promos) {
+  if (!promos || !promos.length) return null
+  const active = promos.find((item) => item.status === 'active')
+  const upcoming = promos.find((item) => item.status === 'upcoming')
+  return active || upcoming || promos[0]
+}
+
+function sortPromos(promos) {
+  const score = { active: 0, upcoming: 1, ended: 2 }
+  return [...(promos || [])].sort((a, b) => {
+    const s = (score[a.status] ?? 9) - (score[b.status] ?? 9)
+    if (s !== 0) return s
+    return String(a.title || '').localeCompare(String(b.title || ''), 'zh-Hant')
+  })
+}
+
 function normalizeItem(item) {
   const pitch = item?.pitch || {}
+  const promos = sortPromos(item?.promos || [])
   return {
     code: item.code || '',
     name: item.name || pitch.name || '未命名商品',
@@ -139,6 +158,8 @@ function normalizeItem(item) {
     isNew: Boolean(pitch.isNew),
     videoUrl: item.videoUrl || '',
     moreLinks: parseMoreLinks(item.moreLinksRaw),
+    promos,
+    promoBadge: choosePromoBadge(promos),
   }
 }
 
@@ -181,76 +202,60 @@ function LoadingCard() {
   )
 }
 
+
 function ProductRowCard({ product, onOpen }) {
   const meta = getMeta(product.group)
+  const promo = product.promoBadge
   return (
     <motion.button layout whileHover={{ y: -1 }} onClick={() => onOpen(product)} className="w-full text-left">
-      <div className="group flex gap-3 rounded-[24px] border border-slate-200/80 bg-white p-3 shadow-sm shadow-slate-200/60 transition hover:border-slate-300 hover:shadow-md md:gap-4 md:p-4">
+      <div className="group flex items-center gap-2.5 rounded-[22px] border border-slate-200/80 bg-white px-2.5 py-2.5 shadow-sm shadow-slate-200/50 transition hover:border-slate-300 hover:shadow-md md:gap-4 md:px-4 md:py-3">
         <div className="relative shrink-0">
-          <div className="flex h-22 w-22 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 md:h-24 md:w-24">
+          <div className="flex h-[58px] w-[58px] items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 md:h-[72px] md:w-[72px]">
             {product.photo ? (
-              <img src={product.photo} alt={product.name} className="h-full w-full object-contain p-1.5" />
+              <img src={product.photo} alt={product.name} className="h-full w-full object-contain p-1" />
             ) : (
-              <div className="text-xs text-slate-400">No Image</div>
+              <div className="text-[10px] text-slate-400">No Image</div>
             )}
           </div>
           {product.isNew ? (
-            <span className="absolute -right-1 -top-1 rounded-full bg-slate-900 px-2 py-1 text-[10px] font-semibold tracking-wide text-white shadow-sm">
+            <span className="absolute -right-1 -top-1 rounded-full bg-slate-900 px-1.5 py-0.5 text-[9px] font-semibold tracking-wide text-white shadow-sm">
               NEW
             </span>
           ) : null}
         </div>
 
         <div className="min-w-0 flex-1">
-          <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-            <div className="min-w-0">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className={`rounded-full border px-2.5 py-1 text-[11px] font-medium ${meta.tone}`}>{product.group}</span>
-                <span className="text-[11px] text-slate-400">{product.code}</span>
+          <div className="flex items-start justify-between gap-2 md:gap-4">
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-1.5 text-[10px] text-slate-400 md:text-[11px]">
+                <span className={`inline-flex rounded-full border px-2 py-0.5 font-medium ${meta.tone}`}>{product.group}</span>
+                <span className="truncate">{product.code}</span>
               </div>
-              <h3 className="mt-2 line-clamp-2 text-[15px] font-semibold leading-6 text-slate-900 md:text-base">
-                {product.name}
-              </h3>
-              <p className="mt-1 line-clamp-1 text-sm font-medium text-slate-600">{product.title}</p>
-              <p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-500">{product.content}</p>
-            </div>
-
-            <div className="flex shrink-0 items-end justify-between gap-3 md:min-w-[168px] md:flex-col md:items-end">
-              <div className="text-right">
-                <p className="text-[11px] tracking-wide text-slate-400">建議售價</p>
-                <p className="mt-1 text-lg font-semibold text-slate-900">{currency(product.price)}</p>
-              </div>
-              <div className="flex items-center gap-2">
-                {product.videoUrl ? (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      window.open(product.videoUrl, '_blank', 'noopener,noreferrer')
-                    }}
-                    className="inline-flex items-center gap-1 rounded-2xl bg-rose-50 px-3 py-2 text-xs font-medium text-rose-700 transition hover:bg-rose-100"
-                  >
-                    <PlayCircle className="h-3.5 w-3.5" />
-                    影音
-                  </button>
+              <h3 className="mt-1 line-clamp-1 text-[14px] font-semibold leading-5 text-slate-900 md:text-[15px]">{product.name}</h3>
+              <p className="mt-0.5 line-clamp-1 text-[12px] leading-5 text-slate-600 md:text-[13px]">{product.title}</p>
+              <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                {promo ? (
+                  <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium ${promo.status === 'active' ? 'bg-rose-50 text-rose-700' : promo.status === 'upcoming' ? 'bg-amber-50 text-amber-700' : 'bg-slate-100 text-slate-500'}`}>
+                    <BadgePercent className="h-3 w-3" />
+                    {promo.shortTitle || promo.title}
+                  </span>
                 ) : null}
-                <div className="rounded-2xl bg-slate-100 p-2 text-slate-400 transition group-hover:text-slate-700">
-                  <ChevronRight className="h-4 w-4" />
-                </div>
+                {product.videoUrl ? (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-sky-50 px-2 py-0.5 text-[10px] font-medium text-sky-700">
+                    <PlayCircle className="h-3 w-3" />
+                    影音
+                  </span>
+                ) : null}
               </div>
             </div>
-          </div>
 
-          <div className="mt-3 flex flex-wrap items-center gap-2">
-            {product.tags.slice(0, 4).map((tag) => (
-              <span key={tag} className="rounded-full bg-slate-100 px-2.5 py-1 text-xs text-slate-600">
-                #{tag}
-              </span>
-            ))}
-            {product.moreLinks.length ? (
-              <span className="rounded-full bg-slate-900/5 px-2.5 py-1 text-xs text-slate-500">
-                更多素材 {product.moreLinks.length} 筆
-              </span>
-            ) : null}
+            <div className="shrink-0 text-right pl-1">
+              <p className="text-[10px] tracking-wide text-slate-400">建議售價</p>
+              <p className="mt-0.5 text-[15px] font-semibold text-slate-900 md:text-lg">{currency(product.price)}</p>
+              <div className="mt-1 inline-flex rounded-full bg-slate-100 p-1.5 text-slate-400 transition group-hover:text-slate-700">
+                <ChevronRight className="h-3.5 w-3.5" />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -293,7 +298,7 @@ function DetailPanel({ product, onClose }) {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 32 }}
           transition={{ type: 'spring', stiffness: 250, damping: 24 }}
-          className="absolute inset-x-0 bottom-0 mx-auto max-h-[88vh] w-full max-w-5xl overflow-hidden rounded-t-[32px] border border-white/60 bg-white shadow-2xl"
+          className="absolute inset-x-0 bottom-0 mx-auto flex max-h-[92dvh] w-full max-w-5xl flex-col overflow-hidden rounded-t-[32px] border border-white/60 bg-white shadow-2xl"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
@@ -306,10 +311,11 @@ function DetailPanel({ product, onClose }) {
             </button>
           </div>
 
-          <div className="grid gap-6 overflow-y-auto p-5 md:grid-cols-[0.92fr_1.08fr]">
-            <div className="space-y-4">
-              <div className={`rounded-[28px] border ${meta.section} p-5`}>
-                <div className="mx-auto flex h-64 items-center justify-center rounded-[24px] border border-white/80 bg-white/80 p-4">
+          <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 pb-[max(1rem,env(safe-area-inset-bottom))] md:p-5">
+            <div className="grid gap-4 md:gap-6 md:grid-cols-[0.92fr_1.08fr]">
+              <div className="space-y-4">
+              <div className={`rounded-[24px] border ${meta.section} p-4 md:rounded-[28px] md:p-5`}>
+                <div className="mx-auto flex h-48 items-center justify-center rounded-[20px] border border-white/80 bg-white/80 p-3 md:h-64 md:rounded-[24px] md:p-4">
                   {product.photo ? (
                     <img src={product.photo} alt={product.name} className="max-h-full w-full object-contain" />
                   ) : (
@@ -354,8 +360,25 @@ function DetailPanel({ product, onClose }) {
               <div className="rounded-[28px] border border-slate-200 bg-white p-5">
                 <p className="text-xs tracking-wide text-slate-400">主訴求</p>
                 <h4 className="mt-2 text-xl font-semibold text-slate-900">{product.title}</h4>
-                <p className="mt-3 text-sm leading-7 text-slate-600">{product.content}</p>
+                <p className="mt-3 whitespace-pre-line text-sm leading-7 text-slate-600">{product.content}</p>
               </div>
+
+              {product.promos?.length ? (
+                <div className="rounded-[24px] border border-slate-200 bg-white p-4 md:rounded-[28px]">
+                  <p className="text-xs tracking-wide text-slate-400">促銷活動</p>
+                  <div className="mt-3 space-y-2.5">
+                    {product.promos.map((promo) => (
+                      <div key={promo.promoId || promo.title} className={`rounded-2xl px-3.5 py-3 text-sm ${promo.status === 'active' ? 'bg-rose-50 text-rose-800' : promo.status === 'upcoming' ? 'bg-amber-50 text-amber-800' : 'bg-slate-100 text-slate-600'}`}>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="font-semibold">{promo.title}</span>
+                          <span className="text-[11px] opacity-80">{promo.status === 'active' ? '進行中' : promo.status === 'upcoming' ? '即將開始' : '已結束'}</span>
+                        </div>
+                        <p className="mt-1 whitespace-pre-line leading-6">{promo.content}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
 
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="rounded-[28px] border border-slate-200 bg-white p-4">
@@ -385,6 +408,7 @@ function DetailPanel({ product, onClose }) {
               </div>
             </div>
           </div>
+        </div>
         </motion.div>
       </motion.div>
     </AnimatePresence>
@@ -403,17 +427,34 @@ export default function TtlBioTechFormalCatalog() {
   const [activeProduct, setActiveProduct] = useState(null)
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
 
+
   useEffect(() => {
     let active = true
     async function loadCatalog() {
       try {
         setLoading(true)
         setError('')
-        const response = await fetch(`${import.meta.env.BASE_URL}merged-feed.json`, { cache: 'no-store' })
-        if (!response.ok) throw new Error(`HTTP ${response.status}`)
-        const data = await response.json()
+        const [catalogRes, promoRes] = await Promise.all([
+          fetch(`${import.meta.env.BASE_URL}merged-feed.json`, { cache: 'no-store' }),
+          fetch(`${import.meta.env.BASE_URL}promotions.json`, { cache: 'no-store' }).catch(() => null),
+        ])
+        if (!catalogRes.ok) throw new Error(`HTTP ${catalogRes.status}`)
+        const data = await catalogRes.json()
+        let promoData = { items: [] }
+        if (promoRes && promoRes.ok) {
+          promoData = await promoRes.json()
+        }
         if (!active) return
-        const items = Array.isArray(data?.items) ? data.items.map(normalizeItem) : []
+        const promoMap = {}
+        for (const promo of Array.isArray(promoData?.items) ? promoData.items : []) {
+          for (const code of promo.relatedCodes || []) {
+            if (!promoMap[code]) promoMap[code] = []
+            promoMap[code].push(promo)
+          }
+        }
+        const items = Array.isArray(data?.items)
+          ? data.items.map((item) => normalizeItem({ ...item, promos: promoMap[item.code] || [] }))
+          : []
         setCatalog(items)
         setMeta({
           generatedAt: data?.generatedAt || '',
