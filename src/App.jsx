@@ -1,4 +1,3 @@
-
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
@@ -7,18 +6,17 @@ import {
   ChevronDown,
   ExternalLink,
   Gift,
-  Image as ImageIcon,
   LayoutGrid,
   Link2,
   Menu,
   Palette,
   PlayCircle,
+  Printer,
   Search,
   Settings2,
   Share2,
   Sparkles,
   Star,
-  Tags,
   Type,
   X,
 } from 'lucide-react'
@@ -39,10 +37,32 @@ const CATEGORY_META = [
   { key: '其他', label: '其他', anchor: 'sec-other' },
 ]
 
+// 完美還原台酒品牌色與延伸主題
 const THEMES = [
   {
-    key: 'rose',
-    label: '玫瑰粉',
+    key: 'ttl-classic',
+    label: '台酒經典綠',
+    colors: {
+      '--bg': '#f8f9fa',
+      '--bg-soft': '#f0f4f8',
+      '--surface': '#ffffff',
+      '--surface-soft': '#fcfcfc',
+      '--border': '#cfd8dc',
+      '--text': '#263238',
+      '--muted': '#546e7a',
+      '--primary': '#00897b',
+      '--primary-strong': '#00695c',
+      '--primary-soft': '#e0f2f1',
+      '--chip': '#eceff1',
+      '--highlight': '#ffeb3b',
+      '--highlight-text': '#d81b60',
+      '--price': '#d81b60',
+      '--shadow': 'rgba(0,0,0,0.05)',
+    },
+  },
+  {
+    key: 'ttl-rose',
+    label: '優雅玫瑰金',
     colors: {
       '--bg': '#fff8fb',
       '--bg-soft': '#fff0f6',
@@ -55,106 +75,50 @@ const THEMES = [
       '--primary-strong': '#a12d61',
       '--primary-soft': '#ffe2ec',
       '--chip': '#fff2f7',
-      '--shadow': 'rgba(199, 77, 124, 0.18)',
-    },
-  },
-  {
-    key: 'peach',
-    label: '蜜桃粉',
-    colors: {
-      '--bg': '#fff8f5',
-      '--bg-soft': '#fff0ea',
-      '--surface': '#ffffff',
-      '--surface-soft': '#fff8f6',
-      '--border': '#f2d8cd',
-      '--text': '#3b2724',
-      '--muted': '#82655d',
-      '--primary': '#ce6b7d',
-      '--primary-strong': '#b24d63',
-      '--primary-soft': '#ffe5ea',
-      '--chip': '#fff3f1',
-      '--shadow': 'rgba(206, 107, 125, 0.18)',
-    },
-  },
-  {
-    key: 'berry',
-    label: '莓果粉',
-    colors: {
-      '--bg': '#fff8fc',
-      '--bg-soft': '#fbeff6',
-      '--surface': '#ffffff',
-      '--surface-soft': '#fff9fc',
-      '--border': '#ecd2df',
-      '--text': '#3a2232',
-      '--muted': '#7d5f71',
-      '--primary': '#b45182',
-      '--primary-strong': '#8f2e5f',
-      '--primary-soft': '#f6deea',
-      '--chip': '#fff1f7',
-      '--shadow': 'rgba(180, 81, 130, 0.18)',
-    },
-  },
-  {
-    key: 'mauve',
-    label: '霧紫粉',
-    colors: {
-      '--bg': '#fdf8ff',
-      '--bg-soft': '#f6eefb',
-      '--surface': '#ffffff',
-      '--surface-soft': '#fefbff',
-      '--border': '#e5d6ef',
-      '--text': '#32253a',
-      '--muted': '#6b5b74',
-      '--primary': '#9c5eb0',
-      '--primary-strong': '#7d3f91',
-      '--primary-soft': '#f0e2f6',
-      '--chip': '#f7f0fb',
-      '--shadow': 'rgba(156, 94, 176, 0.18)',
+      '--highlight': '#ffeb3b',
+      '--highlight-text': '#d81b60',
+      '--price': '#d81b60',
+      '--shadow': 'rgba(199, 77, 124, 0.12)',
     },
   },
 ]
 
 const SCALE_PRESETS = {
-  A: { rowImage: 52, detailImage: 96, name: 'text-[14px]', title: 'text-[12px]', price: 'text-[15px]', body: 'text-sm' },
-  'A+': { rowImage: 58, detailImage: 108, name: 'text-[15px]', title: 'text-[13px]', price: 'text-[16px]', body: 'text-[15px]' },
-  'A++': { rowImage: 64, detailImage: 120, name: 'text-[16px]', title: 'text-[14px]', price: 'text-[17px]', body: 'text-base' },
+  'A': { rowImage: 65, detailImage: 96, name: 'text-[14px]', title: 'text-[12px]', price: 'text-[16px]', body: 'text-[13px]' },
+  'A+': { rowImage: 80, detailImage: 110, name: 'text-[16px]', title: 'text-[14px]', price: 'text-[18px]', body: 'text-[15px]' },
+  'A++': { rowImage: 100, detailImage: 120, name: 'text-[18px]', title: 'text-[16px]', price: 'text-[20px]', body: 'text-[16px]' },
 }
 
 const PROMO_STATUS_META = {
-  active: { label: '進行中', className: 'border-rose-200 bg-rose-50 text-rose-700' },
+  active: { label: '進行中', className: 'border-orange-200 bg-orange-50 text-orange-700' },
   upcoming: { label: '即將開始', className: 'border-amber-200 bg-amber-50 text-amber-700' },
-  ended: { label: '已結束', className: 'border-slate-200 bg-slate-100 text-slate-600' },
+  ended: { label: '已結束', className: 'border-slate-200 bg-slate-100 text-slate-600 line-through' },
 }
 
 function normalizeCategory(raw) {
   const value = raw || ''
-  if (value.includes('美容')) return '美容產品'
-  if (value.includes('清潔')) return '清潔產品'
+  if (value.includes('美容') || value.includes('保養')) return '美容產品'
+  if (value.includes('清潔') || value.includes('洗沐')) return '清潔產品'
   if (value.includes('飲品') || value.includes('黑麥汁')) return '保健飲品'
-  if (value.includes('保健食品') || value.includes('買一送一')) return '保健食品'
+  if (value.includes('保健食品') || value.includes('健康') || value.includes('買一送一')) return '保健食品'
   return '其他'
 }
 
 function parseTags(raw) {
   if (Array.isArray(raw)) return raw.filter(Boolean)
   if (!raw) return []
-  return String(raw)
-    .split(/[，,]/)
-    .map((item) => item.trim())
-    .filter(Boolean)
+  return String(raw).split(/[，,]/).map((item) => item.trim()).filter(Boolean)
 }
 
 function parseMoreLinks(raw) {
   if (!raw) return []
-  return String(raw)
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .map((line) => {
-      const [type = '', label = '', url = ''] = line.split('|')
-      return { type, label: label || type || '更多素材', url }
-    })
-    .filter((item) => item.url)
+  return String(raw).split(/\r?\n/).map((line) => line.trim()).filter(Boolean).map((line) => {
+    const parts = line.split('|')
+    const type = parts[0] || ''
+    const label = parts.length >= 3 ? parts[1] : (type || '更多素材')
+    const url = parts.length >= 3 ? parts.slice(2).join('|') : (parts[1] || line)
+    return { type, label, url }
+  }).filter((item) => item.url)
 }
 
 function getYouTubeEmbed(url) {
@@ -168,7 +132,7 @@ function currency(value) {
 }
 
 function placeholderSvg(label = 'TTL Bio-Tech') {
-  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360" viewBox="0 0 480 360"><defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#f9e8ef"/><stop offset="1" stop-color="#f4d7e3"/></linearGradient></defs><rect width="480" height="360" fill="url(#g)" rx="28"/><text x="50%" y="46%" font-size="20" text-anchor="middle" fill="#8f2e5f" font-family="Arial, sans-serif">${label}</text><text x="50%" y="58%" font-size="13" text-anchor="middle" fill="#9c6a80" font-family="Arial, sans-serif">Image unavailable</text></svg>`)}`
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360" viewBox="0 0 480 360"><defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#f0f4f8"/><stop offset="1" stop-color="#cfd8dc"/></linearGradient></defs><rect width="480" height="360" fill="url(#g)" rx="28"/><text x="50%" y="46%" font-size="20" text-anchor="middle" fill="#546e7a" font-family="Arial, sans-serif">${label}</text><text x="50%" y="58%" font-size="13" text-anchor="middle" fill="#90a4ae" font-family="Arial, sans-serif">無圖片</text></svg>`)}`
 }
 
 function usePersistentState(key, fallback) {
@@ -176,41 +140,26 @@ function usePersistentState(key, fallback) {
     if (typeof window === 'undefined') return fallback
     try {
       return window.localStorage.getItem(key) || fallback
-    } catch {
-      return fallback
-    }
+    } catch { return fallback }
   })
-
   useEffect(() => {
-    try {
-      window.localStorage.setItem(key, value)
-    } catch {}
+    try { window.localStorage.setItem(key, value) } catch {}
   }, [key, value])
-
   return [value, setValue]
 }
 
 function useScrollSpy(ids) {
   const setActiveSection = useAppStore((state) => state.setActiveSection)
-
   useEffect(() => {
-    const elements = ids
-      .map((id) => document.getElementById(id))
-      .filter(Boolean)
+    const elements = ids.map((id) => document.getElementById(id)).filter(Boolean)
     if (!elements.length) return undefined
-
     const observer = new IntersectionObserver(
       (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
-        if (visible[0]) {
-          setActiveSection(visible[0].target.id)
-        }
+        const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)
+        if (visible[0]) setActiveSection(visible[0].target.id)
       },
-      { rootMargin: '-40% 0px -50% 0px', threshold: [0.1, 0.35, 0.6] }
+      { rootMargin: '-185px 0px -60% 0px', threshold: [0, 0.5, 1] }
     )
-
     elements.forEach((element) => observer.observe(element))
     return () => observer.disconnect()
   }, [ids, setActiveSection])
@@ -221,17 +170,34 @@ function useBodyLock(locked) {
     if (!locked) return undefined
     const previous = document.body.style.overflow
     document.body.style.overflow = 'hidden'
-    return () => {
-      document.body.style.overflow = previous
-    }
+    return () => { document.body.style.overflow = previous }
   }, [locked])
+}
+
+// 完美的關鍵字高亮元件，保留原始設計的 mark 標籤感
+function HighlightText({ text, keyword }) {
+  if (!keyword || !text) return <>{text}</>
+  const parts = String(text).split(new RegExp(`(${keyword})`, 'gi'))
+  return (
+    <>
+      {parts.map((part, i) =>
+        part.toLowerCase() === keyword.toLowerCase() ? (
+          <mark key={i} className="rounded-[2px] bg-[var(--highlight)] px-0.5 font-bold text-[var(--highlight-text)] shadow-sm">
+            {part}
+          </mark>
+        ) : (
+          part
+        )
+      )}
+    </>
+  )
 }
 
 function SectionTitle({ title, subtitle }) {
   return (
-    <div className="mb-3 flex items-end justify-between gap-3">
+    <div className="mb-3 flex items-end justify-between gap-3 border-l-4 border-[var(--primary)] pl-2">
       <div>
-        <h2 className="text-[18px] font-semibold text-[var(--text)]">{title}</h2>
+        <h2 className="text-[18px] font-black text-[var(--text)]">{title}</h2>
         {subtitle ? <p className="mt-1 text-xs text-[var(--muted)]">{subtitle}</p> : null}
       </div>
     </div>
@@ -240,7 +206,7 @@ function SectionTitle({ title, subtitle }) {
 
 function CarouselCard({ children }) {
   return (
-    <div className="w-[78vw] max-w-[280px] shrink-0 snap-start overflow-hidden rounded-3xl border border-[var(--border)] bg-[var(--surface)] shadow-sm shadow-[var(--shadow)]/60">
+    <div className="w-[85vw] max-w-[300px] shrink-0 snap-start overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-md shadow-[var(--shadow)] transition-transform active:scale-[0.98]">
       {children}
     </div>
   )
@@ -248,35 +214,32 @@ function CarouselCard({ children }) {
 
 function SafeImage({ src, alt, className, fallbackLabel, contain = false }) {
   const [currentSrc, setCurrentSrc] = useState(src || placeholderSvg(fallbackLabel))
-
-  useEffect(() => {
-    setCurrentSrc(src || placeholderSvg(fallbackLabel))
-  }, [src, fallbackLabel])
-
+  useEffect(() => { setCurrentSrc(src || placeholderSvg(fallbackLabel)) }, [src, fallbackLabel])
   return (
     <img
       src={currentSrc}
       alt={alt}
-      className={`${className} ${contain ? 'object-contain' : 'object-cover'}`}
+      className={`${className} ${contain ? 'object-contain mix-blend-multiply' : 'object-cover'}`}
       onError={() => setCurrentSrc(placeholderSvg(fallbackLabel))}
       loading="lazy"
+      decoding="async"
     />
   )
 }
 
 function LoaderOverlay({ progress, stage }) {
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 z-[80] flex items-center justify-center bg-[color:var(--bg)]/95 backdrop-blur-sm">
-      <div className="w-[min(88vw,360px)] rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-5 shadow-xl shadow-[var(--shadow)]/60">
-        <div className="flex items-center gap-3 text-[var(--primary)]">
-          <Sparkles className="h-5 w-5" />
-          <p className="text-sm font-medium">正在整理銷售支援資料</p>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 z-[80] flex items-center justify-center bg-[var(--bg)]/80 backdrop-blur-md">
+      <div className="w-[min(90vw,340px)] rounded-[22px] border border-white/50 bg-white/90 p-6 text-center shadow-2xl">
+        <div className="inline-flex items-center gap-2 rounded-full bg-[var(--primary-soft)] px-3 py-1.5 text-xs font-bold text-[var(--primary)]">
+          <Sparkles className="h-4 w-4" /> 台酒生技
         </div>
-        <p className="mt-3 text-[13px] text-[var(--muted)]">{stage}</p>
-        <div className="mt-4 h-2 overflow-hidden rounded-full bg-[var(--bg-soft)]">
-          <motion.div className="h-full rounded-full bg-[var(--primary)]" animate={{ width: `${progress}%` }} />
+        <h3 className="mt-4 text-[17px] font-black text-[var(--text)]">正在準備銷售支援內容</h3>
+        <p className="mt-2 text-xs text-[var(--muted)]">首次啟動時，系統會先同步主資料並建立商品卡。</p>
+        <div className="mt-5 h-2 w-full overflow-hidden rounded-full bg-slate-100">
+          <motion.div className="h-full rounded-full bg-gradient-to-r from-[#80cbc4] via-[var(--primary)] to-[#26a69a]" animate={{ width: `${progress}%` }} transition={{ duration: 0.3 }} />
         </div>
-        <p className="mt-2 text-right text-xs text-[var(--muted)]">{progress}%</p>
+        <p className="mt-3 text-[14px] font-bold text-[var(--text)]">{stage}</p>
       </div>
     </motion.div>
   )
@@ -285,22 +248,20 @@ function LoaderOverlay({ progress, stage }) {
 function ToastMessage() {
   const toast = useAppStore((state) => state.toast)
   const clearToast = useAppStore((state) => state.clearToast)
-
   useEffect(() => {
     if (!toast) return undefined
     const timer = window.setTimeout(() => clearToast(toast.id), 2500)
     return () => window.clearTimeout(timer)
   }, [toast, clearToast])
-
   return (
     <AnimatePresence>
       {toast ? (
         <motion.div
           key={toast.id}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 10 }}
-          className="fixed bottom-20 left-1/2 z-[90] -translate-x-1/2 rounded-full bg-[var(--text)] px-4 py-2 text-sm text-white shadow-lg"
+          initial={{ opacity: 0, y: 20, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 10, scale: 0.9 }}
+          className="fixed bottom-24 left-1/2 z-[90] flex w-max max-w-[90%] -translate-x-1/2 items-center justify-center gap-2 rounded-full bg-black/90 px-6 py-3 text-[16px] font-bold text-white shadow-xl backdrop-blur-sm"
         >
           {toast.message}
         </motion.div>
@@ -313,46 +274,44 @@ function SettingsPanel({ open, onClose, theme, setTheme, scale, setScale }) {
   return (
     <AnimatePresence>
       {open ? (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[70] bg-black/35 backdrop-blur-sm" onClick={onClose}>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[70] bg-black/50 backdrop-blur-sm" onClick={onClose}>
           <motion.div
-            initial={{ opacity: 0, y: -16 }}
+            initial={{ opacity: 0, y: '100%' }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -16 }}
+            exit={{ opacity: 0, y: '100%' }}
             transition={{ type: 'spring', stiffness: 260, damping: 24 }}
             onClick={(event) => event.stopPropagation()}
-            className="absolute right-4 top-16 w-[min(92vw,340px)] rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-4 shadow-2xl shadow-[var(--shadow)]/60"
+            className="absolute inset-x-0 bottom-0 mx-auto w-full max-w-2xl rounded-t-[24px] bg-[var(--surface)] px-5 pb-[calc(20px+env(safe-area-inset-bottom))] pt-4 shadow-2xl"
           >
+            <div className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-slate-200" />
             <div className="flex items-center justify-between">
+              <h3 className="text-lg font-black text-[var(--text)]">系統顯示設定</h3>
+              <button onClick={onClose} className="rounded-full bg-[var(--surface-soft)] p-2 text-[var(--muted)]"><X className="h-5 w-5" /></button>
+            </div>
+            <div className="mt-6 space-y-6">
               <div>
-                <p className="text-xs text-[var(--muted)]">閱讀與主題</p>
-                <h3 className="text-base font-semibold text-[var(--text)]">顯示設定</h3>
+                <div className="mb-3 flex items-center gap-2 text-sm font-bold text-[var(--text)]"><Type className="h-4 w-4" />字級與排版密度</div>
+                <div className="flex gap-3">
+                  {Object.keys(SCALE_PRESETS).map((key) => (
+                    <button key={key} onClick={() => setScale(key)} className={`flex-1 rounded-xl border py-2.5 text-sm font-bold transition ${scale === key ? 'border-[var(--primary)] bg-[var(--primary)] text-white shadow-md' : 'border-[var(--border)] bg-[var(--surface-soft)] text-[var(--muted)]'}`}>
+                      {key}
+                    </button>
+                  ))}
+                </div>
               </div>
-              <button onClick={onClose} className="rounded-full bg-[var(--bg-soft)] p-2 text-[var(--muted)]"><X className="h-4 w-4" /></button>
-            </div>
-
-            <div className="mt-4">
-              <div className="mb-2 flex items-center gap-2 text-sm font-medium text-[var(--text)]"><Type className="h-4 w-4" />字級 / 圖片倍率</div>
-              <div className="flex gap-2">
-                {Object.keys(SCALE_PRESETS).map((key) => (
-                  <button key={key} onClick={() => setScale(key)} className={`rounded-full border px-3 py-2 text-sm ${scale === key ? 'border-[var(--primary)] bg-[var(--primary)] text-white' : 'border-[var(--border)] bg-[var(--surface-soft)] text-[var(--muted)]'}`}>
-                    {key}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-4">
-              <div className="mb-2 flex items-center gap-2 text-sm font-medium text-[var(--text)]"><Palette className="h-4 w-4" />配色主題</div>
-              <div className="grid grid-cols-2 gap-2">
-                {THEMES.map((item) => (
-                  <button key={item.key} onClick={() => setTheme(item.key)} className={`rounded-2xl border p-3 text-left ${theme === item.key ? 'border-[var(--primary)] bg-[var(--primary-soft)]' : 'border-[var(--border)] bg-[var(--surface-soft)]'}`}>
-                    <div className="flex gap-2">
-                      <span className="h-5 w-5 rounded-full" style={{ background: item.colors['--bg-soft'] }} />
-                      <span className="h-5 w-5 rounded-full" style={{ background: item.colors['--primary'] }} />
-                    </div>
-                    <p className="mt-2 text-sm font-medium text-[var(--text)]">{item.label}</p>
-                  </button>
-                ))}
+              <div>
+                <div className="mb-3 flex items-center gap-2 text-sm font-bold text-[var(--text)]"><Palette className="h-4 w-4" />品牌配色主題</div>
+                <div className="grid grid-cols-2 gap-3">
+                  {THEMES.map((item) => (
+                    <button key={item.key} onClick={() => setTheme(item.key)} className={`flex items-center gap-3 rounded-xl border p-3 transition ${theme === item.key ? 'border-[var(--primary)] bg-[var(--primary-soft)] ring-2 ring-[var(--primary)] ring-offset-1' : 'border-[var(--border)] bg-[var(--surface-soft)]'}`}>
+                      <div className="flex h-8 w-8 shrink-0 overflow-hidden rounded-full border border-[var(--border)]">
+                        <div className="h-full w-1/2" style={{ background: item.colors['--bg'] }} />
+                        <div className="h-full w-1/2" style={{ background: item.colors['--primary'] }} />
+                      </div>
+                      <span className="text-sm font-bold text-[var(--text)]">{item.label}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           </motion.div>
@@ -365,29 +324,23 @@ function SettingsPanel({ open, onClose, theme, setTheme, scale, setScale }) {
 function PromoCarousel({ items, onOpenPromo, onOpenProduct }) {
   if (!items.length) return null
   return (
-    <section id="promo" data-spy-section className="scroll-mt-28">
-      <SectionTitle title="促銷焦點" subtitle="左右滑動檢視近期活動，維持單手操作節奏。" />
-      <div className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2 md:-mx-0 md:px-0">
+    <section id="promo" data-spy-section className="scroll-mt-[185px]">
+      <SectionTitle title="🔥 最新活動" subtitle="左右滑動檢視近期活動" />
+      <div className="-mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-4 md:-mx-0 md:px-0">
         {items.map((promo) => {
           const statusMeta = PROMO_STATUS_META[promo.status] || PROMO_STATUS_META.active
           return (
             <CarouselCard key={promo.promoId}>
-              <button onClick={() => onOpenPromo(promo)} className="block w-full text-left">
-                <div className="p-4">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className={`rounded-full border px-2.5 py-1 text-[11px] font-medium ${statusMeta.className}`}>{statusMeta.label}</span>
-                    <BadgePercent className="h-4 w-4 text-[var(--primary)]" />
+              <button onClick={() => onOpenPromo(promo)} className="flex h-full w-full flex-col text-left">
+                <div className="relative aspect-[16/9] w-full bg-slate-100">
+                  {promo.img ? <SafeImage src={promo.img} alt={promo.title} fallbackLabel="活動圖片" className="h-full w-full object-cover" /> : <div className="flex h-full items-center justify-center text-slate-400"><BadgePercent className="h-10 w-10" /></div>}
+                  <div className="absolute right-2 top-2 rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-bold shadow-sm backdrop-blur-sm" style={{ color: 'var(--primary)' }}>
+                    {promo.startDate} 截止
                   </div>
-                  <h3 className="mt-3 line-clamp-2 text-[15px] font-semibold text-[var(--text)]">{promo.shortTitle || promo.title}</h3>
-                  <p className="mt-2 line-clamp-3 text-sm leading-6 text-[var(--muted)]">{promo.content}</p>
-                  <p className="mt-3 text-xs text-[var(--muted)]">{promo.startDate || '未設定'} ～ {promo.endDate || '未設定'}</p>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {promo.relatedProducts.slice(0, 2).map((item) => (
-                      <button key={item.code} onClick={(event) => { event.stopPropagation(); onOpenProduct(item.code) }} className="rounded-full border border-[var(--border)] bg-[var(--surface-soft)] px-2.5 py-1 text-[11px] text-[var(--muted)]">
-                        {item.name}
-                      </button>
-                    ))}
-                  </div>
+                </div>
+                <div className="flex flex-1 flex-col p-3">
+                  <h3 className="line-clamp-2 text-[15px] font-black leading-tight text-[var(--text)]">{promo.shortTitle || promo.title}</h3>
+                  <p className="mt-1.5 line-clamp-2 flex-1 text-xs leading-relaxed text-[var(--muted)]">{promo.content}</p>
                 </div>
               </button>
             </CarouselCard>
@@ -401,33 +354,28 @@ function PromoCarousel({ items, onOpenPromo, onOpenProduct }) {
 function RankingCarousel({ items, onOpenProduct }) {
   if (!items.length) return null
   return (
-    <section id="hot" data-spy-section className="scroll-mt-28">
-      <SectionTitle title="熱銷主推" subtitle="優先呈現已有銷售驗證的強勢商品。" />
-      <div className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2 md:-mx-0 md:px-0">
+    <section id="hot" data-spy-section className="scroll-mt-[185px]">
+      <SectionTitle title="👑 熱銷排行" subtitle="依據實際銷售數據即時更新" />
+      <div className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-4 md:-mx-0 md:px-0">
         {items.map((product) => (
-          <CarouselCard key={product.code}>
-            <button onClick={() => onOpenProduct(product.code)} className="block w-full text-left">
-              <div className="flex gap-3 p-4">
-                <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface-soft)]">
-                  <SafeImage src={product.photo} alt={product.name} fallbackLabel={product.name} contain className="h-full w-full p-1.5" />
-                  <span className="absolute left-2 top-2 rounded-full bg-[var(--primary)] px-2 py-0.5 text-[10px] font-bold text-white">TOP {product.rank}</span>
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-[11px] text-[var(--muted)]">{product.code}</p>
-                  <h3 className="mt-1 line-clamp-2 text-[15px] font-semibold text-[var(--text)]">{product.name}</h3>
-                  <p className="mt-2 line-clamp-2 text-sm text-[var(--muted)]">{product.title}</p>
-                  <p className="mt-3 text-sm font-semibold text-[var(--text)]">{currency(product.price)}</p>
+          <div key={product.code} className="w-[110px] shrink-0 snap-start">
+            <button onClick={() => onOpenProduct(product.code)} className="flex w-full flex-col items-center gap-2 text-center transition-transform active:scale-95">
+              <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-2xl border border-[var(--border)] bg-white p-2 shadow-sm">
+                <SafeImage src={product.photo} alt={product.name} fallbackLabel={product.name} contain className="h-full w-full" />
+                <div className={`absolute left-0 top-0 flex h-6 w-6 items-center justify-center rounded-br-lg text-[12px] font-black text-white shadow-sm ${product.rank === 1 ? 'bg-[#ffd700] text-[#3e2723]' : product.rank === 2 ? 'bg-[#cfd8dc] text-[#37474f]' : product.rank === 3 ? 'bg-[#d7ccc8] text-[#3e2723]' : 'bg-black/60'}`}>
+                  {product.rank}
                 </div>
               </div>
+              <p className="line-clamp-2 text-[12px] font-bold leading-tight text-[var(--text)]">{product.name}</p>
             </button>
-          </CarouselCard>
+          </div>
         ))}
       </div>
     </section>
   )
 }
 
-function ProductRow({ product, scale, onOpenProductByCode }) {
+function ProductRow({ product, scale, keyword, onOpenProductByCode }) {
   const expandedCardId = useAppStore((state) => state.expandedCardId)
   const setExpandedCardId = useAppStore((state) => state.setExpandedCardId)
   const openLightbox = useAppStore((state) => state.openLightbox)
@@ -445,19 +393,21 @@ function ProductRow({ product, scale, onOpenProductByCode }) {
     setExpandedCardId(product.code)
     if (willExpand) {
       window.setTimeout(() => {
-        cardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        const el = cardRef.current
+        if (el) {
+          const y = el.getBoundingClientRect().top + window.scrollY - 185
+          window.scrollTo({ top: y, behavior: 'smooth' })
+        }
       }, 150)
-      if (typeof window !== 'undefined') {
-        window.history.pushState({ ui: 'card', code: product.code }, '')
-      }
+      if (typeof window !== 'undefined') window.history.pushState({ ui: 'card', code: product.code }, '')
     }
   }
 
   const copyPitch = async () => {
-    const payload = `${product.name}\n${product.title}\n${product.content}`
+    const payload = `【 ✨ 產品推薦 】\n🌿 ${product.name}\n-------------------\n💬 主打：${product.title}\n📝 特色：${product.content}\n💰 優惠價：$${product.price.toLocaleString()}\n${product.tags.map(t => '#' + t).join(' ')}\n-------------------\n(台酒生技)`
     try {
       await navigator.clipboard.writeText(payload)
-      showToast('已複製銷售話術')
+      showToast(<span><Sparkles className="inline mb-1 h-5 w-5"/> 已複製銷售文案</span>)
     } catch {
       showToast('複製失敗，請稍後再試')
     }
@@ -470,35 +420,45 @@ function ProductRow({ product, scale, onOpenProductByCode }) {
     if (typeof window !== 'undefined') window.history.pushState({ ui: 'video', code: product.code }, '')
   }
 
-  const openSheet = () => {
-    openMediaSheet(product)
-    if (typeof window !== 'undefined') window.history.pushState({ ui: 'sheet', code: product.code }, '')
-  }
-
   const hasSeenVideo = Boolean(seenVideos[product.code])
 
   return (
-    <div ref={cardRef} className="overflow-hidden rounded-[24px] border border-[var(--border)] bg-[var(--surface)] shadow-sm shadow-[var(--shadow)]/60">
-      <button onClick={toggle} className="flex w-full items-center gap-3 px-2.5 py-2.5 text-left">
-        <div className="relative shrink-0 overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface-soft)]" style={{ width: scalePreset.rowImage, height: scalePreset.rowImage }}>
+    <div ref={cardRef} className={`relative overflow-hidden rounded-xl border bg-[var(--surface)] transition-all ${isExpanded ? 'border-[var(--primary)] shadow-lg shadow-[var(--primary)]/10' : 'border-[var(--border)] shadow-sm'}`}>
+      {product.isNew && (
+        <div className="absolute left-0 top-0 z-10 flex items-center gap-0.5 rounded-br-[10px] bg-[#ff5252] px-2 py-0.5 text-[10px] font-bold text-white shadow-sm">
+          NEW
+        </div>
+      )}
+      <button onClick={toggle} className="relative flex w-full items-center gap-3 p-3 text-left">
+        <div className="relative shrink-0 overflow-hidden rounded-lg border border-slate-100 bg-[#fcfcfc]" style={{ width: scalePreset.rowImage, height: scalePreset.rowImage }}>
           <SafeImage src={product.photo} alt={product.name} fallbackLabel={product.name} contain className="h-full w-full p-1" />
+          {product.videoUrl && (
+            <div className={`absolute bottom-1 right-1 flex h-5 w-5 items-center justify-center rounded-full border border-white/30 text-white backdrop-blur-sm shadow-sm ${hasSeenVideo ? 'bg-black/40' : 'bg-gradient-to-br from-amber-400 to-orange-500 ring-2 ring-orange-400/50'}`}>
+              <PlayCircle className="h-3.5 w-3.5" />
+            </div>
+          )}
         </div>
         <div className="min-w-0 flex-1">
-          <div className="flex items-start justify-between gap-3">
+          <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
-              <p className="text-[10px] text-[var(--muted)]">{product.code}</p>
-              <h3 className={`mt-0.5 line-clamp-1 font-semibold text-[var(--text)] ${scalePreset.name}`}>{product.name}</h3>
-              <p className={`mt-1 line-clamp-1 text-[var(--muted)] ${scalePreset.title}`}>{product.title}</p>
-              <div className="mt-1.5 flex flex-wrap gap-1.5">
-                {product.rank ? <span className="rounded-full bg-[var(--primary-soft)] px-2 py-0.5 text-[10px] font-medium text-[var(--primary-strong)]">TOP {product.rank}</span> : null}
-                {product.promos.slice(0, 1).map((promo) => (
-                  <span key={promo.promoId} className="rounded-full bg-rose-50 px-2 py-0.5 text-[10px] font-medium text-rose-700">{promo.shortTitle || promo.title}</span>
+              <p className="font-mono text-[10px] text-[var(--muted)]"><HighlightText text={product.code} keyword={keyword} /></p>
+              <h3 className={`mt-0.5 line-clamp-2 font-black leading-snug text-[var(--text)] ${scalePreset.name}`}>
+                <HighlightText text={product.name} keyword={keyword} />
+              </h3>
+              <p className="mt-0.5 text-[11px] text-[var(--muted)]">{product.spec}</p>
+              <div className="mt-1 flex flex-wrap gap-1.5">
+                {product.promos.map((promo) => (
+                  <span key={promo.promoId} className="flex items-center gap-0.5 rounded border border-orange-200 bg-orange-50 px-1.5 py-0.5 text-[10px] font-bold text-orange-700">
+                    <Gift className="h-3 w-3" />{promo.shortTitle || promo.title}
+                  </span>
                 ))}
               </div>
             </div>
             <div className="shrink-0 text-right">
-              <p className={`font-semibold text-[var(--text)] ${scalePreset.price}`}>{currency(product.price)}</p>
-              <ChevronDown className={`ml-auto mt-2 h-4 w-4 text-[var(--muted)] transition ${isExpanded ? 'rotate-180' : ''}`} />
+              <p className={`font-black text-[var(--price)] ${scalePreset.price}`}>
+                <span className="text-xs mr-0.5">$</span>{product.price.toLocaleString()}
+              </p>
+              <ChevronDown className={`ml-auto mt-2 h-5 w-5 text-slate-300 transition-transform ${isExpanded ? 'rotate-180 text-[var(--primary)]' : ''}`} />
             </div>
           </div>
         </div>
@@ -510,69 +470,43 @@ function ProductRow({ product, scale, onOpenProductByCode }) {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.26, ease: 'easeOut' }}
-            className="overflow-hidden border-t border-[var(--border)]"
+            transition={{ duration: 0.25, ease: 'easeInOut' }}
+            className="overflow-hidden border-t border-[var(--border)] bg-[#fafafa]"
           >
-            <div className="space-y-3 px-2.5 pb-3 pt-3">
-              <div className="flex gap-3">
-                <button
-                  onClick={() => {
-                    openLightbox({ src: product.photo, title: product.name })
-                    if (typeof window !== 'undefined') window.history.pushState({ ui: 'lightbox', code: product.code }, '')
-                  }}
-                  className="relative shrink-0 overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface-soft)]"
-                  style={{ width: scalePreset.detailImage, height: scalePreset.detailImage }}
-                >
-                  <SafeImage src={product.photo} alt={product.name} fallbackLabel={product.name} contain className="h-full w-full p-2" />
-                  <div className="absolute inset-x-2 bottom-2 rounded-full bg-black/55 px-2 py-1 text-[11px] text-white backdrop-blur-sm">點圖放大</div>
-                </button>
-                <div className="min-w-0 flex-1">
-                  <p className={`leading-6 text-[var(--text)] ${scalePreset.body}`}>{product.content}</p>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {product.tags.map((tag) => (
-                      <button key={tag} onClick={() => onOpenProductByCode(product.code, tag)} className="rounded-full border border-[var(--border)] bg-[var(--chip)] px-2.5 py-1 text-xs text-[var(--muted)]">
-                        #{tag}
-                      </button>
-                    ))}
-                  </div>
+            <div className="p-4">
+              {product.title && (
+                <div className={`mb-1.5 flex items-center gap-1 font-black text-[var(--primary)] ${scalePreset.name}`}>
+                  <span className="text-[#ffd700]">★</span>
+                  <HighlightText text={product.title} keyword={keyword} />
                 </div>
-              </div>
+              )}
+              <p className={`whitespace-pre-line leading-relaxed text-[#455a64] ${scalePreset.body}`}>{product.content || <span className="text-sm text-slate-400">尚無詳細資料</span>}</p>
+              
+              {product.tags && product.tags.length > 0 && (
+                <div className="mt-3 flex flex-wrap gap-1.5">
+                  {product.tags.map((tag) => (
+                    <button key={tag} onClick={() => onOpenProductByCode(product.code, tag)} className="rounded text-[11px] bg-[var(--chip)] px-2 py-1 text-[var(--muted)] transition hover:bg-[var(--primary-soft)] hover:text-[var(--primary)] active:scale-95">
+                      #<HighlightText text={tag} keyword={keyword} />
+                    </button>
+                  ))}
+                </div>
+              )}
 
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                <button
-                  onClick={openVideoInline}
-                  disabled={!product.videoUrl}
-                  className={`rounded-2xl px-3 py-2.5 text-sm font-medium ${product.videoUrl ? (hasSeenVideo ? 'bg-slate-100 text-slate-600' : 'bg-gradient-to-r from-amber-400 to-orange-500 text-white shadow-md') : 'bg-slate-100 text-slate-400'}`}
-                >
-                  <span className="inline-flex items-center gap-2"><PlayCircle className="h-4 w-4" />影音</span>
-                </button>
-                <button onClick={openSheet} className="rounded-2xl bg-[var(--primary-soft)] px-3 py-2.5 text-sm font-medium text-[var(--primary-strong)]">
-                  <span className="inline-flex items-center gap-2"><Link2 className="h-4 w-4" />更多素材</span>
-                </button>
-                <button onClick={copyPitch} className="rounded-2xl bg-[var(--surface-soft)] px-3 py-2.5 text-sm font-medium text-[var(--text)]">
-                  <span className="inline-flex items-center gap-2"><Share2 className="h-4 w-4" />複製話術</span>
-                </button>
-                <button onClick={() => setExpandedCardId(product.code)} className="rounded-2xl bg-[var(--surface-soft)] px-3 py-2.5 text-sm font-medium text-[var(--muted)]">
-                  收合內容
+              <div className="mt-4 flex flex-wrap items-center justify-end gap-2">
+                {product.videoUrl && (
+                  <button onClick={openVideoInline} className={`flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-bold transition active:scale-95 ${hasSeenVideo ? 'bg-slate-200 text-slate-600' : 'bg-gradient-to-r from-amber-400 to-orange-500 text-white shadow-md'}`}>
+                    <PlayCircle className="h-4 w-4" />商品影片
+                  </button>
+                )}
+                {product.moreLinks.length > 0 && (
+                  <button onClick={() => { openMediaSheet(product); if (typeof window !== 'undefined') window.history.pushState({ ui: 'sheet', code: product.code }, '') }} className="flex items-center gap-1 rounded-full border border-[var(--border)] bg-white px-3 py-1.5 text-xs font-bold text-[var(--text)] transition active:scale-95">
+                    <Link2 className="h-4 w-4" />更多素材
+                  </button>
+                )}
+                <button onClick={copyPitch} className="flex items-center gap-1 rounded-full border border-[var(--border)] bg-white px-3 py-1.5 text-xs font-bold text-[var(--muted)] transition active:scale-95 hover:bg-slate-50">
+                  <Share2 className="h-4 w-4" />分享
                 </button>
               </div>
-
-              {product.promos.length ? (
-                <div className="rounded-2xl border border-rose-100 bg-rose-50/70 p-3">
-                  <div className="mb-2 flex items-center gap-2 text-sm font-medium text-rose-700"><Gift className="h-4 w-4" />相關促銷</div>
-                  <div className="space-y-2">
-                    {product.promos.map((promo) => (
-                      <div key={promo.promoId} className="rounded-2xl bg-white/80 p-2.5">
-                        <div className="flex items-center justify-between gap-2">
-                          <p className="text-sm font-medium text-[var(--text)]">{promo.shortTitle || promo.title}</p>
-                          <span className={`rounded-full border px-2 py-0.5 text-[10px] ${PROMO_STATUS_META[promo.status || 'active']?.className || PROMO_STATUS_META.active.className}`}>{PROMO_STATUS_META[promo.status || 'active']?.label || '活動中'}</span>
-                        </div>
-                        <p className="mt-1 text-xs leading-5 text-[var(--muted)]">{promo.content}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ) : null}
             </div>
           </motion.div>
         ) : null}
@@ -589,30 +523,38 @@ function MediaSheet() {
 
   return (
     <AnimatePresence>
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[75] bg-black/50 backdrop-blur-sm" onClick={closeModal}>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[75] bg-black/55 backdrop-blur-[3px]" onClick={closeModal}>
         <motion.div
           initial={{ y: '100%' }}
           animate={{ y: 0 }}
           exit={{ y: '100%' }}
-          transition={{ type: 'spring', stiffness: 240, damping: 26 }}
+          transition={{ type: 'spring', stiffness: 260, damping: 24 }}
           onClick={(event) => event.stopPropagation()}
-          className="absolute inset-x-0 bottom-0 mx-auto w-full max-w-2xl rounded-t-[32px] bg-[var(--surface)] px-4 pb-[calc(20px+env(safe-area-inset-bottom))] pt-3 shadow-2xl"
+          className="absolute inset-x-0 bottom-0 mx-auto w-full max-w-lg rounded-t-[24px] bg-white px-4 pb-[calc(20px+env(safe-area-inset-bottom))] pt-4 shadow-2xl"
         >
-          <div className="mx-auto mb-4 h-1.5 w-14 rounded-full bg-slate-300" />
-          <div className="flex items-start justify-between gap-3">
+          <div className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-slate-200" />
+          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
             <div>
-              <p className="text-xs text-[var(--muted)]">更多素材</p>
-              <h3 className="text-lg font-semibold text-[var(--text)]">{mediaSheetProduct.name}</h3>
+              <p className="text-[14px] font-black text-[var(--text)] flex items-center gap-1.5"><Link2 className="h-4 w-4 text-[var(--muted)]"/>更多素材</p>
+              <p className="mt-0.5 text-[12px] text-[var(--muted)]">商品：{mediaSheetProduct.name}</p>
             </div>
-            <button onClick={closeModal} className="rounded-full bg-[var(--surface-soft)] p-2 text-[var(--muted)]"><X className="h-4 w-4" /></button>
+            <button onClick={closeModal} className="rounded-full bg-slate-100 p-2 text-slate-500"><X className="h-5 w-5" /></button>
           </div>
-          <div className="mt-4 space-y-2">
-            {mediaSheetProduct.moreLinks.length ? mediaSheetProduct.moreLinks.map((item, index) => (
-              <a key={`${item.url}-${index}`} href={item.url} target="_blank" rel="noreferrer" className="flex items-center justify-between rounded-2xl border border-[var(--border)] bg-[var(--surface-soft)] px-4 py-3 text-sm text-[var(--text)]">
-                <span>{item.label}</span>
-                <ExternalLink className="h-4 w-4 text-[var(--muted)]" />
-              </a>
-            )) : <div className="rounded-2xl border border-dashed border-[var(--border)] p-4 text-sm text-[var(--muted)]">此商品目前沒有更多素材。</div>}
+          <div className="mt-3 max-h-[60vh] overflow-y-auto space-y-2 pb-4">
+            {mediaSheetProduct.moreLinks.length ? mediaSheetProduct.moreLinks.map((item, index) => {
+              const IconTag = item.type === 'yt' ? PlayCircle : item.type === 'ig' ? ImageIcon : ExternalLink
+              return (
+                <a key={`${item.url}-${index}`} href={item.url} target="_blank" rel="noreferrer" className="flex items-center justify-between rounded-xl bg-slate-50 p-3 text-[14px] font-bold text-[var(--text)] active:bg-slate-100">
+                  <div className="flex items-center gap-3">
+                    <div className={`flex h-8 w-8 items-center justify-center rounded-full text-white shadow-sm ${item.type==='yt'?'bg-red-500':item.type==='fb'?'bg-blue-600':item.type==='ig'?'bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-500':'bg-slate-500'}`}>
+                      <IconTag className="h-4 w-4" />
+                    </div>
+                    {item.label}
+                  </div>
+                  <ExternalLink className="h-4 w-4 text-slate-400" />
+                </a>
+              )
+            }) : <div className="py-8 text-center text-sm text-[var(--muted)]"><Search className="mx-auto mb-2 h-8 w-8 text-slate-300"/>沒有可用的連結</div>}
           </div>
         </motion.div>
       </motion.div>
@@ -628,17 +570,24 @@ function VideoModal() {
   const embedUrl = getYouTubeEmbed(videoPayload.url)
   return (
     <AnimatePresence>
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[76] bg-black/60 backdrop-blur-sm" onClick={closeModal}>
-        <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }} onClick={(event) => event.stopPropagation()} className="absolute inset-x-4 top-1/2 mx-auto w-[min(92vw,760px)] -translate-y-1/2 overflow-hidden rounded-[28px] border border-white/20 bg-black shadow-2xl">
-          <div className="flex items-center justify-between border-b border-white/10 px-4 py-3 text-white">
-            <div>
-              <p className="text-xs text-white/60">站內影音</p>
-              <h3 className="text-base font-semibold">{videoPayload.title}</h3>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[76] bg-black/80 backdrop-blur-sm" onClick={closeModal}>
+        <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }} onClick={(event) => event.stopPropagation()} className="absolute inset-x-4 top-1/2 mx-auto w-[min(100%,760px)] -translate-y-1/2 overflow-hidden rounded-[20px] bg-white shadow-2xl">
+          <div className="flex items-start justify-between border-b border-slate-100 p-3">
+            <div className="min-w-0 pr-3">
+              <h3 className="flex items-center gap-1.5 text-[15px] font-black text-[var(--text)]"><PlayCircle className="h-4 w-4 text-[var(--muted)]"/>商品影片</h3>
+              <p className="mt-0.5 truncate text-[12px] text-[var(--muted)]">{videoPayload.title}</p>
             </div>
-            <button onClick={closeModal} className="rounded-full bg-white/10 p-2 text-white"><X className="h-4 w-4" /></button>
+            <div className="flex shrink-0 items-center gap-2">
+              <a href={videoPayload.url} target="_blank" rel="noreferrer" className="flex items-center gap-1 rounded-full bg-amber-100 px-3 py-1.5 text-xs font-bold text-amber-800">
+                <ExternalLink className="h-3 w-3"/>外部開啟
+              </a>
+              <button onClick={closeModal} className="rounded-full bg-slate-100 p-1.5 text-slate-500"><X className="h-5 w-5" /></button>
+            </div>
           </div>
-          <div className="aspect-video bg-black">
-            {embedUrl ? <iframe src={embedUrl} title={videoPayload.title} className="h-full w-full" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen /> : <video src={videoPayload.url} controls className="h-full w-full" playsInline />}
+          <div className="bg-black">
+            <div className="relative w-full pt-[56.25%]">
+              {embedUrl ? <iframe src={embedUrl} title={videoPayload.title} className="absolute inset-0 h-full w-full border-0 bg-black" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen playsInline /> : <video src={videoPayload.url} controls className="absolute inset-0 h-full w-full bg-black object-contain" playsInline />}
+            </div>
           </div>
         </motion.div>
       </motion.div>
@@ -653,19 +602,9 @@ function LightboxModal() {
   if (activeModal !== 'lightbox' || !lightbox) return null
   return (
     <AnimatePresence>
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[77] bg-black/78 backdrop-blur-sm" onClick={closeModal}>
-        <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }} onClick={(event) => event.stopPropagation()} className="absolute inset-x-4 top-1/2 mx-auto w-[min(92vw,780px)] -translate-y-1/2 overflow-hidden rounded-[28px] bg-white shadow-2xl">
-          <div className="flex items-center justify-between border-b border-[var(--border)] px-4 py-3">
-            <div>
-              <p className="text-xs text-[var(--muted)]">圖片預覽</p>
-              <h3 className="text-base font-semibold text-[var(--text)]">{lightbox.title}</h3>
-            </div>
-            <button onClick={closeModal} className="rounded-full bg-[var(--surface-soft)] p-2 text-[var(--muted)]"><X className="h-4 w-4" /></button>
-          </div>
-          <div className="flex items-center justify-center bg-[var(--bg-soft)] p-4">
-            <SafeImage src={lightbox.src} alt={lightbox.title} fallbackLabel={lightbox.title} contain className="max-h-[72vh] w-full" />
-          </div>
-        </motion.div>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[77] flex items-center justify-center bg-black/90 backdrop-blur-sm" onClick={closeModal}>
+        <button onClick={closeModal} className="absolute right-4 top-4 rounded-full bg-white/20 p-2 text-white backdrop-blur-md"><X className="h-6 w-6" /></button>
+        <motion.img initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }} src={lightbox.src} alt={lightbox.title} className="max-h-[85vh] max-w-[95vw] object-contain" onClick={(e) => e.stopPropagation()} />
       </motion.div>
     </AnimatePresence>
   )
@@ -676,40 +615,38 @@ function FabMenu({ onScrollTop, onGotoPromo, onGotoHot, onToggleSettings, onColl
   const toggleFab = useAppStore((state) => state.toggleFab)
   const closeFab = useAppStore((state) => state.closeFab)
   const actions = [
-    { key: 'promo', label: '最新活動', icon: BadgePercent, onClick: onGotoPromo, balloon: true },
-    { key: 'hot', label: '熱銷主推', icon: Star, onClick: onGotoHot },
     { key: 'settings', label: '顯示設定', icon: Settings2, onClick: onToggleSettings },
-    { key: 'collapse', label: '收合全部', icon: LayoutGrid, onClick: onCollapseAll },
-    { key: 'top', label: '回到頂端', icon: ArrowUp, onClick: onScrollTop },
+    { key: 'collapse', label: '收合全部卡片', icon: LayoutGrid, onClick: onCollapseAll },
+    { key: 'top', label: '回到最頂端', icon: ArrowUp, onClick: onScrollTop },
   ]
 
   return (
-    <div className="fixed bottom-[calc(18px+env(safe-area-inset-bottom))] right-4 z-[72] flex flex-col items-end gap-3">
-      <button onClick={onGotoPromo} className="promo-balloon inline-flex items-center gap-2 rounded-full bg-[var(--primary)] px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-[var(--shadow)]">
-        <BadgePercent className="h-4 w-4" />最新活動
+    <div className="fixed bottom-[calc(20px+env(safe-area-inset-bottom))] right-4 z-[72] flex flex-col items-end gap-3">
+      <button onClick={onGotoPromo} className="promo-balloon flex h-[46px] w-[46px] items-center justify-center rounded-full bg-orange-500 text-white shadow-lg outline-none">
+        <BadgePercent className="h-6 w-6" />
       </button>
       <AnimatePresence>
-        {fabOpen ? (
-          <motion.div initial="hidden" animate="show" exit="hidden" variants={{ show: { transition: { staggerChildren: 0.05, delayChildren: 0.02 } }, hidden: { transition: { staggerChildren: 0.03, staggerDirection: -1 } } }} className="flex flex-col items-end gap-2">
+        {fabOpen && (
+          <motion.div initial="hidden" animate="show" exit="hidden" variants={{ show: { transition: { staggerChildren: 0.05, delayChildren: 0.02 } }, hidden: { transition: { staggerChildren: 0.03, staggerDirection: -1 } } }} className="absolute bottom-16 right-0 flex flex-col items-end gap-2">
             {actions.map((action) => {
               const Icon = action.icon
               return (
                 <motion.button
                   key={action.key}
-                  variants={{ hidden: { opacity: 0, y: 18, scale: 0.92 }, show: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', stiffness: 280, damping: 22 } } }}
+                  variants={{ hidden: { opacity: 0, y: 20, scale: 0.8 }, show: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', stiffness: 300, damping: 20 } } }}
                   onClick={() => { action.onClick(); closeFab() }}
-                  className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-sm font-medium text-[var(--text)] shadow-md shadow-[var(--shadow)]/60"
+                  className="flex h-[40px] items-center gap-2 whitespace-nowrap rounded-full border border-slate-200 bg-white px-4 text-[13px] font-bold text-slate-700 shadow-md"
                 >
-                  <Icon className="h-4 w-4 text-[var(--primary)]" />
                   {action.label}
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-100"><Icon className="h-4 w-4 text-[var(--primary)]" /></div>
                 </motion.button>
               )
             })}
           </motion.div>
-        ) : null}
+        )}
       </AnimatePresence>
-      <button onClick={toggleFab} className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-[var(--primary)] text-white shadow-2xl shadow-[var(--shadow)]">
-        <Menu className={`h-6 w-6 transition ${fabOpen ? 'rotate-90' : ''}`} />
+      <button onClick={toggleFab} className="flex h-[52px] w-[52px] items-center justify-center rounded-full bg-[var(--primary)] text-white shadow-xl outline-none transition-transform active:scale-90">
+        <Menu className={`h-6 w-6 transition-transform duration-300 ${fabOpen ? 'rotate-90' : ''}`} />
       </button>
     </div>
   )
@@ -719,23 +656,18 @@ function PromoDrawer({ promo, onClose, onOpenProduct }) {
   if (!promo) return null
   return (
     <AnimatePresence>
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[74] bg-black/45 backdrop-blur-sm" onClick={onClose}>
-        <motion.div initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }} transition={{ type: 'spring', stiffness: 240, damping: 26 }} onClick={(event) => event.stopPropagation()} className="absolute inset-x-0 bottom-0 mx-auto w-full max-w-2xl rounded-t-[32px] bg-[var(--surface)] px-4 pb-[calc(20px+env(safe-area-inset-bottom))] pt-3 shadow-2xl">
-          <div className="mx-auto mb-4 h-1.5 w-14 rounded-full bg-slate-300" />
-          <div className="flex items-start justify-between gap-3">
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[74] bg-black/70 backdrop-blur-sm" onClick={onClose}>
+        <motion.div initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }} transition={{ type: 'spring', stiffness: 260, damping: 24 }} onClick={(event) => event.stopPropagation()} className="absolute inset-x-0 bottom-0 mx-auto flex max-h-[90vh] w-full max-w-lg flex-col rounded-t-[24px] bg-white shadow-2xl">
+          <div className="flex shrink-0 items-center justify-between border-b border-slate-100 p-4">
             <div>
-              <p className="text-xs text-[var(--muted)]">促銷專區</p>
-              <h3 className="text-lg font-semibold text-[var(--text)]">{promo.title}</h3>
+              <p className="text-[12px] font-bold text-[var(--primary)]">{promo.startDate} ~ {promo.endDate}</p>
+              <h3 className="mt-0.5 text-[20px] font-black text-[var(--text)]">{promo.title}</h3>
             </div>
-            <button onClick={onClose} className="rounded-full bg-[var(--surface-soft)] p-2 text-[var(--muted)]"><X className="h-4 w-4" /></button>
+            <button onClick={onClose} className="rounded-full bg-slate-100 p-2 text-slate-500"><X className="h-6 w-6" /></button>
           </div>
-          <p className="mt-4 text-sm leading-7 text-[var(--text)]">{promo.content}</p>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {promo.relatedProducts.map((item) => (
-              <button key={item.code} onClick={() => onOpenProduct(item.code)} className="rounded-full border border-[var(--border)] bg-[var(--surface-soft)] px-3 py-1.5 text-sm text-[var(--text)]">
-                {item.name}
-              </button>
-            ))}
+          <div className="flex-1 overflow-y-auto p-4 pb-[calc(20px+env(safe-area-inset-bottom))]">
+            {promo.img && <div className="mb-4 overflow-hidden rounded-xl bg-black"><img src={promo.img} className="w-full" alt="活動" /></div>}
+            <p className="whitespace-pre-line text-[15px] leading-relaxed text-[var(--text)]">{promo.content}</p>
           </div>
         </motion.div>
       </motion.div>
@@ -751,11 +683,10 @@ export default function App() {
   const [rankings, setRankings] = useState([])
   const [loading, setLoading] = useState(true)
   const [progress, setProgress] = useState(8)
-  const [stage, setStage] = useState('準備啟動...')
+  const [stage, setStage] = useState('準備啟動系統...')
   const [keyword, setKeyword] = useState('')
   const [activeCategory, setActiveCategory] = useState('all')
   const [activeTag, setActiveTag] = useState('')
-  const [promoFilter, setPromoFilter] = useState('all')
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [promoDrawer, setPromoDrawer] = useState(null)
   const navRef = useRef(null)
@@ -772,13 +703,10 @@ export default function App() {
   const setExpandedCardId = useAppStore((state) => state.setExpandedCardId)
 
   const themeConfig = THEMES.find((item) => item.key === theme) || THEMES[0]
-  const scalePreset = SCALE_PRESETS[scale] || SCALE_PRESETS.A
 
   useBodyLock(Boolean(activeModal || promoDrawer || settingsOpen))
 
-  useEffect(() => {
-    hydrateSeenVideos()
-  }, [hydrateSeenVideos])
+  useEffect(() => { hydrateSeenVideos() }, [hydrateSeenVideos])
 
   useEffect(() => {
     let cancelled = false
@@ -786,44 +714,35 @@ export default function App() {
       try {
         setLoading(true)
         setStage('載入商品主檔...')
-        setProgress(16)
-        const mergedRes = await fetch(`${BASE_URL}merged-feed.json`)
-        const mergedJson = await mergedRes.json()
+        setProgress(20)
+        // 在真實環境應替換為實際 API
+        const [mergedRes, promoRes, rankRes] = await Promise.allSettled([
+          fetch(`${BASE_URL}merged-feed.json`),
+          fetch(`${BASE_URL}promotions.json`),
+          fetch(`${BASE_URL}rankings.json`)
+        ])
         if (cancelled) return
-        setProgress(46)
+        setProgress(60)
 
-        setStage('整理促銷活動...')
-        const promoRes = await fetch(`${BASE_URL}promotions.json`)
-        const promoJson = await promoRes.json()
-        if (cancelled) return
-        setProgress(70)
-
-        setStage('整合熱銷排行...')
-        const rankRes = await fetch(`${BASE_URL}rankings.json`)
-        const rankJson = await rankRes.json()
-        if (cancelled) return
+        const mergedJson = mergedRes.status === 'fulfilled' ? await mergedRes.value.json().catch(()=>({})) : {}
+        const promoJson = promoRes.status === 'fulfilled' ? await promoRes.value.json().catch(()=>({})) : {}
+        const rankJson = rankRes.status === 'fulfilled' ? await rankRes.value.json().catch(()=>({})) : {}
 
         setProducts(Array.isArray(mergedJson.items) ? mergedJson.items : [])
         setPromotions(Array.isArray(promoJson.items) ? promoJson.items : [])
         setRankings(Array.isArray(rankJson.items) ? rankJson.items : [])
+        
         setProgress(100)
-        setStage('完成')
-        window.setTimeout(() => {
-          if (!cancelled) setLoading(false)
-        }, 220)
+        setStage('完成載入')
+        window.setTimeout(() => { if (!cancelled) setLoading(false) }, 300)
       } catch (error) {
-        console.error(error)
-        setStage('資料載入失敗')
+        setStage('初始化完成 (無外掛資料)')
         setProgress(100)
-        window.setTimeout(() => {
-          if (!cancelled) setLoading(false)
-        }, 260)
+        window.setTimeout(() => { if (!cancelled) setLoading(false) }, 300)
       }
     }
     load()
-    return () => {
-      cancelled = true
-    }
+    return () => { cancelled = true }
   }, [])
 
   const normalizedProducts = useMemo(() => {
@@ -838,7 +757,7 @@ export default function App() {
         group: normalizeCategory(item.category),
         price: Number(item.price || 0),
         photo: item.photo,
-        title: pitch.title || item.name,
+        title: pitch.title || '',
         content: pitch.content || '',
         tags: parseTags(pitch.tags),
         isNew: Boolean(pitch.isNew),
@@ -862,14 +781,14 @@ export default function App() {
   const productsWithPromos = useMemo(() => {
     return normalizedProducts.map((product) => ({
       ...product,
-      promos: enrichedPromotions.filter((promo) => (promo.relatedCodes || []).includes(product.code)),
+      promos: enrichedPromotions.filter((promo) => (promo.relatedCodes || []).includes(product.code) && promo.status !== 'ended'),
     }))
   }, [normalizedProducts, enrichedPromotions])
 
   const allTags = useMemo(() => {
     const counter = new Map()
     productsWithPromos.forEach((item) => item.tags.forEach((tag) => counter.set(tag, (counter.get(tag) || 0) + 1)))
-    return [...counter.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10).map(([tag]) => tag)
+    return [...counter.entries()].sort((a, b) => b[1] - a[1]).slice(0, 15).map(([tag]) => tag)
   }, [productsWithPromos])
 
   const filteredProducts = useMemo(() => {
@@ -893,11 +812,7 @@ export default function App() {
   }, [filteredProducts])
 
   const hotProducts = useMemo(() => productsWithPromos.filter((item) => item.rank && item.rank <= 10).sort((a, b) => a.rank - b.rank), [productsWithPromos])
-
-  const promoItems = useMemo(() => {
-    const base = promoFilter === 'all' ? enrichedPromotions : enrichedPromotions.filter((promo) => (promo.relatedProducts || []).some((product) => product.group === promoFilter))
-    return base.filter((promo) => promo.status !== 'ended').slice(0, 10)
-  }, [enrichedPromotions, promoFilter])
+  const promoItems = useMemo(() => enrichedPromotions.filter((promo) => promo.status !== 'ended').slice(0, 10), [enrichedPromotions])
 
   const sectionIds = useMemo(() => ['promo', 'hot', ...CATEGORY_META.filter((item) => item.key !== 'all').map((item) => item.anchor)], [])
   useScrollSpy(sectionIds)
@@ -909,22 +824,10 @@ export default function App() {
 
   useEffect(() => {
     const handlePopState = () => {
-      if (activeModal || mediaSheetProduct) {
-        closeModal()
-        return
-      }
-      if (promoDrawer) {
-        setPromoDrawer(null)
-        return
-      }
-      if (settingsOpen) {
-        setSettingsOpen(false)
-        return
-      }
-      if (expandedCardId) {
-        closeExpandedCard()
-        return
-      }
+      if (activeModal || mediaSheetProduct) { closeModal(); return }
+      if (promoDrawer) { setPromoDrawer(null); return }
+      if (settingsOpen) { setSettingsOpen(false); return }
+      if (expandedCardId) { closeExpandedCard(); return }
       closeFab()
     }
     window.addEventListener('popstate', handlePopState)
@@ -932,116 +835,106 @@ export default function App() {
   }, [activeModal, mediaSheetProduct, promoDrawer, settingsOpen, expandedCardId, closeExpandedCard, closeFab, closeModal])
 
   const scrollToId = useCallback((id) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    const el = document.getElementById(id)
+    if (el) {
+      const y = el.getBoundingClientRect().top + window.scrollY - 185
+      window.scrollTo({ top: y, behavior: 'smooth' })
+    }
   }, [])
 
   const openProductByCode = useCallback((code, tag) => {
-    const target = productsWithPromos.find((item) => item.code === code)
-    if (!target) return
     if (tag) {
       setActiveTag(tag)
+      setKeyword('')
       showToast(`已套用標籤：#${tag}`)
     }
     setExpandedCardId(code)
     window.setTimeout(() => {
-      document.getElementById(`card-${code}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      const el = document.getElementById(`card-${code}`)
+      if (el) {
+        const y = el.getBoundingClientRect().top + window.scrollY - 185
+        window.scrollTo({ top: y, behavior: 'smooth' })
+      }
     }, 150)
-  }, [productsWithPromos, setExpandedCardId, showToast])
-
-  const applyTheme = themeConfig.colors
+  }, [setExpandedCardId, showToast])
 
   return (
-    <div style={applyTheme} className="min-h-screen overflow-x-hidden bg-[var(--bg)] text-[var(--text)]">
+    <div style={themeConfig.colors} className="min-h-screen bg-[var(--bg)] text-[var(--text)] font-sans antialiased">
       <style>{`
-        html, body, #root { min-height: 100%; background: var(--bg); }
-        body { overflow-x: hidden; }
-        .promo-balloon { animation: pulseGlow 2s ease-in-out infinite; }
-        @keyframes pulseGlow {
-          0%, 100% { box-shadow: 0 10px 24px var(--shadow), 0 0 0 0 rgba(255,255,255,.0); }
-          50% { box-shadow: 0 10px 24px var(--shadow), 0 0 0 10px rgba(255,255,255,.0); }
-        }
-        *::-webkit-scrollbar { height: 8px; width: 8px; }
-        *::-webkit-scrollbar-thumb { background: rgba(0,0,0,.15); border-radius: 999px; }
+        html, body { min-height: 100%; background: var(--bg); overscroll-behavior-y: none; }
+        .promo-balloon { animation: pulseGlow 2s infinite; }
+        @keyframes pulseGlow { 0% { box-shadow: 0 0 0 0 rgba(249,115,22,0.7); } 70% { box-shadow: 0 0 0 10px rgba(249,115,22,0); } 100% { box-shadow: 0 0 0 0 rgba(249,115,22,0); } }
+        *::-webkit-scrollbar { display: none; } /* 為了 App 質感隱藏滾動條 */
       `}</style>
 
-      {loading ? <LoaderOverlay progress={progress} stage={stage} /> : null}
+      {loading && <LoaderOverlay progress={progress} stage={stage} />}
 
-      <div className="mx-auto max-w-6xl px-4 pb-[calc(110px+env(safe-area-inset-bottom))] pt-4 md:px-6 md:pt-6">
-        <header className="sticky top-0 z-30 -mx-4 border-b border-[var(--border)] bg-[var(--bg)]/90 px-4 pb-3 pt-4 backdrop-blur-sm md:mx-0 md:rounded-[28px] md:border md:bg-[var(--surface)]/92 md:px-5 md:shadow-sm md:shadow-[var(--shadow)]/50">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <p className="text-xs tracking-[0.18em] text-[var(--muted)]">TTL Bio-tech 健康美學</p>
-              <h1 className="mt-1 text-[20px] font-semibold md:text-[24px]">台酒生技 產品銷售輔助</h1>
-              <p className="mt-1 text-xs text-[var(--muted)]">單手銷售武器｜維持原地展開、原地操作、原地返回</p>
+      <div className="mx-auto max-w-4xl pb-[calc(100px+env(safe-area-inset-bottom))]">
+        {/* 精確還原 Sticky Header */}
+        <header className="sticky top-0 z-30 bg-white/90 px-4 pb-2 pt-4 shadow-sm backdrop-blur-md">
+          <div className="flex items-center justify-between">
+            <div className="text-center w-full flex-1">
+              <h1 className="text-[20px] font-black leading-none text-[var(--primary)]">TTL Bio-tech 健康美學</h1>
+              <p className="mt-1 text-[11px] font-bold text-[var(--muted)]">台酒生技 產品銷售輔助</p>
             </div>
-            <button onClick={() => { setSettingsOpen(true); window.history.pushState({ ui: 'settings' }, '') }} className="rounded-full border border-[var(--border)] bg-[var(--surface)] p-2.5 text-[var(--primary)] shadow-sm">
-              <Settings2 className="h-5 w-5" />
+            <button className="absolute right-4 flex items-center gap-1 rounded-full border border-[var(--primary)] bg-[var(--primary-soft)] px-3 py-1.5 text-xs font-bold text-[var(--primary)] transition active:scale-95">
+              <Printer className="h-4 w-4" />列印
             </button>
           </div>
 
-          <div className="mt-3 flex gap-2">
-            <div className="relative flex-1">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted)]" />
-              <input value={keyword} onChange={(event) => setKeyword(event.target.value)} placeholder="搜尋商品名稱、代號、主訴求或標籤" className="h-11 w-full rounded-2xl border border-[var(--border)] bg-[var(--surface)] pl-10 pr-4 text-sm outline-none" />
-            </div>
+          <div className="mx-auto mt-3 w-full max-w-[600px] relative">
+            <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+            <input 
+              value={keyword} 
+              onChange={(e) => setKeyword(e.target.value)} 
+              placeholder="搜尋產品名稱、關鍵字..." 
+              className="h-[44px] w-full rounded-full border border-slate-200 bg-slate-50 pl-10 pr-10 text-[15px] font-bold text-slate-700 outline-none focus:border-[var(--primary)] focus:bg-white focus:ring-2 focus:ring-[var(--primary-soft)] transition"
+            />
+            {keyword && (
+              <button onClick={() => setKeyword('')} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-slate-200 p-1 text-slate-500 hover:bg-slate-300">
+                <X className="h-4 w-4" />
+              </button>
+            )}
           </div>
 
-          <div ref={navRef} className="-mx-1 mt-3 flex gap-2 overflow-x-auto px-1 pb-1">
-            {[
-              { label: '促銷焦點', anchor: 'promo' },
-              { label: '熱銷主推', anchor: 'hot' },
-              ...CATEGORY_META.filter((item) => item.key !== 'all').map((item) => ({ label: item.label, anchor: item.anchor, category: item.key })),
-            ].map((item) => {
+          <div ref={navRef} className="mt-3 flex gap-2 overflow-x-auto pb-1">
+            {[{ label: '全部', anchor: 'promo' }, ...CATEGORY_META.filter((item) => item.key !== 'all').map((item) => ({ label: item.label, anchor: item.anchor, category: item.key }))].map((item) => {
               const active = activeSection === item.anchor || (item.category && activeCategory === item.category)
               return (
                 <button
                   key={item.anchor}
                   data-anchor={item.anchor}
-                  onClick={() => { if (item.category) setActiveCategory(item.category); scrollToId(item.anchor) }}
-                  className={`whitespace-nowrap rounded-full border px-3 py-2 text-sm transition ${active ? 'border-[var(--primary)] bg-[var(--primary)] text-white' : 'border-[var(--border)] bg-[var(--surface)] text-[var(--muted)]'}`}
+                  onClick={() => { if (item.category) setActiveCategory(item.category); else setActiveCategory('all'); scrollToId(item.anchor) }}
+                  className={`whitespace-nowrap rounded-full px-4 py-1.5 text-[14px] font-bold transition ${active ? 'bg-[var(--primary)] text-white shadow-md shadow-[var(--primary)]/30' : 'bg-slate-100 text-slate-500'}`}
                 >
                   {item.label}
                 </button>
               )
             })}
           </div>
-
-          <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
-            <button onClick={() => { setActiveCategory('all'); setActiveTag(''); showToast('已切回全部商品') }} className={`whitespace-nowrap rounded-full border px-3 py-1.5 text-xs ${activeCategory === 'all' ? 'border-[var(--primary)] bg-[var(--primary-soft)] text-[var(--primary-strong)]' : 'border-[var(--border)] bg-[var(--surface)] text-[var(--muted)]'}`}>全部</button>
-            {allTags.map((tag) => (
-              <button key={tag} onClick={() => { setActiveTag((prev) => (prev === tag ? '' : tag)); showToast(`已套用標籤：#${tag}`) }} className={`whitespace-nowrap rounded-full border px-3 py-1.5 text-xs ${activeTag === tag ? 'border-[var(--primary)] bg-[var(--primary-soft)] text-[var(--primary-strong)]' : 'border-[var(--border)] bg-[var(--surface)] text-[var(--muted)]'}`}>
-                #{tag}
-              </button>
-            ))}
-          </div>
         </header>
 
-        <main className="space-y-6 pt-4">
+        <main className="px-4 pt-4 space-y-6">
           <PromoCarousel items={promoItems} onOpenPromo={(promo) => { setPromoDrawer(promo); window.history.pushState({ ui: 'promo', promoId: promo.promoId }, '') }} onOpenProduct={openProductByCode} />
-          <RankingCarousel items={hotProducts} onOpenProduct={openProductByCode} />
+          {keyword === '' && activeTag === '' && <RankingCarousel items={hotProducts} onOpenProduct={openProductByCode} />}
 
-          <section id="promo-zone" className="rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-4 shadow-sm shadow-[var(--shadow)]/50">
-            <SectionTitle title="促銷專區" subtitle="用商品群組快速切換活動範圍。" />
-            <div className="flex gap-2 overflow-x-auto pb-1">
-              <button onClick={() => setPromoFilter('all')} className={`whitespace-nowrap rounded-full border px-3 py-2 text-sm ${promoFilter === 'all' ? 'border-[var(--primary)] bg-[var(--primary)] text-white' : 'border-[var(--border)] bg-[var(--surface-soft)] text-[var(--muted)]'}`}>全部活動</button>
-              {CATEGORY_META.filter((item) => item.key !== 'all').map((item) => (
-                <button key={item.key} onClick={() => setPromoFilter(item.key)} className={`whitespace-nowrap rounded-full border px-3 py-2 text-sm ${promoFilter === item.key ? 'border-[var(--primary)] bg-[var(--primary)] text-white' : 'border-[var(--border)] bg-[var(--surface-soft)] text-[var(--muted)]'}`}>{item.label}</button>
-              ))}
-            </div>
-          </section>
-
-          {groupedProducts.map((group) => (
-            <section key={group.key} id={group.anchor} data-spy-section className="scroll-mt-32 rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-4 shadow-sm shadow-[var(--shadow)]/50">
-              <SectionTitle title={group.label} subtitle={`目前 ${group.items.length} 項，維持緊湊掃描節奏。`} />
+          {groupedProducts.length > 0 ? groupedProducts.map((group) => (
+            <section key={group.key} id={group.anchor} data-spy-section className="scroll-mt-[185px]">
+              <SectionTitle title={group.label} subtitle="" />
               <div className="space-y-3">
                 {group.items.map((product) => (
                   <div id={`card-${product.code}`} key={product.code}>
-                    <ProductRow product={product} scale={scale} onOpenProductByCode={openProductByCode} />
+                    <ProductRow product={product} scale={scale} keyword={keyword} onOpenProductByCode={openProductByCode} />
                   </div>
                 ))}
               </div>
             </section>
-          ))}
+          )) : (
+            <div className="py-20 text-center">
+              <Search className="mx-auto h-12 w-12 text-slate-300 mb-3" />
+              <p className="text-[16px] font-bold text-slate-500">沒有符合條件的商品</p>
+            </div>
+          )}
         </main>
       </div>
 
