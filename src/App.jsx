@@ -50,7 +50,7 @@ const CATEGORY_META = [
   { key: '其他', label: '其他', anchor: 'sec-other' },
 ]
 
-// 佈景主題設定：優化粉藍色調，並新增優雅紫
+// 💡 可以在這裡隨時修改你的四個主題顏色
 const THEMES = [
   {
     key: 'ttl-classic',
@@ -109,8 +109,8 @@ const THEMES = [
       '--border': '#dbe6ee',
       '--text': '#2c3e50',
       '--muted': '#647a8f',
-      '--primary': '#6ba3d6',       
-      '--primary-strong': '#4a82b5',
+      '--primary': '#5c8fbe',       // 加深後的質感粉藍
+      '--primary-strong': '#3f73a3',
       '--primary-soft': '#e4eff7',
       '--promo': '#f59e0b',         
       '--promo-soft': '#fef3c7',
@@ -118,7 +118,7 @@ const THEMES = [
       '--highlight': '#fff59d',
       '--highlight-text': '#d81b60',
       '--price': '#ef4444',
-      '--shadow': 'rgba(107, 163, 214, 0.12)',
+      '--shadow': 'rgba(92, 143, 190, 0.12)',
     },
   },
   {
@@ -132,8 +132,8 @@ const THEMES = [
       '--border': '#e2dcf2',
       '--text': '#352b47',
       '--muted': '#6b5e84',
-      '--primary': '#9b7ad6',       
-      '--primary-strong': '#7a55be',
+      '--primary': '#8a67cc',       // 加深後的優雅紫
+      '--primary-strong': '#6846a6',
       '--primary-soft': '#eee8f9',
       '--promo': '#f43f5e',         
       '--promo-soft': '#ffe4e6',
@@ -141,16 +141,16 @@ const THEMES = [
       '--highlight': '#fff59d',
       '--highlight-text': '#c2185b',
       '--price': '#e11d48',
-      '--shadow': 'rgba(155, 122, 214, 0.12)',
+      '--shadow': 'rgba(138, 103, 204, 0.12)',
     },
   },
 ]
 
-// 重構後的字體級距 (A 繼承原 A+，A+ 繼承原 A++，建立全新更大的 A++)
+// 支援促銷標籤與 Tags 同步放大的級距設定
 const SCALE_PRESETS = {
-  'A': { rowImage: 80, detailImage: 110, name: 'text-[16px]', title: 'text-[14px]', price: 'text-[18px]', body: 'text-[15px]' },
-  'A+': { rowImage: 100, detailImage: 120, name: 'text-[18px]', title: 'text-[16px]', price: 'text-[20px]', body: 'text-[16px]' },
-  'A++': { rowImage: 120, detailImage: 130, name: 'text-[20px]', title: 'text-[18px]', price: 'text-[22px]', body: 'text-[18px]' },
+  'A': { rowImage: 80, detailImage: 110, name: 'text-[16px]', title: 'text-[14px]', price: 'text-[18px]', body: 'text-[15px]', tag: 'text-[11px] px-2 py-1', promoTag: 'text-[10px] px-1.5 py-0.5', icon: 'h-3 w-3' },
+  'A+': { rowImage: 100, detailImage: 120, name: 'text-[18px]', title: 'text-[16px]', price: 'text-[20px]', body: 'text-[16px]', tag: 'text-[13px] px-2.5 py-1', promoTag: 'text-[12px] px-2 py-1', icon: 'h-3.5 w-3.5' },
+  'A++': { rowImage: 120, detailImage: 130, name: 'text-[20px]', title: 'text-[18px]', price: 'text-[22px]', body: 'text-[18px]', tag: 'text-[15px] px-3 py-1.5', promoTag: 'text-[14px] px-2.5 py-1.5', icon: 'h-4 w-4' },
 }
 
 const PROMO_STATUS_META = {
@@ -243,13 +243,11 @@ function useBodyLock(locked) {
   }, [locked])
 }
 
-// 支援多關鍵字的高亮系統
 function HighlightText({ text, keyword }) {
   const keywords = Array.isArray(keyword) ? keyword : [keyword].filter(Boolean)
   if (!keywords.length || !text) return <>{text}</>
   
   const escapeRegExp = (string) => String(string).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  // 依長度遞減排序，避免部分字串重疊取代的問題
   const sortedKeywords = [...keywords].sort((a, b) => b.length - a.length)
   const regex = new RegExp(`(${sortedKeywords.map(escapeRegExp).join('|')})`, 'gi')
   const parts = String(text).split(regex)
@@ -583,15 +581,16 @@ function ProductRow({ product, scale, keyword, onOpenProductByCode, onApplyTagFi
               <p className={`mt-0.5 line-clamp-2 font-bold text-[var(--primary)] ${scalePreset.title}`}><HighlightText text={product.title || product.spec || ''} keyword={keyword} /></p>
               {product.spec && product.spec !== product.title ? <p className="mt-0.5 text-[11px] text-[var(--muted)] line-clamp-1">{product.spec}</p> : null}
               
+              {/* 這裡的 promo tag 現在會跟隨 SCALE_PRESETS 縮放 */}
               <div className="mt-1 flex flex-wrap gap-1.5">
                 {product.promos.map((promo) => (
                   <button 
                     key={promo.promoId} 
                     onClick={(e) => { e.stopPropagation(); onOpenPromo(promo); }}
-                    className="flex items-center gap-0.5 rounded border px-1.5 py-0.5 text-[10px] font-bold transition active:scale-95" 
+                    className={`flex items-center gap-0.5 rounded border ${scalePreset.promoTag} font-bold transition active:scale-95`} 
                     style={{ borderColor: 'var(--primary)', background: 'var(--primary-soft)', color: 'var(--primary)' }}
                   >
-                    <Gift className="h-3 w-3" />{promo.shortTitle || promo.title}
+                    <Gift className={scalePreset.icon} />{promo.shortTitle || promo.title}
                   </button>
                 ))}
               </div>
@@ -624,10 +623,11 @@ function ProductRow({ product, scale, keyword, onOpenProductByCode, onApplyTagFi
               )}
               <p className={`whitespace-pre-line leading-relaxed text-[#455a64] ${scalePreset.body}`}>{product.content || <span className="text-sm text-slate-400">尚無詳細資料</span>}</p>
               
+              {/* 這裡的 hashtag 現在會跟隨 SCALE_PRESETS 縮放 */}
               {product.tags && product.tags.length > 0 && (
                 <div className="mt-3 flex flex-wrap gap-1.5">
                   {product.tags.map((tag) => (
-                    <button key={tag} onClick={() => onApplyTagFilter(product.code, tag)} className="rounded text-[11px] bg-[var(--chip)] px-2 py-1 text-[var(--muted)] transition hover:bg-[var(--primary-soft)] hover:text-[var(--primary)] active:scale-95">
+                    <button key={tag} onClick={() => onApplyTagFilter(product.code, tag)} className={`rounded bg-[var(--chip)] ${scalePreset.tag} text-[var(--muted)] transition hover:bg-[var(--primary-soft)] hover:text-[var(--primary)] active:scale-95`}>
                       #<HighlightText text={tag} keyword={keyword} />
                     </button>
                   ))}
@@ -766,7 +766,6 @@ function LightboxModal() {
   )
 }
 
-// 支援階層式導航選單的 FAB
 function FabMenu({ onScrollTop, onGotoPromo, onToggleSettings, onGotoSection }) {
   const fabOpen = useAppStore((state) => state.fabOpen)
   const toggleFab = useAppStore((state) => state.toggleFab)
@@ -774,7 +773,6 @@ function FabMenu({ onScrollTop, onGotoPromo, onToggleSettings, onGotoSection }) 
   
   const [navMode, setNavMode] = useState(false)
 
-  // 當浮動選單關閉時，將模式恢復為主選單
   useEffect(() => {
     if (!fabOpen) {
       const t = setTimeout(() => setNavMode(false), 300)
@@ -1077,7 +1075,6 @@ export default function App() {
     }))
   }, [normalizedProducts, enrichedPromotions])
 
-  // 多關鍵字解析：支援全半形空白、逗號、全形逗號、頓號
   const parsedKeywords = useMemo(() => {
     return keyword.split(/[\s\u3000,，、]+/).filter(Boolean)
   }, [keyword])
@@ -1087,7 +1084,6 @@ export default function App() {
       const categoryOk = activeCategory === 'all' || item.group === activeCategory
       const tagOk = !activeTag || item.tags.includes(activeTag)
       const haystack = [item.name, item.title, item.content, item.code, ...item.tags].join(' ').toLowerCase()
-      // AND 邏輯：所有切割出的關鍵字都必須包含在內才顯示
       const keywordOk = parsedKeywords.length === 0 || parsedKeywords.every(k => haystack.includes(k.toLowerCase()))
       
       return categoryOk && tagOk && keywordOk
@@ -1227,7 +1223,6 @@ export default function App() {
               <h1 className="text-[20px] font-black leading-none text-[var(--primary)]">TTL Bio-tech 健康美學</h1>
               <p className="mt-1 text-[11px] font-bold text-[var(--muted)]">台酒生技 產品銷售輔助</p>
             </div>
-            {/* 更改為極簡單純圖示的列印按鈕 */}
             <button className="absolute right-4 flex h-[34px] w-[34px] items-center justify-center rounded-full border border-[var(--primary)] bg-[var(--primary-soft)] text-[var(--primary)] transition active:scale-95 shadow-sm">
               <Printer className="h-[18px] w-[18px]" />
             </button>
