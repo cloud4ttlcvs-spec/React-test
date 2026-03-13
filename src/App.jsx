@@ -512,6 +512,7 @@ function ProductRow({ product, scale, keyword, onOpenProductByCode, onApplyTagFi
     const willExpand = expandedCardId !== product.code
     setExpandedCardId(product.code)
     if (willExpand) {
+      if (typeof window !== 'undefined') window.history.pushState({ ui: 'card', code: product.code }, '')
       window.setTimeout(() => {
         const el = cardRef.current
         if (el) {
@@ -520,7 +521,8 @@ function ProductRow({ product, scale, keyword, onOpenProductByCode, onApplyTagFi
           window.scrollTo({ top: y, behavior: 'smooth' })
         }
       }, 280)
-      if (typeof window !== 'undefined') window.history.pushState({ ui: 'card', code: product.code }, '')
+    } else {
+      if (window.history.state?.ui === 'card') window.history.back()
     }
   }
 
@@ -832,7 +834,7 @@ function FabMenu({ onScrollTop, onGotoPromo, onToggleSettings, onGotoSection }) 
   )
 }
 
-function PromoDrawer({ promo, onClose, onOpenProduct }) {
+function PromoDrawer({ promo, onClose, onNavigateToProduct }) {
   if (!promo) return null
   return (
     <AnimatePresence>
@@ -856,7 +858,7 @@ function PromoDrawer({ promo, onClose, onOpenProduct }) {
             {getPromoImage(promo) && <div className="mb-4 overflow-hidden rounded-xl bg-black"><img src={getPromoImage(promo)} className="w-full object-contain max-h-[40vh]" alt="活動" /></div>}
             <p className="whitespace-pre-line text-[15px] leading-relaxed text-[var(--text)]">{promo.content}</p>
             
-            {/* 新增：適用此活動的商品清單，直接跳轉 */}
+            {/* 適用此活動的商品清單：使用專屬的跨層導航函數 */}
             {promo.relatedProducts && promo.relatedProducts.length > 0 && (
               <div className="mt-8 border-t border-slate-100 pt-5">
                 <h4 className="mb-3 flex items-center gap-1.5 text-[14px] font-bold text-[var(--primary)]">
@@ -866,16 +868,7 @@ function PromoDrawer({ promo, onClose, onOpenProduct }) {
                   {promo.relatedProducts.map(product => (
                     <button
                       key={product.code}
-                      onClick={() => {
-                        // 確保返回歷史紀錄乾淨不殘留
-                        if (window.history.state?.ui === 'promo') {
-                          window.history.back();
-                        } else {
-                          onClose();
-                        }
-                        // 稍微延遲讓抽屜有關閉的視覺時間，然後自動捲動並打開商品卡
-                        setTimeout(() => onOpenProduct(product.code), 300);
-                      }}
+                      onClick={() => onNavigateToProduct(product.code)}
                       className="flex items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--surface-soft)] p-2 transition active:scale-[0.98]"
                     >
                       <div className="flex items-center gap-3 min-w-0">
@@ -1225,7 +1218,7 @@ export default function App() {
     }, 120)
   }, [setExpandedCardId, showToast])
 
-  // 修復歷史紀錄不一致：為外部開啟商品加上 pushState
+  // 統一從外部 (例如排行、促銷等) 開啟商品的方法，並注入 state
   const openProductByCode = useCallback((code) => {
     setExpandedCardId(code)
     if (typeof window !== 'undefined') window.history.pushState({ ui: 'card', code }, '')
@@ -1238,6 +1231,27 @@ export default function App() {
       }
     }, 280) 
   }, [setExpandedCardId])
+
+  // 智慧跨層導航：處理從促銷抽屜直達商品的邏輯
+  const navigateToProductFromPromo = useCallback((code) => {
+    // 判斷目前開啟了幾層 UI（用來決定 history.go 要退回幾步）
+    let steps = 0;
+    if (promoDrawer) steps++;
+    if (promoCenterOpen) steps++;
+    
+    if (steps > 0 && typeof window !== 'undefined') {
+      window.history.go(-steps);
+    }
+    
+    // 強制關閉所有可能阻擋畫面的遮罩 Panel
+    setPromoDrawer(null);
+    setPromoCenterOpen(false);
+    
+    // 等待轉場動畫，再精準滾動並展開商品
+    setTimeout(() => {
+      openProductByCode(code);
+    }, 350);
+  }, [promoDrawer, promoCenterOpen, openProductByCode]);
 
   return (
     <div style={themeConfig.colors} className="min-h-screen bg-[var(--bg)] text-[var(--text)] font-sans antialiased">
@@ -1259,7 +1273,6 @@ export default function App() {
               <h1 className="text-[20px] font-black leading-none text-[var(--primary)]">TTL Bio-tech 健康美學</h1>
               <p className="mt-1 text-[11px] font-bold text-[var(--muted)]">台酒生技 產品銷售輔助</p>
             </div>
-            {/* 補上列印行為的 onClick */}
             <button onClick={() => window.print()} className="absolute right-4 flex h-[34px] w-[34px] items-center justify-center rounded-full border border-[var(--primary)] bg-[var(--primary-soft)] text-[var(--primary)] transition active:scale-95 shadow-sm">
               <Printer className="h-[18px] w-[18px]" />
             </button>
@@ -1338,13 +1351,19 @@ export default function App() {
       <VideoModal />
       <LightboxModal />
       <PromoCenterPanel 
-        open={promoCenterOpen} items={enrichedPromotions} statusFilter={promoStatusFilter} setStatusFilter={setPromoStatusFilter} groupFilter={promoGroupFilter} setGroupFilter={setPromoGroupFilter} onOpenPromo={(promo) => { setPromoDrawer(promo); window.history.pushState({ ui: 'promo', promoId: promo.promoId }, '') }} 
+        open={promoCenterOpen} 
+        items={enrichedPromotions} 
+        statusFilter={promoStatusFilter} 
+        setStatusFilter={setPromoStatusFilter} 
+        groupFilter={promoGroupFilter} 
+        setGroupFilter={setPromoGroupFilter} 
+        onOpenPromo={(promo) => { setPromoDrawer(promo); window.history.pushState({ ui: 'promo', promoId: promo.promoId }, '') }} 
         onClose={() => { if (window.history.state?.ui === 'promo-center') window.history.back(); else setPromoCenterOpen(false); }} 
       />
       <PromoDrawer 
         promo={promoDrawer} 
         onClose={() => { if (window.history.state?.ui === 'promo') window.history.back(); else setPromoDrawer(null); }} 
-        onOpenProduct={openProductByCode} 
+        onNavigateToProduct={navigateToProductFromPromo}
       />
       <FabMenu onScrollTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })} onGotoPromo={() => { setPromoCenterOpen(true); window.history.pushState({ ui: 'promo-center' }, '') }} onToggleSettings={() => { setSettingsOpen(true); window.history.pushState({ ui: 'settings' }, '') }} onGotoSection={handleGotoSection} />
       <ToastMessage />
