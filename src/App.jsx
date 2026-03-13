@@ -7,6 +7,7 @@ import {
   ExternalLink,
   Gift,
   LayoutGrid,
+  ImageIcon,
   Link2,
   Menu,
   Palette,
@@ -41,7 +42,7 @@ const CATEGORY_META = [
 const THEMES = [
   {
     key: 'ttl-classic',
-    label: '台酒經典綠',
+    label: '台酒綠',
     colors: {
       '--bg': '#f8f9fa',
       '--bg-soft': '#f0f4f8',
@@ -53,6 +54,8 @@ const THEMES = [
       '--primary': '#00897b',
       '--primary-strong': '#00695c',
       '--primary-soft': '#e0f2f1',
+      '--promo': '#00897b',
+      '--promo-soft': '#dff5f1',
       '--chip': '#eceff1',
       '--highlight': '#ffeb3b',
       '--highlight-text': '#d81b60',
@@ -62,7 +65,7 @@ const THEMES = [
   },
   {
     key: 'ttl-rose',
-    label: '優雅玫瑰金',
+    label: '玫瑰金',
     colors: {
       '--bg': '#fff8fb',
       '--bg-soft': '#fff0f6',
@@ -74,11 +77,59 @@ const THEMES = [
       '--primary': '#c74d7c',
       '--primary-strong': '#a12d61',
       '--primary-soft': '#ffe2ec',
+      '--promo': '#c74d7c',
+      '--promo-soft': '#ffe5ee',
       '--chip': '#fff2f7',
       '--highlight': '#ffeb3b',
       '--highlight-text': '#d81b60',
       '--price': '#d81b60',
       '--shadow': 'rgba(199, 77, 124, 0.12)',
+    },
+  },
+  {
+    key: 'ttl-blue',
+    label: '清新藍',
+    colors: {
+      '--bg': '#f6fbff',
+      '--bg-soft': '#eef7ff',
+      '--surface': '#ffffff',
+      '--surface-soft': '#f8fbff',
+      '--border': '#d9e8f6',
+      '--text': '#1f3145',
+      '--muted': '#60758a',
+      '--primary': '#3b82f6',
+      '--primary-strong': '#1d4ed8',
+      '--primary-soft': '#dbeafe',
+      '--promo': '#3b82f6',
+      '--promo-soft': '#e3f0ff',
+      '--chip': '#eef5ff',
+      '--highlight': '#fff59d',
+      '--highlight-text': '#d81b60',
+      '--price': '#ef4444',
+      '--shadow': 'rgba(59, 130, 246, 0.12)',
+    },
+  },
+  {
+    key: 'ttl-purple',
+    label: '優雅紫',
+    colors: {
+      '--bg': '#faf7ff',
+      '--bg-soft': '#f3eeff',
+      '--surface': '#ffffff',
+      '--surface-soft': '#fbf9ff',
+      '--border': '#e4ddf5',
+      '--text': '#342c46',
+      '--muted': '#6f6588',
+      '--primary': '#8b5cf6',
+      '--primary-strong': '#6d28d9',
+      '--primary-soft': '#ede9fe',
+      '--promo': '#8b5cf6',
+      '--promo-soft': '#f0ebff',
+      '--chip': '#f4f0ff',
+      '--highlight': '#fff59d',
+      '--highlight-text': '#c2185b',
+      '--price': '#e11d48',
+      '--shadow': 'rgba(139, 92, 246, 0.12)',
     },
   },
 ]
@@ -102,6 +153,17 @@ function normalizeCategory(raw) {
   if (value.includes('飲品') || value.includes('黑麥汁')) return '保健飲品'
   if (value.includes('保健食品') || value.includes('健康') || value.includes('買一送一')) return '保健食品'
   return '其他'
+}
+
+
+function getPromoGroups(promo) {
+  const source = promo.relatedProducts || []
+  const groups = [...new Set(source.map((item) => item?.group).filter(Boolean).filter((group) => group !== '其他'))]
+  return groups.length ? groups : ['其他']
+}
+
+function getPromoImage(promo) {
+  return promo.imgUrl || promo.img || ''
 }
 
 function parseTags(raw) {
@@ -237,7 +299,7 @@ function LoaderOverlay({ progress, stage }) {
         <h3 className="mt-4 text-[17px] font-black text-[var(--text)]">正在準備銷售支援內容</h3>
         <p className="mt-2 text-xs text-[var(--muted)]">首次啟動時，系統會先同步主資料並建立商品卡。</p>
         <div className="mt-5 h-2 w-full overflow-hidden rounded-full bg-slate-100">
-          <motion.div className="h-full rounded-full bg-gradient-to-r from-[#80cbc4] via-[var(--primary)] to-[#26a69a]" animate={{ width: `${progress}%` }} transition={{ duration: 0.3 }} />
+          <motion.div className="h-full rounded-full bg-gradient-to-r from-[var(--primary-soft)] via-[var(--primary)] to-[var(--primary-strong)]" animate={{ width: `${progress}%` }} transition={{ duration: 0.3 }} />
         </div>
         <p className="mt-3 text-[14px] font-bold text-[var(--text)]">{stage}</p>
       </div>
@@ -321,26 +383,37 @@ function SettingsPanel({ open, onClose, theme, setTheme, scale, setScale }) {
   )
 }
 
-function PromoCarousel({ items, onOpenPromo, onOpenProduct }) {
+function PromoCarousel({ items, onOpenPromo }) {
   if (!items.length) return null
   return (
     <section id="promo" data-spy-section className="scroll-mt-[185px]">
-      <SectionTitle title="🔥 最新活動" subtitle="左右滑動檢視近期活動" />
+      <SectionTitle title="🔥 促銷焦點" subtitle="左右滑動檢視近期活動" />
       <div className="-mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-4 md:-mx-0 md:px-0">
         {items.map((promo) => {
           const statusMeta = PROMO_STATUS_META[promo.status] || PROMO_STATUS_META.active
+          const promoImage = getPromoImage(promo)
           return (
             <CarouselCard key={promo.promoId}>
               <button onClick={() => onOpenPromo(promo)} className="flex h-full w-full flex-col text-left">
                 <div className="relative aspect-[16/9] w-full bg-slate-100">
-                  {promo.img ? <SafeImage src={promo.img} alt={promo.title} fallbackLabel="活動圖片" className="h-full w-full object-cover" /> : <div className="flex h-full items-center justify-center text-slate-400"><BadgePercent className="h-10 w-10" /></div>}
-                  <div className="absolute right-2 top-2 rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-bold shadow-sm backdrop-blur-sm" style={{ color: 'var(--primary)' }}>
-                    {promo.startDate} 截止
+                  {promoImage ? <SafeImage src={promoImage} alt={promo.title} fallbackLabel="活動圖片" className="h-full w-full object-cover" /> : <div className="flex h-full items-center justify-center text-slate-400"><BadgePercent className="h-10 w-10" /></div>}
+                  <div className={`absolute left-2 top-2 rounded-full border px-2.5 py-0.5 text-[10px] font-bold shadow-sm backdrop-blur-sm ${statusMeta.className}`}>
+                    {statusMeta.label}
+                  </div>
+                  <div className="absolute right-2 top-2 rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-bold shadow-sm backdrop-blur-sm" style={{ color: 'var(--promo)' }}>
+                    {promo.endDate || promo.startDate}
                   </div>
                 </div>
                 <div className="flex flex-1 flex-col p-3">
                   <h3 className="line-clamp-2 text-[15px] font-black leading-tight text-[var(--text)]">{promo.shortTitle || promo.title}</h3>
                   <p className="mt-1.5 line-clamp-2 flex-1 text-xs leading-relaxed text-[var(--muted)]">{promo.content}</p>
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {getPromoGroups(promo).slice(0,3).map((group) => (
+                      <span key={group} className="rounded-full px-2 py-0.5 text-[10px] font-bold" style={{ background: 'var(--promo-soft)', color: 'var(--promo)' }}>
+                        {group}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </button>
             </CarouselCard>
@@ -351,11 +424,11 @@ function PromoCarousel({ items, onOpenPromo, onOpenProduct }) {
   )
 }
 
-function RankingCarousel({ items, onOpenProduct }) {
+function RankingCarousel({ items, onOpenProduct, subtitle = '依據實際銷售數據即時更新' }) {
   if (!items.length) return null
   return (
     <section id="hot" data-spy-section className="scroll-mt-[185px]">
-      <SectionTitle title="👑 熱銷排行" subtitle="依據實際銷售數據即時更新" />
+      <SectionTitle title="👑 熱銷排行" subtitle={subtitle} />
       <div className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-4 md:-mx-0 md:px-0">
         {items.map((product) => (
           <div key={product.code} className="w-[110px] shrink-0 snap-start">
@@ -375,7 +448,7 @@ function RankingCarousel({ items, onOpenProduct }) {
   )
 }
 
-function ProductRow({ product, scale, keyword, onOpenProductByCode }) {
+function ProductRow({ product, scale, keyword, onOpenProductByCode, onApplyTagFilter }) {
   const expandedCardId = useAppStore((state) => state.expandedCardId)
   const setExpandedCardId = useAppStore((state) => state.setExpandedCardId)
   const openLightbox = useAppStore((state) => state.openLightbox)
@@ -430,10 +503,10 @@ function ProductRow({ product, scale, keyword, onOpenProductByCode }) {
         </div>
       )}
       <button onClick={toggle} className="relative flex w-full items-center gap-3 p-3 text-left">
-        <div className="relative shrink-0 overflow-hidden rounded-lg border border-slate-100 bg-[#fcfcfc]" style={{ width: scalePreset.rowImage, height: scalePreset.rowImage }}>
+        <div className="relative shrink-0 overflow-hidden rounded-lg border border-slate-100 bg-[#fcfcfc]" style={{ width: scalePreset.rowImage, height: scalePreset.rowImage }} onClick={(event) => { if (isExpanded) { event.stopPropagation(); openLightbox({ src: product.photo || placeholderSvg(product.name), title: product.name }) } }}>
           <SafeImage src={product.photo} alt={product.name} fallbackLabel={product.name} contain className="h-full w-full p-1" />
           {product.videoUrl && (
-            <div className={`absolute bottom-1 right-1 flex h-5 w-5 items-center justify-center rounded-full border border-white/30 text-white backdrop-blur-sm shadow-sm ${hasSeenVideo ? 'bg-black/40' : 'bg-gradient-to-br from-amber-400 to-orange-500 ring-2 ring-orange-400/50'}`}>
+            <div className={`absolute bottom-1 right-1 flex h-5 w-5 items-center justify-center rounded-full border border-white/30 text-white backdrop-blur-sm shadow-sm ${hasSeenVideo ? 'bg-black/40' : 'bg-[var(--promo)] ring-2 ring-[var(--promo)]/35'}`}>
               <PlayCircle className="h-3.5 w-3.5" />
             </div>
           )}
@@ -445,10 +518,11 @@ function ProductRow({ product, scale, keyword, onOpenProductByCode }) {
               <h3 className={`mt-0.5 line-clamp-2 font-black leading-snug text-[var(--text)] ${scalePreset.name}`}>
                 <HighlightText text={product.name} keyword={keyword} />
               </h3>
-              <p className="mt-0.5 text-[11px] text-[var(--muted)]">{product.spec}</p>
+              <p className={`mt-0.5 line-clamp-2 font-bold text-[var(--primary)] ${scalePreset.title}`}><HighlightText text={product.title || product.spec || ''} keyword={keyword} /></p>
+              {product.spec && product.spec !== product.title ? <p className="mt-0.5 text-[11px] text-[var(--muted)] line-clamp-1">{product.spec}</p> : null}
               <div className="mt-1 flex flex-wrap gap-1.5">
                 {product.promos.map((promo) => (
-                  <span key={promo.promoId} className="flex items-center gap-0.5 rounded border border-orange-200 bg-orange-50 px-1.5 py-0.5 text-[10px] font-bold text-orange-700">
+                  <span key={promo.promoId} className="flex items-center gap-0.5 rounded border px-1.5 py-0.5 text-[10px] font-bold" style={{ borderColor: 'var(--promo)', background: 'var(--promo-soft)', color: 'var(--promo)' }}>
                     <Gift className="h-3 w-3" />{promo.shortTitle || promo.title}
                   </span>
                 ))}
@@ -485,7 +559,7 @@ function ProductRow({ product, scale, keyword, onOpenProductByCode }) {
               {product.tags && product.tags.length > 0 && (
                 <div className="mt-3 flex flex-wrap gap-1.5">
                   {product.tags.map((tag) => (
-                    <button key={tag} onClick={() => onOpenProductByCode(product.code, tag)} className="rounded text-[11px] bg-[var(--chip)] px-2 py-1 text-[var(--muted)] transition hover:bg-[var(--primary-soft)] hover:text-[var(--primary)] active:scale-95">
+                    <button key={tag} onClick={() => onApplyTagFilter(product.code, tag)} className="rounded text-[11px] bg-[var(--chip)] px-2 py-1 text-[var(--muted)] transition hover:bg-[var(--primary-soft)] hover:text-[var(--primary)] active:scale-95">
                       #<HighlightText text={tag} keyword={keyword} />
                     </button>
                   ))}
@@ -494,7 +568,7 @@ function ProductRow({ product, scale, keyword, onOpenProductByCode }) {
 
               <div className="mt-4 flex flex-wrap items-center justify-end gap-2">
                 {product.videoUrl && (
-                  <button onClick={openVideoInline} className={`flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-bold transition active:scale-95 ${hasSeenVideo ? 'bg-slate-200 text-slate-600' : 'bg-gradient-to-r from-amber-400 to-orange-500 text-white shadow-md'}`}>
+                  <button onClick={openVideoInline} className={`flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-bold transition active:scale-95 ${hasSeenVideo ? 'bg-slate-200 text-slate-600' : 'bg-[var(--promo)] text-white shadow-md'}`}>
                     <PlayCircle className="h-4 w-4" />商品影片
                   </button>
                 )}
@@ -622,7 +696,7 @@ function FabMenu({ onScrollTop, onGotoPromo, onGotoHot, onToggleSettings, onColl
 
   return (
     <div className="fixed bottom-[calc(20px+env(safe-area-inset-bottom))] right-4 z-[72] flex flex-col items-end gap-3">
-      <button onClick={onGotoPromo} className="promo-balloon flex h-[46px] w-[46px] items-center justify-center rounded-full bg-orange-500 text-white shadow-lg outline-none">
+      <button onClick={onGotoPromo} className="promo-balloon flex h-[46px] w-[46px] items-center justify-center rounded-full text-white shadow-lg outline-none" style={{ background: 'var(--promo)' }}>
         <BadgePercent className="h-6 w-6" />
       </button>
       <AnimatePresence>
@@ -666,8 +740,90 @@ function PromoDrawer({ promo, onClose, onOpenProduct }) {
             <button onClick={onClose} className="rounded-full bg-slate-100 p-2 text-slate-500"><X className="h-6 w-6" /></button>
           </div>
           <div className="flex-1 overflow-y-auto p-4 pb-[calc(20px+env(safe-area-inset-bottom))]">
-            {promo.img && <div className="mb-4 overflow-hidden rounded-xl bg-black"><img src={promo.img} className="w-full" alt="活動" /></div>}
+            {getPromoImage(promo) && <div className="mb-4 overflow-hidden rounded-xl bg-black"><img src={getPromoImage(promo)} className="w-full" alt="活動" /></div>}
             <p className="whitespace-pre-line text-[15px] leading-relaxed text-[var(--text)]">{promo.content}</p>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  )
+}
+
+
+function PromoCenterPanel({ open, items, statusFilter, setStatusFilter, groupFilter, setGroupFilter, onOpenPromo, onClose }) {
+  if (!open) return null
+  const availableGroups = ['all', ...CATEGORY_META.filter((item) => item.key !== 'all' && item.key !== '其他').map((item) => item.key)]
+  const filtered = items.filter((promo) => {
+    const statusOk = statusFilter === 'all' || promo.status === statusFilter
+    const groupOk = groupFilter === 'all' || getPromoGroups(promo).includes(groupFilter)
+    return statusOk && groupOk
+  })
+  return (
+    <AnimatePresence>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[73] bg-black/60 backdrop-blur-sm" onClick={onClose}>
+        <motion.div initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }} transition={{ type: 'spring', stiffness: 260, damping: 24 }} onClick={(event) => event.stopPropagation()} className="absolute inset-x-0 bottom-0 mx-auto flex max-h-[92vh] w-full max-w-3xl flex-col rounded-t-[24px] bg-[var(--surface)] shadow-2xl">
+          <div className="flex shrink-0 items-center justify-between border-b border-[var(--border)] p-4">
+            <div>
+              <p className="text-[12px] font-bold" style={{ color: 'var(--promo)' }}>促銷專區</p>
+              <h3 className="mt-0.5 text-[20px] font-black text-[var(--text)]">全部活動與篩選</h3>
+            </div>
+            <button onClick={onClose} className="rounded-full bg-slate-100 p-2 text-slate-500"><X className="h-5 w-5" /></button>
+          </div>
+          <div className="shrink-0 space-y-3 border-b border-[var(--border)] p-4">
+            <div className="flex flex-wrap gap-2">
+              {['all','active','upcoming','ended'].map((status) => {
+                const active = statusFilter === status
+                const label = status === 'all' ? '全部' : (PROMO_STATUS_META[status]?.label || status)
+                return (
+                  <button key={status} onClick={() => setStatusFilter(status)} className={`rounded-full border px-3 py-1.5 text-xs font-bold transition ${active ? 'text-white shadow-sm' : 'bg-white text-[var(--muted)]'}`} style={active ? { background: 'var(--promo)', borderColor: 'var(--promo)' } : { borderColor: 'var(--border)' }}>
+                    {label}
+                  </button>
+                )
+              })}
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {availableGroups.map((group) => {
+                const active = groupFilter === group
+                const label = group === 'all' ? '全部品類' : group
+                return (
+                  <button key={group} onClick={() => setGroupFilter(group)} className={`rounded-full border px-3 py-1.5 text-xs font-bold transition ${active ? 'text-white shadow-sm' : 'bg-white text-[var(--muted)]'}`} style={active ? { background: 'var(--primary)', borderColor: 'var(--primary)' } : { borderColor: 'var(--border)' }}>
+                    {label}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+          <div className="flex-1 overflow-y-auto p-4 pb-[calc(20px+env(safe-area-inset-bottom))]">
+            <div className="grid gap-3 md:grid-cols-2">
+              {filtered.length ? filtered.map((promo) => {
+                const statusMeta = PROMO_STATUS_META[promo.status] || PROMO_STATUS_META.active
+                const promoImage = getPromoImage(promo)
+                return (
+                  <button key={promo.promoId} onClick={() => onOpenPromo(promo)} className="overflow-hidden rounded-2xl border border-[var(--border)] bg-white text-left shadow-sm">
+                    <div className="relative aspect-[16/9] bg-slate-100">
+                      {promoImage ? <SafeImage src={promoImage} alt={promo.title} fallbackLabel="活動圖片" className="h-full w-full object-cover" /> : <div className="flex h-full items-center justify-center text-slate-400"><BadgePercent className="h-9 w-9" /></div>}
+                      <div className={`absolute left-2 top-2 rounded-full border px-2.5 py-0.5 text-[10px] font-bold shadow-sm backdrop-blur-sm ${statusMeta.className}`}>
+                        {statusMeta.label}
+                      </div>
+                    </div>
+                    <div className="space-y-2 p-3">
+                      <div className="flex items-start justify-between gap-3">
+                        <h4 className="line-clamp-2 text-[15px] font-black leading-tight text-[var(--text)]">{promo.title}</h4>
+                        <span className="shrink-0 text-[10px] font-bold text-[var(--muted)]">{promo.endDate || promo.startDate}</span>
+                      </div>
+                      <p className="line-clamp-3 text-[12px] leading-relaxed text-[var(--muted)]">{promo.content}</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {getPromoGroups(promo).map((group) => (
+                          <span key={group} className="rounded-full px-2 py-0.5 text-[10px] font-bold" style={{ background: 'var(--promo-soft)', color: 'var(--promo)' }}>
+                            {group}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </button>
+                )
+              }) : <div className="col-span-full py-10 text-center text-sm text-[var(--muted)]">沒有符合條件的促銷活動</div>}
+            </div>
           </div>
         </motion.div>
       </motion.div>
@@ -689,6 +845,10 @@ export default function App() {
   const [activeTag, setActiveTag] = useState('')
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [promoDrawer, setPromoDrawer] = useState(null)
+  const [promoCenterOpen, setPromoCenterOpen] = useState(false)
+  const [promoStatusFilter, setPromoStatusFilter] = useState('active')
+  const [promoGroupFilter, setPromoGroupFilter] = useState('all')
+  const [tagReturnCode, setTagReturnCode] = useState(null)
   const navRef = useRef(null)
 
   const expandedCardId = useAppStore((state) => state.expandedCardId)
@@ -704,7 +864,7 @@ export default function App() {
 
   const themeConfig = THEMES.find((item) => item.key === theme) || THEMES[0]
 
-  useBodyLock(Boolean(activeModal || promoDrawer || settingsOpen))
+  useBodyLock(Boolean(activeModal || promoDrawer || promoCenterOpen || settingsOpen))
 
   useEffect(() => { hydrateSeenVideos() }, [hydrateSeenVideos])
 
@@ -774,6 +934,7 @@ export default function App() {
   const enrichedPromotions = useMemo(() => {
     return promotions.map((promo) => ({
       ...promo,
+      img: getPromoImage(promo),
       relatedProducts: (promo.relatedCodes || []).map((code) => productMap.get(code)).filter(Boolean),
     }))
   }, [promotions, productMap])
@@ -812,6 +973,12 @@ export default function App() {
   }, [filteredProducts])
 
   const hotProducts = useMemo(() => productsWithPromos.filter((item) => item.rank && item.rank <= 10).sort((a, b) => a.rank - b.rank), [productsWithPromos])
+  const visibleHotProducts = useMemo(() => {
+    if (!filteredProducts.length) return hotProducts
+    const codeSet = new Set(filteredProducts.map((item) => item.code))
+    const matched = hotProducts.filter((item) => codeSet.has(item.code))
+    return matched.length ? matched : hotProducts
+  }, [filteredProducts, hotProducts])
   const promoItems = useMemo(() => enrichedPromotions.filter((promo) => promo.status !== 'ended').slice(0, 10), [enrichedPromotions])
 
   const sectionIds = useMemo(() => ['promo', 'hot', ...CATEGORY_META.filter((item) => item.key !== 'all').map((item) => item.anchor)], [])
@@ -826,13 +993,32 @@ export default function App() {
     const handlePopState = () => {
       if (activeModal || mediaSheetProduct) { closeModal(); return }
       if (promoDrawer) { setPromoDrawer(null); return }
+      if (promoCenterOpen) { setPromoCenterOpen(false); return }
       if (settingsOpen) { setSettingsOpen(false); return }
+      if (activeTag || keyword || activeCategory !== 'all') {
+        const restoreCode = tagReturnCode
+        setActiveTag('')
+        setKeyword('')
+        setActiveCategory('all')
+        if (restoreCode) {
+          setExpandedCardId(restoreCode)
+          window.setTimeout(() => {
+            const el = document.getElementById(`card-${restoreCode}`)
+            if (el) {
+              const y = el.getBoundingClientRect().top + window.scrollY - 185
+              window.scrollTo({ top: y, behavior: 'smooth' })
+            }
+          }, 120)
+          setTagReturnCode(null)
+        }
+        return
+      }
       if (expandedCardId) { closeExpandedCard(); return }
       closeFab()
     }
     window.addEventListener('popstate', handlePopState)
     return () => window.removeEventListener('popstate', handlePopState)
-  }, [activeModal, mediaSheetProduct, promoDrawer, settingsOpen, expandedCardId, closeExpandedCard, closeFab, closeModal])
+  }, [activeModal, mediaSheetProduct, promoDrawer, promoCenterOpen, settingsOpen, expandedCardId, activeTag, keyword, activeCategory, tagReturnCode, closeExpandedCard, closeFab, closeModal, setExpandedCardId])
 
   const scrollToId = useCallback((id) => {
     const el = document.getElementById(id)
@@ -842,12 +1028,31 @@ export default function App() {
     }
   }, [])
 
-  const openProductByCode = useCallback((code, tag) => {
-    if (tag) {
-      setActiveTag(tag)
-      setKeyword('')
-      showToast(`已套用標籤：#${tag}`)
-    }
+  const clearFilters = useCallback(() => {
+    setKeyword('')
+    setActiveTag('')
+    setActiveCategory('all')
+    setTagReturnCode(null)
+  }, [])
+
+  const applyTagFilter = useCallback((code, tag) => {
+    setTagReturnCode(code)
+    setActiveTag(tag)
+    setKeyword('')
+    setActiveCategory('all')
+    setExpandedCardId(code)
+    showToast(`已套用標籤：#${tag}`)
+    if (typeof window !== 'undefined') window.history.pushState({ ui: 'tag-filter', code, tag }, '')
+    window.setTimeout(() => {
+      const el = document.getElementById(`card-${code}`)
+      if (el) {
+        const y = el.getBoundingClientRect().top + window.scrollY - 185
+        window.scrollTo({ top: y, behavior: 'smooth' })
+      }
+    }, 120)
+  }, [setExpandedCardId, showToast])
+
+  const openProductByCode = useCallback((code) => {
     setExpandedCardId(code)
     window.setTimeout(() => {
       const el = document.getElementById(`card-${code}`)
@@ -856,12 +1061,12 @@ export default function App() {
         window.scrollTo({ top: y, behavior: 'smooth' })
       }
     }, 150)
-  }, [setExpandedCardId, showToast])
+  }, [setExpandedCardId])
 
   return (
-    <div style={themeConfig.colors} className="min-h-screen bg-[var(--bg)] text-[var(--text)] font-sans antialiased">
+    <div style={themeConfig.colors} className="min-h-screen overflow-x-hidden bg-[var(--bg)] text-[var(--text)] font-sans antialiased">
       <style>{`
-        html, body { min-height: 100%; background: var(--bg); overscroll-behavior-y: none; }
+        html, body { min-height: 100%; background: var(--bg); overscroll-behavior-y: none; overflow-x: hidden; }
         .promo-balloon { animation: pulseGlow 2s infinite; }
         @keyframes pulseGlow { 0% { box-shadow: 0 0 0 0 rgba(249,115,22,0.7); } 70% { box-shadow: 0 0 0 10px rgba(249,115,22,0); } 100% { box-shadow: 0 0 0 0 rgba(249,115,22,0); } }
         *::-webkit-scrollbar { display: none; } /* 為了 App 質感隱藏滾動條 */
@@ -890,13 +1095,14 @@ export default function App() {
               placeholder="搜尋產品名稱、關鍵字..." 
               className="h-[44px] w-full rounded-full border border-slate-200 bg-slate-50 pl-10 pr-10 text-[15px] font-bold text-slate-700 outline-none focus:border-[var(--primary)] focus:bg-white focus:ring-2 focus:ring-[var(--primary-soft)] transition"
             />
-            {keyword && (
-              <button onClick={() => setKeyword('')} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-slate-200 p-1 text-slate-500 hover:bg-slate-300">
+            {(keyword || activeTag) && (
+              <button onClick={clearFilters} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-slate-200 p-1 text-slate-500 hover:bg-slate-300">
                 <X className="h-4 w-4" />
               </button>
             )}
           </div>
 
+          {activeTag ? <div className="mt-2 flex items-center gap-2 px-1"><span className="rounded-full px-3 py-1 text-[11px] font-bold" style={{ background: 'var(--primary-soft)', color: 'var(--primary)' }}>#{activeTag}</span><button onClick={clearFilters} className="text-[11px] font-bold text-[var(--muted)] underline underline-offset-2">返回全部</button></div> : null}
           <div ref={navRef} className="mt-3 flex gap-2 overflow-x-auto pb-1">
             {[{ label: '全部', anchor: 'promo' }, ...CATEGORY_META.filter((item) => item.key !== 'all').map((item) => ({ label: item.label, anchor: item.anchor, category: item.key }))].map((item) => {
               const active = activeSection === item.anchor || (item.category && activeCategory === item.category)
@@ -915,8 +1121,8 @@ export default function App() {
         </header>
 
         <main className="px-4 pt-4 space-y-6">
-          <PromoCarousel items={promoItems} onOpenPromo={(promo) => { setPromoDrawer(promo); window.history.pushState({ ui: 'promo', promoId: promo.promoId }, '') }} onOpenProduct={openProductByCode} />
-          {keyword === '' && activeTag === '' && <RankingCarousel items={hotProducts} onOpenProduct={openProductByCode} />}
+          <PromoCarousel items={promoItems} onOpenPromo={(promo) => { setPromoDrawer(promo); window.history.pushState({ ui: 'promo', promoId: promo.promoId }, '') }} />
+          <RankingCarousel items={visibleHotProducts} onOpenProduct={openProductByCode} subtitle={keyword || activeTag ? '已依目前篩選條件保留相關熱銷品' : '依據實際銷售數據即時更新'} />
 
           {groupedProducts.length > 0 ? groupedProducts.map((group) => (
             <section key={group.key} id={group.anchor} data-spy-section className="scroll-mt-[185px]">
@@ -924,7 +1130,7 @@ export default function App() {
               <div className="space-y-3">
                 {group.items.map((product) => (
                   <div id={`card-${product.code}`} key={product.code}>
-                    <ProductRow product={product} scale={scale} keyword={keyword} onOpenProductByCode={openProductByCode} />
+                    <ProductRow product={product} scale={scale} keyword={keyword} onOpenProductByCode={openProductByCode} onApplyTagFilter={applyTagFilter} />
                   </div>
                 ))}
               </div>
@@ -942,8 +1148,9 @@ export default function App() {
       <MediaSheet />
       <VideoModal />
       <LightboxModal />
+      <PromoCenterPanel open={promoCenterOpen} items={enrichedPromotions} statusFilter={promoStatusFilter} setStatusFilter={setPromoStatusFilter} groupFilter={promoGroupFilter} setGroupFilter={setPromoGroupFilter} onOpenPromo={(promo) => { setPromoDrawer(promo); window.history.pushState({ ui: 'promo', promoId: promo.promoId }, '') }} onClose={() => setPromoCenterOpen(false)} />
       <PromoDrawer promo={promoDrawer} onClose={() => setPromoDrawer(null)} onOpenProduct={openProductByCode} />
-      <FabMenu onScrollTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })} onGotoPromo={() => scrollToId('promo')} onGotoHot={() => scrollToId('hot')} onToggleSettings={() => { setSettingsOpen(true); window.history.pushState({ ui: 'settings' }, '') }} onCollapseAll={() => closeExpandedCard()} />
+      <FabMenu onScrollTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })} onGotoPromo={() => { setPromoCenterOpen(true); window.history.pushState({ ui: 'promo-center' }, '') }} onGotoHot={() => scrollToId('hot')} onToggleSettings={() => { setSettingsOpen(true); window.history.pushState({ ui: 'settings' }, '') }} onCollapseAll={() => closeExpandedCard()} />
       <ToastMessage />
     </div>
   )
