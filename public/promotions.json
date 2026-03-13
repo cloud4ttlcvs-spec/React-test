@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-13T00:00:00",
+  "generatedAt": "2026-03-14T00:00:00+08:00",
   "count": 29,
   "items": [
     {
@@ -13,8 +13,19 @@
         "34130013-12"
       ],
       "startDate": "2025/10/21",
-      "endDate": "2026/1/22",
-      "status": "ended"
+      "endDate": "2026/01/22",
+      "status": "ended",
+      "bgColor": "#fff6d5",
+      "ch": {
+        "show": true,
+        "mart": true,
+        "eshop": false,
+        "office": false
+      },
+      "channelLabels": [
+        "酒廠展售中心",
+        "量販/特販"
+      ]
     },
     {
       "promoId": "2025_Q4_02",
@@ -26,8 +37,19 @@
         "34130013-12"
       ],
       "startDate": "2025/11/21",
-      "endDate": "2026/1/22",
-      "status": "ended"
+      "endDate": "2026/01/22",
+      "status": "ended",
+      "bgColor": "#fff6d5",
+      "ch": {
+        "show": true,
+        "mart": true,
+        "eshop": false,
+        "office": false
+      },
+      "channelLabels": [
+        "酒廠展售中心",
+        "量販/特販"
+      ]
     },
     {
       "promoId": "2025_Q4_03",
@@ -40,7 +62,20 @@
       ],
       "startDate": "2025/10/21",
       "endDate": "",
-      "status": "active"
+      "status": "active",
+      "bgColor": "#FBE1E7",
+      "ch": {
+        "show": true,
+        "mart": true,
+        "eshop": true,
+        "office": true
+      },
+      "channelLabels": [
+        "酒廠展售中心",
+        "量販/特販",
+        "購物網",
+        "員購/內部"
+      ]
     },
     {
       "promoId": "2025_Q4_04",
@@ -51,9 +86,20 @@
       "relatedCodes": [
         "美容 沐浴 洗髮 洗面 皂"
       ],
-      "startDate": "2025/10/3",
-      "endDate": "2026/5/31",
-      "status": "active"
+      "startDate": "2025/10/03",
+      "endDate": "2026/05/31",
+      "status": "active",
+      "bgColor": "#FBE1E7",
+      "ch": {
+        "show": true,
+        "mart": true,
+        "eshop": false,
+        "office": false
+      },
+      "channelLabels": [
+        "酒廠展售中心",
+        "量販/特販"
+      ]
     },
     {
       "promoId": "2025_Q4_05",
@@ -64,9 +110,21 @@
       "relatedCodes": [
         "易洗樂"
       ],
-      "startDate": "2025/11/4",
-      "endDate": "2025/12/7",
-      "status": "ended"
+      "startDate": "2025/11/04",
+      "endDate": "2025/12/07",
+      "status": "ended",
+      "bgColor": "#E3F2FD",
+      "ch": {
+        "show": true,
+        "mart": true,
+        "eshop": false,
+        "office": true
+      },
+      "channelLabels": [
+        "酒廠展售中心",
+        "量販/特販",
+        "員購/內部"
+      ]
     },
     {
       "promoId": "2025_Q4_06",
@@ -79,7 +137,20 @@
       ],
       "startDate": "2025/12/12",
       "endDate": "2025/12/31",
-      "status": "ended"
+      "status": "ended",
+      "bgColor": "#FBE1E7",
+      "ch": {
+        "show": true,
+        "mart": true,
+        "eshop": true,
+        "office": true
+      },
+      "channelLabels": [
+        "酒廠展售中心",
+        "量販/特販",
+        "購物網",
+        "員購/內部"
+      ]
     },
     {
       "promoId": "2025_Q4_07",
@@ -92,8 +163,19 @@
         "36130004-12"
       ],
       "startDate": "2025/12/19",
-      "endDate": "2026/1/26",
-      "status": "ended"
+      "endDate": "2026/01/26",
+      "status": "ended",
+      "bgColor": "#FBE1E7",
+      "ch": {
+        "show": true,
+        "mart": true,
+        "eshop": false,
+        "office": false
+      },
+      "channelLabels": [
+        "酒廠展售中心",
+        "量販/特販"
+      ]
     },
     {
       "promoId": "2026_Q1_01",
@@ -104,9 +186,20 @@
       "relatedCodes": [
         "37370011-12"
       ],
-      "startDate": "2026/1/9",
-      "endDate": "2026/3/2",
-      "status": "ended"
+      "startDate": "2026/01/09",
+      "endDate": "2026/03/02",
+      "status": "ended",
+      "bgColor": "#D8F3DC",
+      "ch": {
+        "show": true,
+        "mart": true,
+        "eshop": false,
+        "office": false
+      },
+      "channelLabels": [
+        "酒廠展售中心",
+        "量販/特販"
+      ]
     },
     {
       "promoId": "2026_Q1_02",
@@ -117,9 +210,21 @@
       "relatedCodes": [
         "37370011-12"
       ],
-      "startDate": "2026/1/9",
-      "endDate": "2026/2/13",
-      "status": "ended"
+      "startDate": "2026/01/09",
+      "endDate": "2026/02/13",
+      "status": "ended",
+      "bgColor": "#D8F3DC",
+      "ch": {
+        "show": true,
+        "mart": true,
+        "eshop": false,
+        "office": true
+      },
+      "channelLabels": [
+        "酒廠展售中心",
+        "量販/特販",
+        "員購/內部"
+      ]
     },
     {
       "promoId": "2026_Q1_03",
@@ -130,9 +235,21 @@
       "relatedCodes": [
         "37370012-12"
       ],
-      "startDate": "2026/1/9",
-      "endDate": "2026/2/13",
-      "status": "ended"
+      "startDate": "2026/01/09",
+      "endDate": "2026/02/13",
+      "status": "ended",
+      "bgColor": "#FBE1E7",
+      "ch": {
+        "show": true,
+        "mart": true,
+        "eshop": false,
+        "office": true
+      },
+      "channelLabels": [
+        "酒廠展售中心",
+        "量販/特販",
+        "員購/內部"
+      ]
     },
     {
       "promoId": "2026_Q1_04",
@@ -144,9 +261,20 @@
         "375358-12",
         "37530007-12"
       ],
-      "startDate": "2026/1/5",
-      "endDate": "2026/1/31",
-      "status": "ended"
+      "startDate": "2026/01/05",
+      "endDate": "2026/01/31",
+      "status": "ended",
+      "bgColor": "#FBE1E7",
+      "ch": {
+        "show": true,
+        "mart": true,
+        "eshop": false,
+        "office": false
+      },
+      "channelLabels": [
+        "酒廠展售中心",
+        "量販/特販"
+      ]
     },
     {
       "promoId": "2026_Q1_05",
@@ -161,9 +289,19 @@
         "341371-12",
         "34130014-12"
       ],
-      "startDate": "2026/3/2",
-      "endDate": "2026/3/17",
-      "status": "active"
+      "startDate": "2026/03/02",
+      "endDate": "2026/03/17",
+      "status": "active",
+      "bgColor": "#fff6d5",
+      "ch": {
+        "show": true,
+        "mart": false,
+        "eshop": false,
+        "office": false
+      },
+      "channelLabels": [
+        "酒廠展售中心"
+      ]
     },
     {
       "promoId": "2026_Q1_06",
@@ -174,9 +312,22 @@
       "relatedCodes": [
         "37530001-12"
       ],
-      "startDate": "2026/2/6",
+      "startDate": "2026/02/06",
       "endDate": "2026/12/12",
-      "status": "active"
+      "status": "active",
+      "bgColor": "#fbe1e7",
+      "ch": {
+        "show": true,
+        "mart": true,
+        "eshop": true,
+        "office": true
+      },
+      "channelLabels": [
+        "酒廠展售中心",
+        "量販/特販",
+        "購物網",
+        "員購/內部"
+      ]
     },
     {
       "promoId": "2025_Q4_08",
@@ -188,8 +339,21 @@
         "37110009-12"
       ],
       "startDate": "2025/12/10",
-      "endDate": "2026/1/31",
-      "status": "ended"
+      "endDate": "2026/01/31",
+      "status": "ended",
+      "bgColor": "#E3F2FD",
+      "ch": {
+        "show": true,
+        "mart": true,
+        "eshop": true,
+        "office": true
+      },
+      "channelLabels": [
+        "酒廠展售中心",
+        "量販/特販",
+        "購物網",
+        "員購/內部"
+      ]
     },
     {
       "promoId": "2025_Q4_09",
@@ -201,8 +365,21 @@
         "37110010-12"
       ],
       "startDate": "2025/12/10",
-      "endDate": "2026/1/31",
-      "status": "ended"
+      "endDate": "2026/01/31",
+      "status": "ended",
+      "bgColor": "#E3F2FD",
+      "ch": {
+        "show": true,
+        "mart": true,
+        "eshop": true,
+        "office": true
+      },
+      "channelLabels": [
+        "酒廠展售中心",
+        "量販/特販",
+        "購物網",
+        "員購/內部"
+      ]
     },
     {
       "promoId": "2025_Q4_10",
@@ -214,8 +391,21 @@
         "37110009-12"
       ],
       "startDate": "2025/12/17",
-      "endDate": "2026/3/1",
-      "status": "ended"
+      "endDate": "2026/03/01",
+      "status": "ended",
+      "bgColor": "#E3F2FD",
+      "ch": {
+        "show": true,
+        "mart": true,
+        "eshop": true,
+        "office": true
+      },
+      "channelLabels": [
+        "酒廠展售中心",
+        "量販/特販",
+        "購物網",
+        "員購/內部"
+      ]
     },
     {
       "promoId": "2025_Q4_11",
@@ -227,8 +417,21 @@
         "37110010-12"
       ],
       "startDate": "2025/12/17",
-      "endDate": "2026/3/1",
-      "status": "ended"
+      "endDate": "2026/03/01",
+      "status": "ended",
+      "bgColor": "#E3F2FD",
+      "ch": {
+        "show": true,
+        "mart": true,
+        "eshop": true,
+        "office": true
+      },
+      "channelLabels": [
+        "酒廠展售中心",
+        "量販/特販",
+        "購物網",
+        "員購/內部"
+      ]
     },
     {
       "promoId": "2026_Q1_07",
@@ -240,9 +443,19 @@
         "385104-12",
         "375176-12"
       ],
-      "startDate": "2026/1/23",
-      "endDate": "2026/2/2",
-      "status": "ended"
+      "startDate": "2026/01/23",
+      "endDate": "2026/02/02",
+      "status": "ended",
+      "bgColor": "#E3F2FD",
+      "ch": {
+        "show": true,
+        "mart": false,
+        "eshop": false,
+        "office": false
+      },
+      "channelLabels": [
+        "酒廠展售中心"
+      ]
     },
     {
       "promoId": "2026_Q1_08",
@@ -254,9 +467,19 @@
         "385104-12",
         "375176-12"
       ],
-      "startDate": "2026/2/13",
-      "endDate": "2026/2/23",
-      "status": "ended"
+      "startDate": "2026/02/13",
+      "endDate": "2026/02/23",
+      "status": "ended",
+      "bgColor": "#e3f2fd",
+      "ch": {
+        "show": true,
+        "mart": false,
+        "eshop": false,
+        "office": false
+      },
+      "channelLabels": [
+        "酒廠展售中心"
+      ]
     },
     {
       "promoId": "2026_Q1_09",
@@ -268,9 +491,19 @@
         "385104-12",
         "375176-12"
       ],
-      "startDate": "2026/3/20",
-      "endDate": "2026/3/30",
-      "status": "upcoming"
+      "startDate": "2026/03/20",
+      "endDate": "2026/03/30",
+      "status": "upcoming",
+      "bgColor": "#E3F2FD",
+      "ch": {
+        "show": true,
+        "mart": false,
+        "eshop": false,
+        "office": false
+      },
+      "channelLabels": [
+        "酒廠展售中心"
+      ]
     },
     {
       "promoId": "2026_Q1_10",
@@ -283,9 +516,19 @@
         "37510002-12",
         "37510003-12"
       ],
-      "startDate": "2026/1/23",
-      "endDate": "2026/2/2",
-      "status": "ended"
+      "startDate": "2026/01/23",
+      "endDate": "2026/02/02",
+      "status": "ended",
+      "bgColor": "#E3F2FD",
+      "ch": {
+        "show": true,
+        "mart": false,
+        "eshop": false,
+        "office": false
+      },
+      "channelLabels": [
+        "酒廠展售中心"
+      ]
     },
     {
       "promoId": "2026_Q1_11",
@@ -298,9 +541,19 @@
         "37510002-12",
         "37510003-12"
       ],
-      "startDate": "2026/2/13",
-      "endDate": "2026/2/23",
-      "status": "ended"
+      "startDate": "2026/02/13",
+      "endDate": "2026/02/23",
+      "status": "ended",
+      "bgColor": "#E3F2FD",
+      "ch": {
+        "show": true,
+        "mart": false,
+        "eshop": false,
+        "office": false
+      },
+      "channelLabels": [
+        "酒廠展售中心"
+      ]
     },
     {
       "promoId": "2026_Q1_12",
@@ -313,9 +566,19 @@
         "37510002-12",
         "37510003-12"
       ],
-      "startDate": "2026/3/20",
-      "endDate": "2026/3/30",
-      "status": "upcoming"
+      "startDate": "2026/03/20",
+      "endDate": "2026/03/30",
+      "status": "upcoming",
+      "bgColor": "#E3F2FD",
+      "ch": {
+        "show": true,
+        "mart": false,
+        "eshop": false,
+        "office": false
+      },
+      "channelLabels": [
+        "酒廠展售中心"
+      ]
     },
     {
       "promoId": "2026_Q1_13",
@@ -327,9 +590,21 @@
         "37100000-12",
         "37100001-12"
       ],
-      "startDate": "2026/1/9",
-      "endDate": "2026/4/24",
-      "status": "active"
+      "startDate": "2026/01/09",
+      "endDate": "2026/04/24",
+      "status": "active",
+      "bgColor": "#e3f2fd",
+      "ch": {
+        "show": true,
+        "mart": true,
+        "eshop": true,
+        "office": false
+      },
+      "channelLabels": [
+        "酒廠展售中心",
+        "量販/特販",
+        "購物網"
+      ]
     },
     {
       "promoId": "2026_Q1_14",
@@ -340,9 +615,19 @@
       "relatedCodes": [
         "37110005-12"
       ],
-      "startDate": "2026/2/2",
-      "endDate": "2026/2/22",
-      "status": "ended"
+      "startDate": "2026/02/02",
+      "endDate": "2026/02/22",
+      "status": "ended",
+      "bgColor": "#E3F2FD",
+      "ch": {
+        "show": false,
+        "mart": false,
+        "eshop": true,
+        "office": false
+      },
+      "channelLabels": [
+        "購物網"
+      ]
     },
     {
       "promoId": "P_mm8nfp3q",
@@ -354,9 +639,21 @@
         "37510002-12",
         "37510003-12"
       ],
-      "startDate": "2026/3/4",
-      "endDate": "2026/4/30",
-      "status": "active"
+      "startDate": "2026/03/04",
+      "endDate": "2026/04/30",
+      "status": "active",
+      "bgColor": "#e3f2fd",
+      "ch": {
+        "show": true,
+        "mart": true,
+        "eshop": true,
+        "office": false
+      },
+      "channelLabels": [
+        "酒廠展售中心",
+        "量販/特販",
+        "購物網"
+      ]
     },
     {
       "promoId": "P_mmegu6jj",
@@ -367,9 +664,19 @@
       "relatedCodes": [
         "37110007-12"
       ],
-      "startDate": "2026/3/5",
-      "endDate": "2026/3/26",
-      "status": "active"
+      "startDate": "2026/03/05",
+      "endDate": "2026/03/26",
+      "status": "active",
+      "bgColor": "#e3f2fd",
+      "ch": {
+        "show": false,
+        "mart": false,
+        "eshop": true,
+        "office": false
+      },
+      "channelLabels": [
+        "購物網"
+      ]
     },
     {
       "promoId": "P_mmehb7vd",
@@ -380,9 +687,19 @@
       "relatedCodes": [
         "375156-12"
       ],
-      "startDate": "2026/3/5",
-      "endDate": "2026/3/26",
-      "status": "active"
+      "startDate": "2026/03/05",
+      "endDate": "2026/03/26",
+      "status": "active",
+      "bgColor": "#e3f2fd",
+      "ch": {
+        "show": false,
+        "mart": false,
+        "eshop": true,
+        "office": false
+      },
+      "channelLabels": [
+        "購物網"
+      ]
     },
     {
       "promoId": "P_mmehflni",
@@ -393,9 +710,19 @@
       "relatedCodes": [
         "37110005-12"
       ],
-      "startDate": "2026/3/5",
-      "endDate": "2026/3/26",
-      "status": "active"
+      "startDate": "2026/03/05",
+      "endDate": "2026/03/26",
+      "status": "active",
+      "bgColor": "#e3f2fd",
+      "ch": {
+        "show": false,
+        "mart": false,
+        "eshop": true,
+        "office": false
+      },
+      "channelLabels": [
+        "購物網"
+      ]
     }
   ]
 }
