@@ -39,7 +39,7 @@ const CATEGORY_META = [
   { key: '其他', label: '其他', anchor: 'sec-other' },
 ]
 
-// 精準還原 HTML 第一版色號
+// 佈景主題設定：加入專屬的活潑促銷色 (Promo Color)
 const THEMES = [
   {
     key: 'ttl-classic',
@@ -55,8 +55,8 @@ const THEMES = [
       '--primary': '#00897b',
       '--primary-strong': '#00695c',
       '--primary-soft': '#e0f2f1',
-      '--promo': '#ff9800',       // 原版橘色促銷色
-      '--promo-soft': '#fff3e0',
+      '--promo': '#00bfa5',       // 活潑的亮湖水綠
+      '--promo-soft': '#e0f2f1',
       '--chip': '#eceff1',
       '--highlight': '#ffeb3b',
       '--highlight-text': '#d81b60',
@@ -78,8 +78,8 @@ const THEMES = [
       '--primary': '#c74d7c',
       '--primary-strong': '#a12d61',
       '--primary-soft': '#ffe2ec',
-      '--promo': '#ff9800',
-      '--promo-soft': '#ffe5ee',
+      '--promo': '#eb5986',       // 使用者指定的玫瑰金專屬活潑促銷色
+      '--promo-soft': '#fce4ec',
       '--chip': '#fff2f7',
       '--highlight': '#ffeb3b',
       '--highlight-text': '#d81b60',
@@ -101,8 +101,8 @@ const THEMES = [
       '--primary': '#3b82f6',
       '--primary-strong': '#1d4ed8',
       '--primary-soft': '#dbeafe',
-      '--promo': '#f97316',
-      '--promo-soft': '#ffedd5',
+      '--promo': '#0ea5e9',       // 活潑的亮天藍色
+      '--promo-soft': '#e0f2fe',
       '--chip': '#eef5ff',
       '--highlight': '#fff59d',
       '--highlight-text': '#d81b60',
@@ -160,7 +160,6 @@ function parseMoreLinks(raw) {
   }).filter((item) => item.url)
 }
 
-// 支援 Shorts 與自動播放的 YouTube 解析器
 function getYouTubeEmbed(url) {
   if (!url) return ''
   const match = String(url).match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([A-Za-z0-9_-]{6,})/)
@@ -201,7 +200,6 @@ function useScrollSpy(ids) {
   }, [ids, setActiveSection])
 }
 
-// 修正鎖定畫面的 Bug，確保釋放後能正常滾動
 function useBodyLock(locked) {
   useEffect(() => {
     if (!locked) return undefined
@@ -399,9 +397,9 @@ function PromoCarousel({ items, onOpenPromo }) {
           return (
             <CarouselCard key={promo.promoId}>
               <button onClick={() => onOpenPromo(promo)} className="flex h-full w-full flex-col text-left">
-                {/* 限制比例並使用 object-contain 防止直式圖片撐爆版面 */}
-                <div className="relative aspect-[16/9] w-full shrink-0 bg-slate-100">
-                  {promoImage ? <SafeImage src={promoImage} alt={promo.title} fallbackLabel="活動圖片" className="h-full w-full object-contain mix-blend-multiply bg-black/5" /> : <div className="flex h-full items-center justify-center text-slate-400"><BadgePercent className="h-10 w-10" /></div>}
+                {/* 強制鎖定高度為 h-[120px] 配合 object-cover，避免被直式海報撐破版面變成醜陋的長條 */}
+                <div className="relative h-[120px] w-full shrink-0 bg-slate-100 overflow-hidden">
+                  {promoImage ? <img src={promoImage} alt={promo.title} className="h-full w-full object-cover" /> : <div className="flex h-full items-center justify-center text-slate-400"><BadgePercent className="h-10 w-10" /></div>}
                   <div className={`absolute left-2 top-2 rounded-full border px-2.5 py-0.5 text-[10px] font-bold shadow-sm backdrop-blur-sm ${statusMeta.className}`}>
                     {statusMeta.label}
                   </div>
@@ -470,13 +468,15 @@ function ProductRow({ product, scale, keyword, onOpenProductByCode, onApplyTagFi
     const willExpand = expandedCardId !== product.code
     setExpandedCardId(product.code)
     if (willExpand) {
+      // 延遲到 280ms (動畫徹底結束後) 且動態抓取 Header 高度，保證對齊 100% 精準不再被切頭
       window.setTimeout(() => {
         const el = cardRef.current
         if (el) {
-          const y = el.getBoundingClientRect().top + window.scrollY - 185
+          const headerHeight = document.querySelector('header')?.offsetHeight || 140
+          const y = el.getBoundingClientRect().top + window.scrollY - headerHeight - 10
           window.scrollTo({ top: y, behavior: 'smooth' })
         }
-      }, 150)
+      }, 280)
       if (typeof window !== 'undefined') window.history.pushState({ ui: 'card', code: product.code }, '')
     }
   }
@@ -494,6 +494,16 @@ function ProductRow({ product, scale, keyword, onOpenProductByCode, onApplyTagFi
   const openVideoInline = () => {
     if (!product.videoUrl) return
     markVideoSeen(product.code, product.videoUrl)
+    
+    // 智慧判斷：如果不是標準 YouTube 或 mp4 格式，直接在外開視窗播放，避免黑屏卡死！
+    const embedUrl = getYouTubeEmbed(product.videoUrl)
+    const isMp4 = product.videoUrl.toLowerCase().endsWith('.mp4')
+    
+    if (!embedUrl && !isMp4) {
+      window.open(product.videoUrl, '_blank')
+      return
+    }
+
     openVideo({ title: product.name, url: product.videoUrl })
     if (typeof window !== 'undefined') window.history.pushState({ ui: 'video', code: product.code }, '')
   }
@@ -527,7 +537,8 @@ function ProductRow({ product, scale, keyword, onOpenProductByCode, onApplyTagFi
               {product.spec && product.spec !== product.title ? <p className="mt-0.5 text-[11px] text-[var(--muted)] line-clamp-1">{product.spec}</p> : null}
               <div className="mt-1 flex flex-wrap gap-1.5">
                 {product.promos.map((promo) => (
-                  <span key={promo.promoId} className="flex items-center gap-0.5 rounded border px-1.5 py-0.5 text-[10px] font-bold" style={{ borderColor: 'var(--promo)', background: 'var(--promo-soft)', color: 'var(--promo)' }}>
+                  // 商品卡內的促銷 Tag 已改用對應的 Primary 色調配置，不再突兀
+                  <span key={promo.promoId} className="flex items-center gap-0.5 rounded border px-1.5 py-0.5 text-[10px] font-bold" style={{ borderColor: 'var(--primary)', background: 'var(--primary-soft)', color: 'var(--primary)' }}>
                     <Gift className="h-3 w-3" />{promo.shortTitle || promo.title}
                   </span>
                 ))}
@@ -648,14 +659,13 @@ function VideoModal() {
   if (activeModal !== 'video' || !videoPayload) return null
   
   const embedUrl = getYouTubeEmbed(videoPayload.url)
-  // 完美判斷 Shorts 以套用直式比例
   const isVertical = /shorts\//i.test(videoPayload.url)
 
   return (
     <AnimatePresence>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[76] bg-black/80 backdrop-blur-sm" onClick={closeModal}>
-        <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }} onClick={(event) => event.stopPropagation()} className="absolute inset-x-4 top-1/2 mx-auto w-[min(100%,760px)] -translate-y-1/2 overflow-hidden rounded-[20px] bg-white shadow-2xl">
-          <div className="flex items-start justify-between border-b border-slate-100 p-3">
+        <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }} onClick={(event) => event.stopPropagation()} className="absolute inset-x-4 top-1/2 mx-auto w-[min(100%,760px)] -translate-y-1/2 overflow-hidden rounded-[20px] bg-white shadow-2xl flex flex-col">
+          <div className="flex shrink-0 items-start justify-between border-b border-slate-100 p-3">
             <div className="min-w-0 pr-3">
               <h3 className="flex items-center gap-1.5 text-[15px] font-black text-[var(--text)]"><PlayCircle className="h-4 w-4 text-[var(--muted)]"/>商品影片</h3>
               <p className="mt-0.5 truncate text-[12px] text-[var(--muted)]">{videoPayload.title}</p>
@@ -667,10 +677,15 @@ function VideoModal() {
               <button onClick={closeModal} className="rounded-full bg-slate-100 p-1.5 text-slate-500"><X className="h-5 w-5" /></button>
             </div>
           </div>
-          <div className="bg-black">
-            {/* 根據直式或橫式套用正確的長寬比 */}
+          <div className="bg-black flex-1 relative flex flex-col justify-center">
             <div className={`relative ${isVertical ? 'mx-auto w-[min(100%,400px)] pt-[177.78%]' : 'w-full pt-[56.25%]'}`}>
               {embedUrl ? <iframe src={embedUrl} title={videoPayload.title} className="absolute inset-0 h-full w-full border-0 bg-black" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen playsInline /> : <video src={videoPayload.url} autoPlay controls className="absolute inset-0 h-full w-full bg-black object-contain" playsInline />}
+            </div>
+            {/* 保險機制：在畫面下方提供極度顯眼的備用外部開啟按鈕 */}
+            <div className="p-3 bg-black text-center border-t border-slate-800">
+              <a href={videoPayload.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-sm text-slate-300 hover:text-white transition">
+                <span>影片若無法播放，請點此使用外部 App 開啟</span> <ExternalLink className="h-4 w-4"/>
+              </a>
             </div>
           </div>
         </motion.div>
@@ -699,7 +714,6 @@ function FabMenu({ onScrollTop, onGotoPromo, onToggleSettings, onCollapseAll }) 
   const toggleFab = useAppStore((state) => state.toggleFab)
   const closeFab = useAppStore((state) => state.closeFab)
   
-  // 補回重新整理按鈕
   const actions = [
     { key: 'refresh', label: '重新整理', icon: RefreshCw, onClick: () => window.location.reload() },
     { key: 'settings', label: '顯示設定', icon: Settings2, onClick: onToggleSettings },
@@ -753,7 +767,7 @@ function PromoDrawer({ promo, onClose, onOpenProduct }) {
             <button onClick={onClose} className="rounded-full bg-slate-100 p-2 text-slate-500"><X className="h-6 w-6" /></button>
           </div>
           <div className="flex-1 overflow-y-auto p-4 pb-[calc(20px+env(safe-area-inset-bottom))]">
-            {getPromoImage(promo) && <div className="mb-4 overflow-hidden rounded-xl bg-black"><img src={getPromoImage(promo)} className="w-full" alt="活動" /></div>}
+            {getPromoImage(promo) && <div className="mb-4 overflow-hidden rounded-xl bg-black"><img src={getPromoImage(promo)} className="w-full object-contain max-h-[40vh]" alt="活動" /></div>}
             <p className="whitespace-pre-line text-[15px] leading-relaxed text-[var(--text)]">{promo.content}</p>
           </div>
         </motion.div>
@@ -812,8 +826,9 @@ function PromoCenterPanel({ open, items, statusFilter, setStatusFilter, groupFil
                 const promoImage = getPromoImage(promo)
                 return (
                   <button key={promo.promoId} onClick={() => onOpenPromo(promo)} className="overflow-hidden rounded-2xl border border-[var(--border)] bg-white text-left shadow-sm">
-                    <div className="relative aspect-[16/9] bg-slate-100">
-                      {promoImage ? <SafeImage src={promoImage} alt={promo.title} fallbackLabel="活動圖片" className="h-full w-full object-cover" /> : <div className="flex h-full items-center justify-center text-slate-400"><BadgePercent className="h-9 w-9" /></div>}
+                    {/* 統一設定高度，避免長短不一 */}
+                    <div className="relative h-[130px] bg-slate-100 overflow-hidden">
+                      {promoImage ? <img src={promoImage} alt={promo.title} className="h-full w-full object-cover" /> : <div className="flex h-full items-center justify-center text-slate-400"><BadgePercent className="h-9 w-9" /></div>}
                       <div className={`absolute left-2 top-2 rounded-full border px-2.5 py-0.5 text-[10px] font-bold shadow-sm backdrop-blur-sm ${statusMeta.className}`}>
                         {statusMeta.label}
                       </div>
@@ -1019,7 +1034,8 @@ export default function App() {
           window.setTimeout(() => {
             const el = document.getElementById(`card-${restoreCode}`)
             if (el) {
-              const y = el.getBoundingClientRect().top + window.scrollY - 185
+              const headerHeight = document.querySelector('header')?.offsetHeight || 140
+              const y = el.getBoundingClientRect().top + window.scrollY - headerHeight - 10
               window.scrollTo({ top: y, behavior: 'smooth' })
             }
           }, 120)
@@ -1037,7 +1053,8 @@ export default function App() {
   const scrollToId = useCallback((id) => {
     const el = document.getElementById(id)
     if (el) {
-      const y = el.getBoundingClientRect().top + window.scrollY - 185
+      const headerHeight = document.querySelector('header')?.offsetHeight || 140
+      const y = el.getBoundingClientRect().top + window.scrollY - headerHeight - 10
       window.scrollTo({ top: y, behavior: 'smooth' })
     }
   }, [])
@@ -1062,7 +1079,8 @@ export default function App() {
     window.setTimeout(() => {
       const el = document.getElementById(`card-${code}`)
       if (el) {
-        const y = el.getBoundingClientRect().top + window.scrollY - 185
+        const headerHeight = document.querySelector('header')?.offsetHeight || 140
+        const y = el.getBoundingClientRect().top + window.scrollY - headerHeight - 10
         window.scrollTo({ top: y, behavior: 'smooth' })
       }
     }, 120)
@@ -1073,10 +1091,11 @@ export default function App() {
     window.setTimeout(() => {
       const el = document.getElementById(`card-${code}`)
       if (el) {
-        const y = el.getBoundingClientRect().top + window.scrollY - 185
+        const headerHeight = document.querySelector('header')?.offsetHeight || 140
+        const y = el.getBoundingClientRect().top + window.scrollY - headerHeight - 10
         window.scrollTo({ top: y, behavior: 'smooth' })
       }
-    }, 150)
+    }, 280) // 280ms 讓展開動畫完整結束後再計算精準位置
   }, [setExpandedCardId])
 
   return (
@@ -1142,7 +1161,7 @@ export default function App() {
           <RankingCarousel items={visibleHotProducts} onOpenProduct={openProductByCode} subtitle={keyword || activeTag ? '已依目前篩選條件保留相關熱銷品' : '依據實際銷售數據即時更新'} />
 
           {groupedProducts.length > 0 ? groupedProducts.map((group) => (
-            <section key={group.key} id={group.anchor} data-spy-section className="scroll-mt-[185px]">
+            <section key={group.key} id={group.anchor} data-spy-section className={`scroll-mt-[185px]`}>
               <SectionTitle title={group.label} subtitle="" />
               <div className="space-y-3">
                 {group.items.map((product) => (
