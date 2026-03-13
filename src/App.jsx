@@ -5,12 +5,14 @@ import {
   Sparkles,
   X,
   ChevronRight,
+  ChevronDown,
   Tags,
   ArrowUpDown,
   Star,
   LayoutGrid,
   PanelTop,
   Layers3,
+  SlidersHorizontal,
 } from "lucide-react";
 
 const PRODUCTS = [
@@ -934,6 +936,7 @@ export default function TtlBioTechProductListSandbox() {
   const [sortKey, setSortKey] = useState("featured");
   const [selectedCodes, setSelectedCodes] = useState([]);
   const [activeProduct, setActiveProduct] = useState(null);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const filtered = useMemo(() => {
     const q = keyword.trim().toLowerCase();
@@ -987,92 +990,177 @@ export default function TtlBioTechProductListSandbox() {
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top,#f8fafc,white_34%,#f8fafc)] text-slate-900">
       <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-6 px-4 py-5 md:px-6 lg:px-8">
-        <section className="rounded-[32px] border border-white/70 bg-white/95 p-5 shadow-sm shadow-slate-200/70 backdrop-blur md:p-6">
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+        <section className="rounded-[26px] border border-white/70 bg-white/95 p-4 shadow-sm shadow-slate-200/70 backdrop-blur md:rounded-[32px] md:p-6">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl">
-              <div className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-3 py-1 text-xs font-medium text-white">
+              <div className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-3 py-1 text-[11px] font-medium text-white md:text-xs">
                 <Sparkles className="h-3.5 w-3.5" />
-                React 商品列表沙盒 v2｜更接近正式站瀏覽感
+                React 商品列表沙盒 v2｜正式站感強化版
               </div>
-              <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-950 md:text-4xl">
-                改成正式站感較強的緊湊列表版型，先驗證大量商品瀏覽的手感
+              <h1 className="mt-3 text-2xl font-semibold tracking-tight text-slate-950 md:text-4xl">
+                改成更接近正式站的緊湊列表瀏覽，先驗證手機檢視是否更順
               </h1>
-              <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600 md:text-base">
-                這版把大圖卡調整為較接近正式站的列表瀏覽節奏：縮小圖片、提高資訊密度、分類區塊更明確，先讓你評估大量商品瀏覽時是否更順、更適合真的往正式版靠攏。
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600 md:mt-3 md:text-base md:leading-7">
+                這版優先處理手機檢視：縮短標題區高度、降低固定列占比，先把首屏可觀看商品的空間拉回來，再逐步補齊促銷與話術層。
               </p>
             </div>
 
-            <div className="grid w-full gap-3 sm:grid-cols-3 lg:max-w-xl">
-              <MetricCard icon={Layers3} label="總品項" value={normalized.length} hint="仍以目前 merged-feed 的實際商品資料為樣本" />
-              <MetricCard icon={LayoutGrid} label="目前篩選" value={filtered.length} hint="搜尋、分類、標籤、排序都已整合進單一 state" />
-              <MetricCard icon={Star} label="比較列" value={compareItems.length} hint="保留比較功能，觀察正式版是否值得留下" />
+            <div className="grid w-full grid-cols-3 gap-2 lg:max-w-xl lg:gap-3">
+              <MetricCard icon={Layers3} label="總品項" value={normalized.length} hint="真實商品資料樣本" />
+              <MetricCard icon={LayoutGrid} label="目前篩選" value={filtered.length} hint="搜尋與分類整合" />
+              <MetricCard icon={Star} label="比較列" value={compareItems.length} hint="持續評估是否保留" />
             </div>
           </div>
         </section>
 
-        <section className="sticky top-4 z-40 rounded-[30px] border border-white/70 bg-white/90 p-4 shadow-lg shadow-slate-200/50 backdrop-blur">
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+        <section className="sticky top-2 z-40 rounded-[24px] border border-white/70 bg-white/92 p-3 shadow-lg shadow-slate-200/50 backdrop-blur md:top-4 md:rounded-[30px] md:p-4">
+          <div className="flex flex-col gap-3 md:gap-4">
+            <div className="flex items-center gap-2 md:hidden">
               <div className="relative flex-1">
                 <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                 <input
                   value={keyword}
                   onChange={(e) => setKeyword(e.target.value)}
-                  placeholder="搜尋商品名稱、代碼、主訴求或標籤"
-                  className="h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 pl-11 pr-4 text-sm outline-none transition focus:border-slate-300 focus:bg-white"
+                  placeholder="搜尋商品名稱、代碼、標籤"
+                  className="h-11 w-full rounded-2xl border border-slate-200 bg-slate-50 pl-11 pr-4 text-sm outline-none transition focus:border-slate-300 focus:bg-white"
                 />
               </div>
+              <button
+                onClick={() => setMobileFiltersOpen((prev) => !prev)}
+                className="inline-flex h-11 shrink-0 items-center gap-2 rounded-2xl border border-slate-200 bg-white px-3 text-sm font-medium text-slate-700"
+              >
+                <SlidersHorizontal className="h-4 w-4" />
+                篩選
+                <ChevronDown className={`h-4 w-4 transition ${mobileFiltersOpen ? "rotate-180" : ""}`} />
+              </button>
+            </div>
 
-              <div className="flex gap-3 sm:w-auto">
-                <div className="relative min-w-[185px] flex-1 sm:flex-none">
-                  <ArrowUpDown className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                  <select
-                    value={sortKey}
-                    onChange={(e) => setSortKey(e.target.value)}
-                    className="h-12 w-full appearance-none rounded-2xl border border-slate-200 bg-slate-50 pl-11 pr-10 text-sm outline-none transition focus:border-slate-300 focus:bg-white"
-                  >
-                    <option value="featured">預設排序</option>
-                    <option value="new">新品優先</option>
-                    <option value="price-asc">價格低到高</option>
-                    <option value="price-desc">價格高到低</option>
-                    <option value="name">名稱排序</option>
-                  </select>
+            <div className="hidden flex-col gap-4 md:flex">
+              <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+                <div className="relative flex-1">
+                  <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                  <input
+                    value={keyword}
+                    onChange={(e) => setKeyword(e.target.value)}
+                    placeholder="搜尋商品名稱、代碼、主訴求或標籤"
+                    className="h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 pl-11 pr-4 text-sm outline-none transition focus:border-slate-300 focus:bg-white"
+                  />
                 </div>
 
-                <button
-                  onClick={clearFilters}
-                  className="h-12 rounded-2xl border border-slate-200 px-4 text-sm font-medium text-slate-600 transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900"
-                >
-                  清除條件
-                </button>
+                <div className="flex gap-3 sm:w-auto">
+                  <div className="relative min-w-[185px] flex-1 sm:flex-none">
+                    <ArrowUpDown className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                    <select
+                      value={sortKey}
+                      onChange={(e) => setSortKey(e.target.value)}
+                      className="h-12 w-full appearance-none rounded-2xl border border-slate-200 bg-slate-50 pl-11 pr-10 text-sm outline-none transition focus:border-slate-300 focus:bg-white"
+                    >
+                      <option value="featured">預設排序</option>
+                      <option value="new">新品優先</option>
+                      <option value="price-asc">價格低到高</option>
+                      <option value="price-desc">價格高到低</option>
+                      <option value="name">名稱排序</option>
+                    </select>
+                  </div>
+
+                  <button
+                    onClick={clearFilters}
+                    className="h-12 rounded-2xl border border-slate-200 px-4 text-sm font-medium text-slate-600 transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900"
+                  >
+                    清除條件
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                {CATEGORY_META.filter((item) => item.key !== "其他").map((item) => (
+                  <FilterPill
+                    key={item.key}
+                    active={activeCategory === item.key || (item.key === "all" && activeCategory === "all")}
+                    onClick={() => (item.key === "all" ? clearFilters() : openCategoryAnchor(item.key))}
+                    className={activeCategory === item.key || (item.key === "all" && activeCategory === "all") ? "" : item.tone}
+                  >
+                    {item.label}
+                    {item.key !== "all" ? ` · ${categoryCounts.get(item.key) || 0}` : ` · ${normalized.length}`}
+                  </FilterPill>
+                ))}
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2">
+                <div className="mr-1 inline-flex items-center gap-2 text-sm text-slate-500">
+                  <Tags className="h-4 w-4" />
+                  熱門標籤
+                </div>
+                {allTags.map((tag) => (
+                  <FilterPill key={tag} active={activeTag === tag} onClick={() => setActiveTag((prev) => (prev === tag ? "" : tag))}>
+                    #{tag}
+                  </FilterPill>
+                ))}
               </div>
             </div>
 
-            <div className="flex flex-wrap gap-2">
-              {CATEGORY_META.filter((item) => item.key !== "其他").map((item) => (
-                <FilterPill
-                  key={item.key}
-                  active={activeCategory === item.key || (item.key === "all" && activeCategory === "all")}
-                  onClick={() => (item.key === "all" ? clearFilters() : openCategoryAnchor(item.key))}
-                  className={activeCategory === item.key || (item.key === "all" && activeCategory === "all") ? "" : item.tone}
+            <AnimatePresence initial={false}>
+              {mobileFiltersOpen ? (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="overflow-hidden md:hidden"
                 >
-                  {item.label}
-                  {item.key !== "all" ? ` · ${categoryCounts.get(item.key) || 0}` : ` · ${normalized.length}`}
-                </FilterPill>
-              ))}
-            </div>
+                  <div className="space-y-3 border-t border-slate-100 pt-3">
+                    <div className="flex gap-2">
+                      <div className="relative flex-1">
+                        <ArrowUpDown className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                        <select
+                          value={sortKey}
+                          onChange={(e) => setSortKey(e.target.value)}
+                          className="h-11 w-full appearance-none rounded-2xl border border-slate-200 bg-slate-50 pl-11 pr-10 text-sm outline-none transition focus:border-slate-300 focus:bg-white"
+                        >
+                          <option value="featured">預設排序</option>
+                          <option value="new">新品優先</option>
+                          <option value="price-asc">價格低到高</option>
+                          <option value="price-desc">價格高到低</option>
+                          <option value="name">名稱排序</option>
+                        </select>
+                      </div>
+                      <button
+                        onClick={clearFilters}
+                        className="h-11 shrink-0 rounded-2xl border border-slate-200 px-3 text-sm font-medium text-slate-600"
+                      >
+                        清除
+                      </button>
+                    </div>
 
-            <div className="flex flex-wrap items-center gap-2">
-              <div className="mr-1 inline-flex items-center gap-2 text-sm text-slate-500">
-                <Tags className="h-4 w-4" />
-                熱門標籤
-              </div>
-              {allTags.map((tag) => (
-                <FilterPill key={tag} active={activeTag === tag} onClick={() => setActiveTag((prev) => (prev === tag ? "" : tag))}>
-                  #{tag}
-                </FilterPill>
-              ))}
-            </div>
+                    <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
+                      {CATEGORY_META.filter((item) => item.key !== "其他").map((item) => (
+                        <FilterPill
+                          key={item.key}
+                          active={activeCategory === item.key || (item.key === "all" && activeCategory === "all")}
+                          onClick={() => (item.key === "all" ? clearFilters() : openCategoryAnchor(item.key))}
+                          className={`whitespace-nowrap ${activeCategory === item.key || (item.key === "all" && activeCategory === "all") ? "" : item.tone}`}
+                        >
+                          {item.label}
+                        </FilterPill>
+                      ))}
+                    </div>
+
+                    <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
+                      {allTags.map((tag) => (
+                        <FilterPill
+                          key={tag}
+                          active={activeTag === tag}
+                          onClick={() => setActiveTag((prev) => (prev === tag ? "" : tag))}
+                          className="whitespace-nowrap"
+                        >
+                          #{tag}
+                        </FilterPill>
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
           </div>
         </section>
 
