@@ -50,7 +50,6 @@ const CATEGORY_META = [
   { key: '其他', label: '其他', anchor: 'sec-other' },
 ]
 
-// 💡 可以在這裡隨時修改你的四個主題顏色
 const THEMES = [
   {
     key: 'ttl-classic',
@@ -109,7 +108,7 @@ const THEMES = [
       '--border': '#dbe6ee',
       '--text': '#2c3e50',
       '--muted': '#647a8f',
-      '--primary': '#5c8fbe',       // 加深後的質感粉藍
+      '--primary': '#5c8fbe',
       '--primary-strong': '#3f73a3',
       '--primary-soft': '#e4eff7',
       '--promo': '#f59e0b',         
@@ -132,7 +131,7 @@ const THEMES = [
       '--border': '#e2dcf2',
       '--text': '#352b47',
       '--muted': '#6b5e84',
-      '--primary': '#8a67cc',       // 加深後的優雅紫
+      '--primary': '#8a67cc',
       '--primary-strong': '#6846a6',
       '--primary-soft': '#eee8f9',
       '--promo': '#f43f5e',         
@@ -146,7 +145,6 @@ const THEMES = [
   },
 ]
 
-// 支援促銷標籤與 Tags 同步放大的級距設定
 const SCALE_PRESETS = {
   'A': { rowImage: 80, detailImage: 110, name: 'text-[16px]', title: 'text-[14px]', price: 'text-[18px]', body: 'text-[15px]', tag: 'text-[11px] px-2 py-1', promoTag: 'text-[10px] px-1.5 py-0.5', icon: 'h-3 w-3' },
   'A+': { rowImage: 100, detailImage: 120, name: 'text-[18px]', title: 'text-[16px]', price: 'text-[20px]', body: 'text-[16px]', tag: 'text-[13px] px-2.5 py-1', promoTag: 'text-[12px] px-2 py-1', icon: 'h-3.5 w-3.5' },
@@ -581,7 +579,6 @@ function ProductRow({ product, scale, keyword, onOpenProductByCode, onApplyTagFi
               <p className={`mt-0.5 line-clamp-2 font-bold text-[var(--primary)] ${scalePreset.title}`}><HighlightText text={product.title || product.spec || ''} keyword={keyword} /></p>
               {product.spec && product.spec !== product.title ? <p className="mt-0.5 text-[11px] text-[var(--muted)] line-clamp-1">{product.spec}</p> : null}
               
-              {/* 這裡的 promo tag 現在會跟隨 SCALE_PRESETS 縮放 */}
               <div className="mt-1 flex flex-wrap gap-1.5">
                 {product.promos.map((promo) => (
                   <button 
@@ -623,7 +620,6 @@ function ProductRow({ product, scale, keyword, onOpenProductByCode, onApplyTagFi
               )}
               <p className={`whitespace-pre-line leading-relaxed text-[#455a64] ${scalePreset.body}`}>{product.content || <span className="text-sm text-slate-400">尚無詳細資料</span>}</p>
               
-              {/* 這裡的 hashtag 現在會跟隨 SCALE_PRESETS 縮放 */}
               {product.tags && product.tags.length > 0 && (
                 <div className="mt-3 flex flex-wrap gap-1.5">
                   {product.tags.map((tag) => (
@@ -859,6 +855,44 @@ function PromoDrawer({ promo, onClose, onOpenProduct }) {
           <div className="flex-1 overflow-y-auto p-4 pb-[calc(20px+env(safe-area-inset-bottom))]">
             {getPromoImage(promo) && <div className="mb-4 overflow-hidden rounded-xl bg-black"><img src={getPromoImage(promo)} className="w-full object-contain max-h-[40vh]" alt="活動" /></div>}
             <p className="whitespace-pre-line text-[15px] leading-relaxed text-[var(--text)]">{promo.content}</p>
+            
+            {/* 新增：適用此活動的商品清單，直接跳轉 */}
+            {promo.relatedProducts && promo.relatedProducts.length > 0 && (
+              <div className="mt-8 border-t border-slate-100 pt-5">
+                <h4 className="mb-3 flex items-center gap-1.5 text-[14px] font-bold text-[var(--primary)]">
+                  <Gift className="h-4 w-4" /> 適用此活動的商品
+                </h4>
+                <div className="grid gap-2">
+                  {promo.relatedProducts.map(product => (
+                    <button
+                      key={product.code}
+                      onClick={() => {
+                        // 確保返回歷史紀錄乾淨不殘留
+                        if (window.history.state?.ui === 'promo') {
+                          window.history.back();
+                        } else {
+                          onClose();
+                        }
+                        // 稍微延遲讓抽屜有關閉的視覺時間，然後自動捲動並打開商品卡
+                        setTimeout(() => onOpenProduct(product.code), 300);
+                      }}
+                      className="flex items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--surface-soft)] p-2 transition active:scale-[0.98]"
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="h-10 w-10 shrink-0 overflow-hidden rounded-lg border border-[var(--border)] bg-[#fcfcfc]">
+                          <SafeImage src={product.photo} alt={product.name} fallbackLabel={product.name} contain className="h-full w-full p-0.5" />
+                        </div>
+                        <div className="text-left min-w-0">
+                          <p className="line-clamp-1 text-[13px] font-bold text-[var(--text)]">{product.name}</p>
+                          <p className="text-[11px] font-bold text-[var(--price)]">${product.price.toLocaleString()}</p>
+                        </div>
+                      </div>
+                      <ChevronDown className="mr-1 h-5 w-5 shrink-0 -rotate-90 text-[var(--primary)]" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </motion.div>
       </motion.div>
@@ -1191,8 +1225,10 @@ export default function App() {
     }, 120)
   }, [setExpandedCardId, showToast])
 
+  // 修復歷史紀錄不一致：為外部開啟商品加上 pushState
   const openProductByCode = useCallback((code) => {
     setExpandedCardId(code)
+    if (typeof window !== 'undefined') window.history.pushState({ ui: 'card', code }, '')
     window.setTimeout(() => {
       const el = document.getElementById(`card-${code}`)
       if (el) {
@@ -1223,7 +1259,8 @@ export default function App() {
               <h1 className="text-[20px] font-black leading-none text-[var(--primary)]">TTL Bio-tech 健康美學</h1>
               <p className="mt-1 text-[11px] font-bold text-[var(--muted)]">台酒生技 產品銷售輔助</p>
             </div>
-            <button className="absolute right-4 flex h-[34px] w-[34px] items-center justify-center rounded-full border border-[var(--primary)] bg-[var(--primary-soft)] text-[var(--primary)] transition active:scale-95 shadow-sm">
+            {/* 補上列印行為的 onClick */}
+            <button onClick={() => window.print()} className="absolute right-4 flex h-[34px] w-[34px] items-center justify-center rounded-full border border-[var(--primary)] bg-[var(--primary-soft)] text-[var(--primary)] transition active:scale-95 shadow-sm">
               <Printer className="h-[18px] w-[18px]" />
             </button>
           </div>
@@ -1292,12 +1329,23 @@ export default function App() {
         </main>
       </div>
 
-      <SettingsPanel open={settingsOpen} onClose={() => setSettingsOpen(false)} theme={theme} setTheme={setTheme} scale={scale} setScale={setScale} />
+      <SettingsPanel 
+        open={settingsOpen} 
+        onClose={() => { if (window.history.state?.ui === 'settings') window.history.back(); else setSettingsOpen(false); }} 
+        theme={theme} setTheme={setTheme} scale={scale} setScale={setScale} 
+      />
       <MediaSheet />
       <VideoModal />
       <LightboxModal />
-      <PromoCenterPanel open={promoCenterOpen} items={enrichedPromotions} statusFilter={promoStatusFilter} setStatusFilter={setPromoStatusFilter} groupFilter={promoGroupFilter} setGroupFilter={setPromoGroupFilter} onOpenPromo={(promo) => { setPromoDrawer(promo); window.history.pushState({ ui: 'promo', promoId: promo.promoId }, '') }} onClose={() => setPromoCenterOpen(false)} />
-      <PromoDrawer promo={promoDrawer} onClose={() => setPromoDrawer(null)} onOpenProduct={openProductByCode} />
+      <PromoCenterPanel 
+        open={promoCenterOpen} items={enrichedPromotions} statusFilter={promoStatusFilter} setStatusFilter={setPromoStatusFilter} groupFilter={promoGroupFilter} setGroupFilter={setPromoGroupFilter} onOpenPromo={(promo) => { setPromoDrawer(promo); window.history.pushState({ ui: 'promo', promoId: promo.promoId }, '') }} 
+        onClose={() => { if (window.history.state?.ui === 'promo-center') window.history.back(); else setPromoCenterOpen(false); }} 
+      />
+      <PromoDrawer 
+        promo={promoDrawer} 
+        onClose={() => { if (window.history.state?.ui === 'promo') window.history.back(); else setPromoDrawer(null); }} 
+        onOpenProduct={openProductByCode} 
+      />
       <FabMenu onScrollTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })} onGotoPromo={() => { setPromoCenterOpen(true); window.history.pushState({ ui: 'promo-center' }, '') }} onToggleSettings={() => { setSettingsOpen(true); window.history.pushState({ ui: 'settings' }, '') }} onGotoSection={handleGotoSection} />
       <ToastMessage />
     </div>
