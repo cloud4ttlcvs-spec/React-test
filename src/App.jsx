@@ -1086,30 +1086,26 @@ export default function App() {
 
   const productMap = useMemo(() => new Map(normalizedProducts.map((item) => [item.code, item])), [normalizedProducts])
 
-  // ==========================================
-  // 【關鍵修正】把 channelLabels 陣列轉為 channel 字串
-  // ==========================================
   const enrichedPromotions = useMemo(() => {
     return promotions.map((promo) => {
-      let channelText = ''
+      const chs = []
       
-      // 1. 優先使用 JSON 中的 channelLabels 陣列
-      if (Array.isArray(promo.channelLabels) && promo.channelLabels.length > 0) {
-        channelText = promo.channelLabels.join('、')
-      } 
-      // 2. 如果沒有 labels，降級看 ch 物件（防呆機制）
-      else if (promo.ch) {
-        const chs = []
+      // 優先使用 ch 物件進行精準判斷
+      if (promo.ch) {
         if (promo.ch.show) chs.push('展售中心')
-        if (promo.ch.mart) chs.push('量販/特販')
+        if (promo.ch.mart) chs.push('便利店')
         if (promo.ch.eshop) chs.push('購物網')
-        if (promo.ch.office) chs.push('員購/內部')
-        channelText = chs.join('、')
+        if (promo.ch.office) chs.push('營業所')
       }
+      
+      // 若完全沒有 ch 屬性，才降級使用原本的 channelLabels
+      let channelText = chs.length > 0 
+        ? chs.join('、') 
+        : (Array.isArray(promo.channelLabels) ? promo.channelLabels.join('、') : '')
 
       return {
         ...promo,
-        channel: channelText, // 綁定到 UI 依賴的 channel 屬性
+        channel: channelText,
         img: getPromoImage(promo),
         relatedProducts: (promo.relatedCodes || []).map((code) => productMap.get(code)).filter(Boolean),
       }
