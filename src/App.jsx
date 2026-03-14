@@ -145,7 +145,6 @@ const THEMES = [
   },
 ]
 
-// 擴充 SCALE_PRESETS，加入針對促銷區（活動標題、文案、狀態標籤、分類篩選）的動態縮放
 const SCALE_PRESETS = {
   'A': { 
     rowImage: 80, detailImage: 110, name: 'text-[16px]', title: 'text-[14px]', price: 'text-[18px]', body: 'text-[15px]', tag: 'text-[11px] px-2 py-1', promoTag: 'text-[10px] px-1.5 py-0.5', icon: 'h-3 w-3',
@@ -1103,6 +1102,7 @@ export default function App() {
 
   const productMap = useMemo(() => new Map(normalizedProducts.map((item) => [item.code, item])), [normalizedProducts])
 
+  // --- 關鍵修正：解析模糊規則 (類別或關鍵字) ---
   const enrichedPromotions = useMemo(() => {
     return promotions.map((promo) => {
       const chs = []
@@ -1118,19 +1118,49 @@ export default function App() {
         ? chs.join('、') 
         : (Array.isArray(promo.channelLabels) ? promo.channelLabels.join('、') : '')
 
+      // 建立模糊比對集合
+      const relatedSet = new Set()
+      const rules = promo.relatedCodes || []
+      
+      rules.forEach(rule => {
+        const cleanRule = String(rule).trim()
+        if (!cleanRule) return
+        
+        // 1. 優先精準比對商品代碼
+        if (productMap.has(cleanRule)) {
+          relatedSet.add(productMap.get(cleanRule))
+        } else {
+          // 2. 模糊比對：分類、名稱、標題、標籤
+          normalizedProducts.forEach(p => {
+            if (
+              p.group.includes(cleanRule) ||
+              (p.category && p.category.includes(cleanRule)) ||
+              (p.name && p.name.includes(cleanRule)) ||
+              (p.title && p.title.includes(cleanRule)) ||
+              p.tags.some(t => t.includes(cleanRule))
+            ) {
+              relatedSet.add(p)
+            }
+          })
+        }
+      })
+
       return {
         ...promo,
         channel: channelText,
         img: getPromoImage(promo),
-        relatedProducts: (promo.relatedCodes || []).map((code) => productMap.get(code)).filter(Boolean),
+        relatedProducts: Array.from(relatedSet), // 將 Set 轉回陣列
       }
     })
-  }, [promotions, productMap])
+  }, [promotions, productMap, normalizedProducts])
 
+  // 商品關聯促銷時，改用 relatedProducts 內的配對結果
   const productsWithPromos = useMemo(() => {
     return normalizedProducts.map((product) => ({
       ...product,
-      promos: enrichedPromotions.filter((promo) => (promo.relatedCodes || []).includes(product.code) && promo.status !== 'ended'),
+      promos: enrichedPromotions.filter(
+        (promo) => promo.status !== 'ended' && promo.relatedProducts.some(rp => rp.code === product.code)
+      ),
     }))
   }, [normalizedProducts, enrichedPromotions])
 
