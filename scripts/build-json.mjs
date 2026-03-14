@@ -1,3 +1,4 @@
+
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
@@ -29,7 +30,7 @@ function normalizeKey(value) {
     .replace(/[\s_\-／/（）()\[\]【】「」『』:：]+/g, '')
 }
 
-function parseCsv(text) {
+function parseCsvMatrix(text) {
   const rows = []
   let row = []
   let cell = ''
@@ -72,16 +73,21 @@ function parseCsv(text) {
     rows.push(row)
   }
 
-  if (!rows.length) return []
-
-  const headers = rows[0].map((h) => String(h || '').replace(/^\uFEFF/, '').trim())
   return rows
-    .slice(1)
+    .map((r) => r.map((v) => String(v ?? '').replace(/^\uFEFF/, '').trim()))
+    .filter((r) => r.some((v) => v !== ''))
+}
+
+function matrixToObjects(matrix, headerRowIndex = 0) {
+  if (!matrix.length || !matrix[headerRowIndex]) return []
+  const headers = matrix[headerRowIndex].map((h) => String(h || '').replace(/^\uFEFF/, '').trim())
+  return matrix
+    .slice(headerRowIndex + 1)
     .filter((r) => r.some((v) => String(v || '').trim() !== ''))
     .map((r) => {
       const obj = {}
       headers.forEach((header, idx) => {
-        obj[header] = (r[idx] ?? '').trim()
+        obj[header] = String(r[idx] ?? '').trim()
       })
       return obj
     })
@@ -108,16 +114,6 @@ function buildValueGetter(row) {
   }
 
   return { getExact, getRegex }
-}
-
-function getUnnamedColumns(row) {
-  return Object.entries(row || {})
-    .filter(([key, value]) => !String(key || '').trim() && String(value || '').trim())
-    .map(([, value]) => String(value).trim())
-}
-
-function looksLikeCode(value) {
-  return /^[A-Za-z0-9][A-Za-z0-9-]{3,}$/.test(String(value || '').trim())
 }
 
 function toNumber(value) {
@@ -190,7 +186,7 @@ function looksLikeHtml(text) {
   return s.startsWith('<!doctype html') || s.startsWith('<html') || s.includes('<head>') || s.includes('<body')
 }
 
-async function fetchCsvRows(url, label) {
+async function fetchText(url, label) {
   const res = await fetch(url, {
     headers: {
       'cache-control': 'no-cache',
@@ -204,11 +200,24 @@ async function fetchCsvRows(url, label) {
   if (looksLikeHtml(text)) {
     throw new Error(`${label} 不是 CSV，而是 HTML 頁面。通常代表網址錯了、試算表未發布、或權限未開放。`)
   }
+  return text
+}
 
-  const rows = parseCsv(text)
-  const headers = Object.keys(rows[0] || {})
+async function fetchCsvRows(url, label) {
+  const text = await fetchText(url, label)
+  const matrix = parseCsvMatrix(text)
+  const rows = matrixToObjects(matrix, 0)
+  const headers = matrix[0] || []
   console.log(`📄 ${label} rows=${rows.length} headers=${headers.join(' | ')}`)
   return rows
+}
+
+async function fetchCsvMatrix(url, label) {
+  const text = await fetchText(url, label)
+  const matrix = parseCsvMatrix(text)
+  const sampleHeaders = matrix.slice(0, 4).map((row) => row.join(' | ')).join(' || ')
+  console.log(`📄 ${label} matrixRows=${matrix.length} topRows=${sampleHeaders}`)
+  return matrix
 }
 
 function readProductFields(row) {
@@ -256,37 +265,6 @@ function readPitchFields(row) {
       getRegex(/content/, /話術/, /文案/),
     tags: getExact('tags', 'pitch_tags', '標籤', '關鍵字') || getRegex(/tags?/, /標籤/, /關鍵字/),
     isNew: toBool(getExact('isNew', 'is_new', '新品', 'new') || getRegex(/isnew/, /新品/, /new/)),
-  }
-}
-
-function readRankingFields(row, index = 0) {
-  const { getExact, getRegex } = buildValueGetter(row)
-  const unnamed = getUnnamedColumns(row)
-  const firstUnnamed = unnamed[0] || ''
-  const explicitCode =
-    getExact('code', 'product_code', '商品編號', '商品代號', 'item_code', '品號') ||
-    getRegex(/(^|.*)(product)?code$/, /商品(編號|代號)/, /品號/, /sku/)
-  const explicitName =
-    getExact('name', 'product_name', '商品名稱', '品名') ||
-    getRegex(/(^|.*)name$/, /商品名稱/, /品名/, /名稱/)
-
-  let code = explicitCode
-  let name = explicitName
-
-  if (!code && looksLikeCode(firstUnnamed)) code = firstUnnamed
-  if (!name && firstUnnamed && !looksLikeCode(firstUnnamed)) name = firstUnnamed
-
-  return {
-    code,
-    name,
-    salesTwd2025:
-      getExact('salesTwd2025', 'sales_twd_2025', '2025銷售額', '銷售額', '實銷金額(台幣)', 'sales') ||
-      getRegex(/sales/, /銷售額/, /營業額/, /實銷金額/),
-    qty2025:
-      getExact('qty2025', 'qty_2025', '2025銷售量', '數量', '開單數量(基礎單位)', 'qty') ||
-      getRegex(/qty/, /數量/, /銷售量/, /開單數量/),
-    rank: getExact('rank', '排名', '名次') || getRegex(/rank/, /排名/, /名次/),
-    rowIndex: index + 1,
   }
 }
 
@@ -379,23 +357,48 @@ function buildPromotions(rows) {
   return { generatedAt: nowIso, count: items.length, items }
 }
 
-function buildRankings(rows, mergedFeed) {
+function buildRankingsFromMatrix(matrix, mergedFeed) {
   const nameByCode = new Map((mergedFeed.items || []).map((item) => [item.code, item.name]))
 
-  const items = rows
-    .map((row, index) => {
-      const entry = readRankingFields(row, index)
-      if (!entry.code && !entry.name) return null
+  const dataRows = matrix
+    .slice(3) // A4 開始才是資料列
+    .filter((row) => row.some((v) => String(v || '').trim() !== ''))
+
+  const normalizedRows = dataRows
+    .map((row) => {
+      const code = String(row[0] || '').trim()
+      if (!code) return null
+
+      const sheetName = String(row[1] || '').trim()
+      const salesPrev = toNumber(row[2])
+      const salesCurr = toNumber(row[3])
+      const qtyPrev = toNumber(row[4])
+      const qtyCurr = toNumber(row[5])
+
       return {
-        code: entry.code,
-        name: entry.name || nameByCode.get(entry.code) || '',
-        salesTwd2025: toNumber(entry.salesTwd2025),
-        qty2025: toNumber(entry.qty2025),
-        rank: toNumber(entry.rank) || entry.rowIndex,
+        code,
+        name: nameByCode.get(code) || sheetName || '',
+        salesTwdPrev: salesPrev,
+        salesTwd2025: salesCurr,
+        qtyPrev,
+        qty2025: qtyCurr,
       }
     })
     .filter(Boolean)
-    .sort((a, b) => a.rank - b.rank)
+
+  const items = normalizedRows
+    .sort((a, b) => {
+      if (b.qty2025 !== a.qty2025) return b.qty2025 - a.qty2025
+      if (b.salesTwd2025 !== a.salesTwd2025) return b.salesTwd2025 - a.salesTwd2025
+      return a.code.localeCompare(b.code)
+    })
+    .map((item, index) => ({
+      code: item.code,
+      name: item.name,
+      salesTwd2025: item.salesTwd2025,
+      qty2025: item.qty2025,
+      rank: index + 1,
+    }))
 
   return { generatedAt: nowIso, count: items.length, items }
 }
@@ -415,16 +418,16 @@ function assertNonEmpty(payload, label) {
 async function main() {
   await fs.mkdir(OUTPUT_DIR, { recursive: true })
 
-  const [productRows, pitchRows, promotionRows, rankRows] = await Promise.all([
+  const [productRows, pitchRows, promotionRows, rankMatrix] = await Promise.all([
     fetchCsvRows(SOURCE_URLS.products, 'products'),
     fetchCsvRows(SOURCE_URLS.pitch, 'pitch'),
     fetchCsvRows(SOURCE_URLS.promotions, 'promotions'),
-    fetchCsvRows(SOURCE_URLS.rank, 'rankings'),
+    fetchCsvMatrix(SOURCE_URLS.rank, 'rankings'),
   ])
 
   const mergedFeed = buildMergedFeed(productRows, pitchRows)
   const promotions = buildPromotions(promotionRows)
-  const rankings = buildRankings(rankRows, mergedFeed)
+  const rankings = buildRankingsFromMatrix(rankMatrix, mergedFeed)
 
   assertNonEmpty(mergedFeed, 'merged-feed.json')
   assertNonEmpty(rankings, 'rankings.json')
