@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-14T00:00:00+08:00",
+  "generatedAt": "2026-03-14T14:23:08.400Z",
   "count": 29,
   "items": [
     {
@@ -13,7 +13,7 @@
         "34130013-12"
       ],
       "startDate": "2025/10/21",
-      "endDate": "2026/01/22",
+      "endDate": "2026/1/22",
       "status": "ended",
       "bgColor": "#fff6d5",
       "ch": {
@@ -37,7 +37,7 @@
         "34130013-12"
       ],
       "startDate": "2025/11/21",
-      "endDate": "2026/01/22",
+      "endDate": "2026/1/22",
       "status": "ended",
       "bgColor": "#fff6d5",
       "ch": {
@@ -86,8 +86,8 @@
       "relatedCodes": [
         "美容 沐浴 洗髮 洗面 皂"
       ],
-      "startDate": "2025/10/03",
-      "endDate": "2026/05/31",
+      "startDate": "2025/10/3",
+      "endDate": "2026/5/31",
       "status": "active",
       "bgColor": "#FBE1E7",
       "ch": {
@@ -110,8 +110,8 @@
       "relatedCodes": [
         "易洗樂"
       ],
-      "startDate": "2025/11/04",
-      "endDate": "2025/12/07",
+      "startDate": "2025/11/4",
+      "endDate": "2025/12/7",
       "status": "ended",
       "bgColor": "#E3F2FD",
       "ch": {
@@ -163,7 +163,7 @@
         "36130004-12"
       ],
       "startDate": "2025/12/19",
-      "endDate": "2026/01/26",
+      "endDate": "2026/1/26",
       "status": "ended",
       "bgColor": "#FBE1E7",
       "ch": {
@@ -186,8 +186,8 @@
       "relatedCodes": [
         "37370011-12"
       ],
-      "startDate": "2026/01/09",
-      "endDate": "2026/03/02",
+      "startDate": "2026/1/9",
+      "endDate": "2026/3/2",
       "status": "ended",
       "bgColor": "#D8F3DC",
       "ch": {
@@ -210,8 +210,8 @@
       "relatedCodes": [
         "37370011-12"
       ],
-      "startDate": "2026/01/09",
-      "endDate": "2026/02/13",
+      "startDate": "2026/1/9",
+      "endDate": "2026/2/13",
       "status": "ended",
       "bgColor": "#D8F3DC",
       "ch": {
@@ -235,8 +235,8 @@
       "relatedCodes": [
         "37370012-12"
       ],
-      "startDate": "2026/01/09",
-      "endDate": "2026/02/13",
+      "startDate": "2026/1/9",
+      "endDate": "2026/2/13",
       "status": "ended",
       "bgColor": "#FBE1E7",
       "ch": {
@@ -261,8 +261,8 @@
         "375358-12",
         "37530007-12"
       ],
-      "startDate": "2026/01/05",
-      "endDate": "2026/01/31",
+      "startDate": "2026/1/5",
+      "endDate": "2026/1/31",
       "status": "ended",
       "bgColor": "#FBE1E7",
       "ch": {
@@ -289,8 +289,8 @@
         "341371-12",
         "34130014-12"
       ],
-      "startDate": "2026/03/02",
-      "endDate": "2026/03/17",
+      "startDate": "2026/3/2",
+      "endDate": "2026/3/17",
       "status": "active",
       "bgColor": "#fff6d5",
       "ch": {
@@ -312,7 +312,7 @@
       "relatedCodes": [
         "37530001-12"
       ],
-      "startDate": "2026/02/06",
+      "startDate": "2026/2/6",
       "endDate": "2026/12/12",
       "status": "active",
       "bgColor": "#fbe1e7",
@@ -339,7 +339,7 @@
         "37110009-12"
       ],
       "startDate": "2025/12/10",
-      "endDate": "2026/01/31",
+      "endDate": "2026/1/31",
       "status": "ended",
       "bgColor": "#E3F2FD",
       "ch": {
@@ -365,7 +365,7 @@
         "37110010-12"
       ],
       "startDate": "2025/12/10",
-      "endDate": "2026/01/31",
+      "endDate": "2026/1/31",
       "status": "ended",
       "bgColor": "#E3F2FD",
       "ch": {
@@ -391,7 +391,7 @@
         "37110009-12"
       ],
       "startDate": "2025/12/17",
-      "endDate": "2026/03/01",
+      "endDate": "2026/3/1",
       "status": "ended",
       "bgColor": "#E3F2FD",
       "ch": {
@@ -417,7 +417,7 @@
         "37110010-12"
       ],
       "startDate": "2025/12/17",
-      "endDate": "2026/03/01",
+      "endDate": "2026/3/1",
       "status": "ended",
       "bgColor": "#E3F2FD",
       "ch": {
@@ -443,8 +443,8 @@
         "385104-12",
         "375176-12"
       ],
-      "startDate": "2026/01/23",
-      "endDate": "2026/02/02",
+      "startDate": "2026/1/23",
+      "endDate": "2026/2/2",
       "status": "ended",
       "bgColor": "#E3F2FD",
       "ch": {
@@ -467,8 +467,8 @@
         "385104-12",
         "375176-12"
       ],
-      "startDate": "2026/02/13",
-      "endDate": "2026/02/23",
+      "startDate": "2026/2/13",
+      "endDate": "2026/2/23",
       "status": "ended",
       "bgColor": "#e3f2fd",
       "ch": {
@@ -491,8 +491,8 @@
         "385104-12",
         "375176-12"
       ],
-      "startDate": "2026/03/20",
-      "endDate": "2026/03/30",
+      "startDate": "2026/3/20",
+      "endDate": "2026/3/30",
       "status": "upcoming",
       "bgColor": "#E3F2FD",
       "ch": {
@@ -516,8 +516,8 @@
         "37510002-12",
         "37510003-12"
       ],
-      "startDate": "2026/01/23",
-      "endDate": "2026/02/02",
+      "startDate": "2026/1/23",
+      "endDate": "2026/2/2",
       "status": "ended",
       "bgColor": "#E3F2FD",
       "ch": {
@@ -541,8 +541,8 @@
         "37510002-12",
         "37510003-12"
       ],
-      "startDate": "2026/02/13",
-      "endDate": "2026/02/23",
+      "startDate": "2026/2/13",
+      "endDate": "2026/2/23",
       "status": "ended",
       "bgColor": "#E3F2FD",
       "ch": {
@@ -566,8 +566,8 @@
         "37510002-12",
         "37510003-12"
       ],
-      "startDate": "2026/03/20",
-      "endDate": "2026/03/30",
+      "startDate": "2026/3/20",
+      "endDate": "2026/3/30",
       "status": "upcoming",
       "bgColor": "#E3F2FD",
       "ch": {
@@ -590,8 +590,8 @@
         "37100000-12",
         "37100001-12"
       ],
-      "startDate": "2026/01/09",
-      "endDate": "2026/04/24",
+      "startDate": "2026/1/9",
+      "endDate": "2026/4/24",
       "status": "active",
       "bgColor": "#e3f2fd",
       "ch": {
@@ -615,8 +615,8 @@
       "relatedCodes": [
         "37110005-12"
       ],
-      "startDate": "2026/02/02",
-      "endDate": "2026/02/22",
+      "startDate": "2026/2/2",
+      "endDate": "2026/2/22",
       "status": "ended",
       "bgColor": "#E3F2FD",
       "ch": {
@@ -639,8 +639,8 @@
         "37510002-12",
         "37510003-12"
       ],
-      "startDate": "2026/03/04",
-      "endDate": "2026/04/30",
+      "startDate": "2026/3/4",
+      "endDate": "2026/4/30",
       "status": "active",
       "bgColor": "#e3f2fd",
       "ch": {
@@ -664,8 +664,8 @@
       "relatedCodes": [
         "37110007-12"
       ],
-      "startDate": "2026/03/05",
-      "endDate": "2026/03/26",
+      "startDate": "2026/3/5",
+      "endDate": "2026/3/26",
       "status": "active",
       "bgColor": "#e3f2fd",
       "ch": {
@@ -687,8 +687,8 @@
       "relatedCodes": [
         "375156-12"
       ],
-      "startDate": "2026/03/05",
-      "endDate": "2026/03/26",
+      "startDate": "2026/3/5",
+      "endDate": "2026/3/26",
       "status": "active",
       "bgColor": "#e3f2fd",
       "ch": {
@@ -710,8 +710,8 @@
       "relatedCodes": [
         "37110005-12"
       ],
-      "startDate": "2026/03/05",
-      "endDate": "2026/03/26",
+      "startDate": "2026/3/5",
+      "endDate": "2026/3/26",
       "status": "active",
       "bgColor": "#e3f2fd",
       "ch": {
