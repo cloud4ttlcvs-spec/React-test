@@ -405,8 +405,26 @@ function buildRankingsFromMatrix(matrix, mergedFeed) {
 
 async function writeJson(filename, payload) {
   const outputPath = path.join(OUTPUT_DIR, filename)
+  
+  // 1. 嘗試讀取舊檔案進行比對
+  try {
+    const oldContent = await fs.readFile(outputPath, 'utf8')
+    const oldData = JSON.parse(oldContent)
+    
+    // 2. 忽略 generatedAt，只比對核心資料 (items) 是否完全相同
+    const isDataSame = JSON.stringify(oldData.items) === JSON.stringify(payload.items)
+    
+    if (isDataSame) {
+      console.log(`⏩ [跳過] ${filename} 資料無變動，保留原檔案以避免觸發 Git Commit`)
+      return // 直接結束，不覆寫檔案
+    }
+  } catch (e) {
+    // 檔案不存在或解析失敗，屬正常現象，繼續往下執行寫入
+  }
+
+  // 3. 資料確實有變動（或首次建立），才覆寫檔案
   await fs.writeFile(outputPath, `${JSON.stringify(payload, null, 2)}\n`, 'utf8')
-  console.log(`✅ 已輸出 ${outputPath}`)
+  console.log(`✅ [更新] 已輸出新的 ${outputPath}`)
 }
 
 function assertNonEmpty(payload, label) {
