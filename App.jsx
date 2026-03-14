@@ -145,7 +145,6 @@ const THEMES = [
   },
 ]
 
-// 擴充 SCALE_PRESETS，加入針對促銷區（活動標題、文案、狀態標籤、分類篩選）的動態縮放
 const SCALE_PRESETS = {
   'A': { 
     rowImage: 80, detailImage: 110, name: 'text-[16px]', title: 'text-[14px]', price: 'text-[18px]', body: 'text-[15px]', tag: 'text-[11px] px-2 py-1', promoTag: 'text-[10px] px-1.5 py-0.5', icon: 'h-3 w-3',
@@ -1080,26 +1079,34 @@ export default function App() {
 
   const normalizedProducts = useMemo(() => {
     const rankMap = new Map(rankings.map((item) => [item.code, item]))
-    return products.map((item) => {
-      const pitch = item.pitch || {}
-      const rank = rankMap.get(item.code)
-      return {
-        code: item.code,
-        name: item.name,
-        category: item.category,
-        group: normalizeCategory(item.category),
-        price: Number(item.price || 0),
-        photo: item.photo,
-        title: pitch.title || '',
-        content: pitch.content || '',
-        tags: parseTags(pitch.tags),
-        isNew: Boolean(pitch.isNew),
-        spec: item.spec || '',
-        videoUrl: item.videoUrl || '',
-        moreLinks: parseMoreLinks(item.moreLinksRaw),
-        rank: rank?.rank || null,
-      }
-    })
+    return products
+      .map((item) => {
+        const pitch = item.pitch || {}
+        const rank = rankMap.get(item.code)
+        
+        // 防呆判斷：過濾掉 isHidden 為 true、'true'、'TRUE' 或 '1' 的商品
+        const isHidden = pitch.isHidden === true || String(pitch.isHidden).toLowerCase() === 'true' || String(pitch.isHidden) === '1' ||
+                         item.isHidden === true || String(item.isHidden).toLowerCase() === 'true' || String(item.isHidden) === '1'
+
+        return {
+          code: item.code,
+          name: item.name,
+          category: item.category,
+          group: normalizeCategory(item.category),
+          price: Number(item.price || 0),
+          photo: item.photo,
+          title: pitch.title || '',
+          content: pitch.content || '',
+          tags: parseTags(pitch.tags),
+          isNew: Boolean(pitch.isNew),
+          isHidden: isHidden,
+          spec: item.spec || '',
+          videoUrl: item.videoUrl || '',
+          moreLinks: parseMoreLinks(item.moreLinksRaw),
+          rank: rank?.rank || null,
+        }
+      })
+      .filter((item) => !item.isHidden) // 🚀 在源頭徹底剔除隱藏商品
   }, [products, rankings])
 
   const productMap = useMemo(() => new Map(normalizedProducts.map((item) => [item.code, item])), [normalizedProducts])
@@ -1107,7 +1114,6 @@ export default function App() {
   const enrichedPromotions = useMemo(() => {
     return promotions.map((promo) => {
       const chs = []
-      
       if (promo.ch) {
         if (promo.ch.show) chs.push('展售中心')
         if (promo.ch.mart) chs.push('便利店')
@@ -1119,19 +1125,45 @@ export default function App() {
         ? chs.join('、') 
         : (Array.isArray(promo.channelLabels) ? promo.channelLabels.join('、') : '')
 
+      const relatedSet = new Set()
+      const rawRules = promo.relatedCodes || []
+      
+      rawRules.forEach(rawRule => {
+        const keywords = String(rawRule).split(/[\s\u3000,，、]+/).filter(Boolean)
+        keywords.forEach(kw => {
+          if (productMap.has(kw)) {
+            relatedSet.add(productMap.get(kw))
+          } else {
+            normalizedProducts.forEach(p => {
+              if (
+                p.group.includes(kw) ||
+                (p.category && p.category.includes(kw)) ||
+                (p.name && p.name.includes(kw)) ||
+                (p.title && p.title.includes(kw)) ||
+                p.tags.some(t => t.includes(kw))
+              ) {
+                relatedSet.add(p)
+              }
+            })
+          }
+        })
+      })
+
       return {
         ...promo,
         channel: channelText,
         img: getPromoImage(promo),
-        relatedProducts: (promo.relatedCodes || []).map((code) => productMap.get(code)).filter(Boolean),
+        relatedProducts: Array.from(relatedSet),
       }
     })
-  }, [promotions, productMap])
+  }, [promotions, productMap, normalizedProducts])
 
   const productsWithPromos = useMemo(() => {
     return normalizedProducts.map((product) => ({
       ...product,
-      promos: enrichedPromotions.filter((promo) => (promo.relatedCodes || []).includes(product.code) && promo.status !== 'ended'),
+      promos: enrichedPromotions.filter(
+        (promo) => promo.status !== 'ended' && promo.relatedProducts.some(rp => rp.code === product.code)
+      ),
     }))
   }, [normalizedProducts, enrichedPromotions])
 
