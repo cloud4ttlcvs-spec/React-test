@@ -90,17 +90,28 @@ function parseCsv(text) {
 function buildValueGetter(row) {
   const entries = Object.entries(row || {})
   const normalized = new Map(entries.map(([key, value]) => [normalizeKey(key), value]))
-  return (...candidates) => {
+
+  const getExact = (...candidates) => {
     for (const candidate of candidates.flat()) {
       const value = normalized.get(normalizeKey(candidate))
       if (value !== undefined && String(value).trim() !== '') return String(value).trim()
     }
     return ''
   }
+
+  const getRegex = (...patterns) => {
+    for (const [key, value] of normalized.entries()) {
+      if (!String(value || '').trim()) continue
+      if (patterns.some((p) => p.test(key))) return String(value).trim()
+    }
+    return ''
+  }
+
+  return { getExact, getRegex }
 }
 
 function toNumber(value) {
-  const cleaned = String(value || '').replace(/[,\sNT$元]/gi, '')
+  const cleaned = String(value || '').replace(/[\s,NT$元]/gi, '')
   if (!cleaned) return 0
   const num = Number(cleaned)
   return Number.isFinite(num) ? num : 0
@@ -147,11 +158,11 @@ function inferPromoStatus(explicitStatus, startDate, endDate) {
   return 'active'
 }
 
-function channelFlagsFromRow(get) {
-  const show = toBool(get('channel_showroom', 'showroom', 'show', '展售中心', '通路展售中心'))
-  const mart = toBool(get('channel_mart', 'mart', '便利店', '通路便利店'))
-  const eshop = toBool(get('channel_eshop', 'eshop', '購物網', '通路購物網'))
-  const office = toBool(get('channel_office', 'office', '營業所', '通路營業所'))
+function channelFlagsFromRow(getExact) {
+  const show = toBool(getExact('channel_showroom', 'showroom', 'show', '展售中心', '通路展售中心'))
+  const mart = toBool(getExact('channel_mart', 'mart', '便利店', '通路便利店'))
+  const eshop = toBool(getExact('channel_eshop', 'eshop', '購物網', '通路購物網'))
+  const office = toBool(getExact('channel_office', 'office', '營業所', '通路營業所'))
   return { show, mart, eshop, office }
 }
 
@@ -164,6 +175,11 @@ function channelLabelsFromFlags(ch) {
   return labels
 }
 
+function looksLikeHtml(text) {
+  const s = String(text || '').trim().slice(0, 500).toLowerCase()
+  return s.startsWith('<!doctype html') || s.startsWith('<html') || s.includes('<head>') || s.includes('<body')
+}
+
 async function fetchCsvRows(url, label) {
   const res = await fetch(url, {
     headers: {
@@ -172,12 +188,82 @@ async function fetchCsvRows(url, label) {
     },
   })
 
-  if (!res.ok) {
-    throw new Error(`${label} CSV 下載失敗：${res.status} ${res.statusText}`)
-  }
+  if (!res.ok) throw new Error(`${label} CSV 下載失敗：${res.status} ${res.statusText}`)
 
   const text = await res.text()
-  return parseCsv(text)
+  if (looksLikeHtml(text)) {
+    throw new Error(`${label} 不是 CSV，而是 HTML 頁面。通常代表網址錯了、試算表未發布、或權限未開放。`)
+  }
+
+  const rows = parseCsv(text)
+  const headers = Object.keys(rows[0] || {})
+  console.log(`📄 ${label} rows=${rows.length} headers=${headers.join(' | ')}`)
+  return rows
+}
+
+function readProductFields(row) {
+  const { getExact, getRegex } = buildValueGetter(row)
+  const code =
+    getExact('code', '商品編號', '商品代號', 'item_code', '品號') ||
+    getRegex(/(^|.*)(product)?code$/, /商品(編號|代號)/, /品號/, /料號/, /sku/, /貨號/)
+  const name =
+    getExact('name', '商品名稱', '品名') ||
+    getRegex(/(^|.*)name$/, /商品名稱/, /品名/, /名稱/)
+  return {
+    code,
+    name,
+    category:
+      getExact('category', '分類', 'category_name', '大類別', '商品分類') ||
+      getRegex(/category/, /分類/, /大類別/),
+    price:
+      getExact('price', '售價', 'price_twd', '單價', '建議售價') ||
+      getRegex(/price/, /售價/, /單價/),
+    spec: getExact('spec', '規格', '容量規格') || getRegex(/spec/, /規格/),
+    photo:
+      getExact('photo', 'image', 'image_url', 'img', '圖片', '商品圖片') ||
+      getRegex(/image/, /img/, /圖片/),
+    videoUrl:
+      getExact('videoUrl', 'video_url', '影片連結', '影音連結') ||
+      getRegex(/video/, /影片/, /影音/),
+    moreLinksRaw:
+      getExact('moreLinksRaw', 'more_links', '更多素材', 'more_links_raw') ||
+      getRegex(/morelinks?/, /素材/),
+  }
+}
+
+function readPitchFields(row) {
+  const { getExact, getRegex } = buildValueGetter(row)
+  const code =
+    getExact('code', '商品編號', '商品代號', 'item_code', '品號') ||
+    getRegex(/(^|.*)(product)?code$/, /商品(編號|代號)/, /品號/, /sku/)
+  const name = getExact('name', '商品名稱', '品名') || getRegex(/(^|.*)name$/, /商品名稱/, /品名/, /名稱/)
+  return {
+    code,
+    name,
+    title: getExact('title', 'pitch_title', '主訴求', '標題') || getRegex(/title/, /主訴求/, /標題/),
+    content:
+      getExact('content', 'pitch_content', '銷售話術', '話術內容', '文案') ||
+      getRegex(/content/, /話術/, /文案/),
+    tags: getExact('tags', 'pitch_tags', '標籤', '關鍵字') || getRegex(/tags?/, /標籤/, /關鍵字/),
+    isNew: toBool(getExact('isNew', 'is_new', '新品', 'new') || getRegex(/isnew/, /新品/, /new/)),
+  }
+}
+
+function readRankingFields(row) {
+  const { getExact, getRegex } = buildValueGetter(row)
+  return {
+    code:
+      getExact('code', '商品編號', '商品代號', 'item_code', '品號') ||
+      getRegex(/(^|.*)(product)?code$/, /商品(編號|代號)/, /品號/, /sku/),
+    name: getExact('name', '商品名稱', '品名') || getRegex(/(^|.*)name$/, /商品名稱/, /品名/, /名稱/),
+    salesTwd2025:
+      getExact('salesTwd2025', 'sales_twd_2025', '2025銷售額', '銷售額', 'sales') ||
+      getRegex(/sales/, /銷售額/, /營業額/),
+    qty2025:
+      getExact('qty2025', 'qty_2025', '2025銷售量', '數量', 'qty') ||
+      getRegex(/qty/, /數量/, /銷售量/),
+    rank: getExact('rank', '排名', '名次') || getRegex(/rank/, /排名/, /名次/),
+  }
 }
 
 function buildMergedFeed(productRows, pitchRows) {
@@ -185,44 +271,40 @@ function buildMergedFeed(productRows, pitchRows) {
   const pitchByName = new Map()
 
   for (const row of pitchRows) {
-    const get = buildValueGetter(row)
-    const code = get('code', '商品編號', '商品代號', 'item_code', '品號')
-    const name = get('name', '商品名稱', '品名')
-    const entry = {
-      title: get('title', 'pitch_title', '主訴求', '標題'),
-      content: get('content', 'pitch_content', '銷售話術', '話術內容', '文案'),
-      tags: get('tags', 'pitch_tags', '標籤', '關鍵字'),
-      isNew: toBool(get('isNew', 'is_new', '新品', 'new')),
-      name,
+    const entry = readPitchFields(row)
+    const pitch = {
+      title: entry.title,
+      content: entry.content,
+      tags: entry.tags,
+      isNew: entry.isNew,
+      name: entry.name,
     }
-    if (code) pitchByCode.set(code, entry)
-    if (name) pitchByName.set(name.trim().toLowerCase(), entry)
+    if (entry.code) pitchByCode.set(entry.code, pitch)
+    if (entry.name) pitchByName.set(entry.name.trim().toLowerCase(), pitch)
   }
 
   const items = productRows
     .map((row) => {
-      const get = buildValueGetter(row)
-      const code = get('code', '商品編號', '商品代號', 'item_code', '品號')
-      const name = get('name', '商品名稱', '品名')
-      if (!code || !name) return null
+      const entry = readProductFields(row)
+      if (!entry.code || !entry.name) return null
 
-      const pitch = pitchByCode.get(code) || pitchByName.get(name.trim().toLowerCase()) || {
+      const pitch = pitchByCode.get(entry.code) || pitchByName.get(entry.name.trim().toLowerCase()) || {
         title: '',
         content: '',
         tags: '',
         isNew: false,
-        name,
+        name: entry.name,
       }
 
       return {
-        code,
-        name,
-        category: get('category', '分類', 'category_name', '大類別', '商品分類'),
-        price: toNumber(get('price', '售價', 'price_twd', '單價', '建議售價')),
-        spec: get('spec', '規格', '容量規格'),
-        photo: get('photo', 'image', 'image_url', 'img', '圖片', '商品圖片'),
-        videoUrl: get('videoUrl', 'video_url', '影片連結', '影音連結'),
-        moreLinksRaw: get('moreLinksRaw', 'more_links', '更多素材', 'more_links_raw'),
+        code: entry.code,
+        name: entry.name,
+        category: entry.category,
+        price: toNumber(entry.price),
+        spec: entry.spec,
+        photo: entry.photo,
+        videoUrl: entry.videoUrl,
+        moreLinksRaw: entry.moreLinksRaw,
         pitch,
       }
     })
@@ -232,12 +314,7 @@ function buildMergedFeed(productRows, pitchRows) {
     schemaVersion: 1,
     buildId,
     generatedAt: nowIso,
-    source: {
-      products: SOURCE_URLS.products,
-      pitch: SOURCE_URLS.pitch,
-      promotions: SOURCE_URLS.promotions,
-      rank: SOURCE_URLS.rank,
-    },
+    source: { ...SOURCE_URLS },
     count: items.length,
     items,
   }
@@ -246,59 +323,49 @@ function buildMergedFeed(productRows, pitchRows) {
 function buildPromotions(rows) {
   const items = rows
     .map((row, index) => {
-      const get = buildValueGetter(row)
-      const ch = channelFlagsFromRow(get)
+      const { getExact } = buildValueGetter(row)
+      const ch = channelFlagsFromRow(getExact)
       const channelLabels = channelLabelsFromFlags(ch)
-      const title = get('title', '活動名稱', 'promo_title', '促銷名稱')
-      const shortTitle = get('shortTitle', '短標', '短標題', 'promo_short_title') || title
-      const content = get('content', '活動說明', '促銷內容', 'promo_copy', '文案')
-      const startDate = normalizeDateString(get('startDate', '開始日期', '活動開始日', 'start_date'))
-      const endDate = normalizeDateString(get('endDate', '結束日期', '活動結束日', 'end_date'))
-      const status = inferPromoStatus(get('status', '活動狀態', 'promo_status'), startDate, endDate)
+      const title = getExact('title', '活動名稱', 'promo_title', '促銷名稱')
+      const shortTitle = getExact('shortTitle', '短標', '短標題', 'promo_short_title') || title
+      const content = getExact('content', '活動說明', '促銷內容', 'promo_copy', '文案')
+      const startDate = normalizeDateString(getExact('startDate', '開始日期', '活動開始日', 'start_date'))
+      const endDate = normalizeDateString(getExact('endDate', '結束日期', '活動結束日', 'end_date'))
+      const status = inferPromoStatus(getExact('status', '活動狀態', 'promo_status'), startDate, endDate)
       const relatedCodes = splitList(
-        get('relatedCodes', '適用商品', '適用品號', '適用商品編號', 'product_codes', 'codes')
+        getExact('relatedCodes', '適用商品', '適用品號', '適用商品編號', 'product_codes', 'codes')
       )
-
       if (!title) return null
-
       return {
-        promoId:
-          get('promoId', '活動編號', 'id', 'promo_id') ||
-          `${new Date().getFullYear()}_${String(index + 1).padStart(3, '0')}`,
+        promoId: getExact('promoId', '活動編號', 'id', 'promo_id') || `${new Date().getFullYear()}_${String(index + 1).padStart(3, '0')}`,
         title,
         shortTitle,
         content,
-        imgUrl: get('imgUrl', '圖片連結', '圖檔連結', 'image_url', 'img', 'image'),
+        imgUrl: getExact('imgUrl', '圖片連結', '圖檔連結', 'image_url', 'img', 'image'),
         relatedCodes,
         startDate,
         endDate,
         status,
-        bgColor: get('bgColor', '背景色', '卡片底色', 'bg_color'),
+        bgColor: getExact('bgColor', '背景色', '卡片底色', 'bg_color'),
         ch,
         channelLabels,
       }
     })
     .filter(Boolean)
-
-  return {
-    generatedAt: nowIso,
-    count: items.length,
-    items,
-  }
+  return { generatedAt: nowIso, count: items.length, items }
 }
 
 function buildRankings(rows) {
   const items = rows
     .map((row) => {
-      const get = buildValueGetter(row)
-      const code = get('code', '商品編號', '商品代號', 'item_code', '品號')
-      if (!code) return null
+      const entry = readRankingFields(row)
+      if (!entry.code) return null
       return {
-        code,
-        name: get('name', '商品名稱', '品名'),
-        salesTwd2025: toNumber(get('salesTwd2025', 'sales_twd_2025', '2025銷售額', '銷售額', 'sales')),
-        qty2025: toNumber(get('qty2025', 'qty_2025', '2025銷售量', '數量', 'qty')),
-        rank: toNumber(get('rank', '排名', '名次')),
+        code: entry.code,
+        name: entry.name,
+        salesTwd2025: toNumber(entry.salesTwd2025),
+        qty2025: toNumber(entry.qty2025),
+        rank: toNumber(entry.rank),
       }
     })
     .filter(Boolean)
@@ -308,18 +375,19 @@ function buildRankings(rows) {
       if (b.rank) return 1
       return b.salesTwd2025 - a.salesTwd2025
     })
-
-  return {
-    generatedAt: nowIso,
-    count: items.length,
-    items,
-  }
+  return { generatedAt: nowIso, count: items.length, items }
 }
 
 async function writeJson(filename, payload) {
   const outputPath = path.join(OUTPUT_DIR, filename)
   await fs.writeFile(outputPath, `${JSON.stringify(payload, null, 2)}\n`, 'utf8')
   console.log(`✅ 已輸出 ${outputPath}`)
+}
+
+function assertNonEmpty(payload, label) {
+  if (!payload.count) {
+    throw new Error(`${label} 產出 0 筆。請優先檢查：1) 對應 CSV URL 是否正確且已發布；2) 標題列欄名是否與 parser 對得上。`)
+  }
 }
 
 async function main() {
@@ -335,6 +403,9 @@ async function main() {
   const mergedFeed = buildMergedFeed(productRows, pitchRows)
   const promotions = buildPromotions(promotionRows)
   const rankings = buildRankings(rankRows)
+
+  assertNonEmpty(mergedFeed, 'merged-feed.json')
+  assertNonEmpty(rankings, 'rankings.json')
 
   await Promise.all([
     writeJson('merged-feed.json', mergedFeed),
