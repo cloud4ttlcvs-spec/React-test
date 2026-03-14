@@ -1102,11 +1102,10 @@ export default function App() {
 
   const productMap = useMemo(() => new Map(normalizedProducts.map((item) => [item.code, item])), [normalizedProducts])
 
-  // --- 關鍵修正：解析模糊規則 (類別或關鍵字) ---
+  // --- 關鍵修正：支援活動規則的複合關鍵字 ---
   const enrichedPromotions = useMemo(() => {
     return promotions.map((promo) => {
       const chs = []
-      
       if (promo.ch) {
         if (promo.ch.show) chs.push('展售中心')
         if (promo.ch.mart) chs.push('便利店')
@@ -1118,43 +1117,43 @@ export default function App() {
         ? chs.join('、') 
         : (Array.isArray(promo.channelLabels) ? promo.channelLabels.join('、') : '')
 
-      // 建立模糊比對集合
       const relatedSet = new Set()
-      const rules = promo.relatedCodes || []
+      const rawRules = promo.relatedCodes || []
       
-      rules.forEach(rule => {
-        const cleanRule = String(rule).trim()
-        if (!cleanRule) return
+      rawRules.forEach(rawRule => {
+        // 關鍵修正：將 "美容 沐浴 皂" 這樣的複合規則切開成獨立關鍵字
+        const keywords = String(rawRule).split(/[\s\u3000,，、]+/).filter(Boolean)
         
-        // 1. 優先精準比對商品代碼
-        if (productMap.has(cleanRule)) {
-          relatedSet.add(productMap.get(cleanRule))
-        } else {
-          // 2. 模糊比對：分類、名稱、標題、標籤
-          normalizedProducts.forEach(p => {
-            if (
-              p.group.includes(cleanRule) ||
-              (p.category && p.category.includes(cleanRule)) ||
-              (p.name && p.name.includes(cleanRule)) ||
-              (p.title && p.title.includes(cleanRule)) ||
-              p.tags.some(t => t.includes(cleanRule))
-            ) {
-              relatedSet.add(p)
-            }
-          })
-        }
+        keywords.forEach(kw => {
+          // 1. 先嘗試精準對應商品代碼
+          if (productMap.has(kw)) {
+            relatedSet.add(productMap.get(kw))
+          } else {
+            // 2. 否則進行模糊比對 (分類、名稱、標題、標籤)
+            normalizedProducts.forEach(p => {
+              if (
+                p.group.includes(kw) ||
+                (p.category && p.category.includes(kw)) ||
+                (p.name && p.name.includes(kw)) ||
+                (p.title && p.title.includes(kw)) ||
+                p.tags.some(t => t.includes(kw))
+              ) {
+                relatedSet.add(p)
+              }
+            })
+          }
+        })
       })
 
       return {
         ...promo,
         channel: channelText,
         img: getPromoImage(promo),
-        relatedProducts: Array.from(relatedSet), // 將 Set 轉回陣列
+        relatedProducts: Array.from(relatedSet),
       }
     })
   }, [promotions, productMap, normalizedProducts])
 
-  // 商品關聯促銷時，改用 relatedProducts 內的配對結果
   const productsWithPromos = useMemo(() => {
     return normalizedProducts.map((product) => ({
       ...product,
