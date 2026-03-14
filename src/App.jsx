@@ -145,10 +145,20 @@ const THEMES = [
   },
 ]
 
+// 擴充 SCALE_PRESETS，加入針對促銷區（活動標題、文案、狀態標籤、分類篩選）的動態縮放
 const SCALE_PRESETS = {
-  'A': { rowImage: 80, detailImage: 110, name: 'text-[16px]', title: 'text-[14px]', price: 'text-[18px]', body: 'text-[15px]', tag: 'text-[11px] px-2 py-1', promoTag: 'text-[10px] px-1.5 py-0.5', icon: 'h-3 w-3' },
-  'A+': { rowImage: 100, detailImage: 120, name: 'text-[18px]', title: 'text-[16px]', price: 'text-[20px]', body: 'text-[16px]', tag: 'text-[13px] px-2.5 py-1', promoTag: 'text-[12px] px-2 py-1', icon: 'h-3.5 w-3.5' },
-  'A++': { rowImage: 120, detailImage: 130, name: 'text-[20px]', title: 'text-[18px]', price: 'text-[22px]', body: 'text-[18px]', tag: 'text-[15px] px-3 py-1.5', promoTag: 'text-[14px] px-2.5 py-1.5', icon: 'h-4 w-4' },
+  'A': { 
+    rowImage: 80, detailImage: 110, name: 'text-[16px]', title: 'text-[14px]', price: 'text-[18px]', body: 'text-[15px]', tag: 'text-[11px] px-2 py-1', promoTag: 'text-[10px] px-1.5 py-0.5', icon: 'h-3 w-3',
+    promoTitle: 'text-[15px]', promoBody: 'text-[12px]', promoDate: 'text-[10px] px-2 py-0.5', promoStatus: 'text-[10px] px-2.5 py-0.5', promoFilter: 'text-[12px] px-3 py-1.5', drawerTitle: 'text-[20px]', drawerDate: 'text-[12px]', drawerBody: 'text-[15px]', drawerRelatedTitle: 'text-[14px]', drawerRelatedName: 'text-[13px]', drawerRelatedPrice: 'text-[11px]'
+  },
+  'A+': { 
+    rowImage: 100, detailImage: 120, name: 'text-[18px]', title: 'text-[16px]', price: 'text-[20px]', body: 'text-[16px]', tag: 'text-[13px] px-2.5 py-1', promoTag: 'text-[12px] px-2 py-1', icon: 'h-3.5 w-3.5',
+    promoTitle: 'text-[17px]', promoBody: 'text-[14px]', promoDate: 'text-[12px] px-2.5 py-1', promoStatus: 'text-[12px] px-3 py-1', promoFilter: 'text-[14px] px-3.5 py-2', drawerTitle: 'text-[22px]', drawerDate: 'text-[14px]', drawerBody: 'text-[17px]', drawerRelatedTitle: 'text-[16px]', drawerRelatedName: 'text-[15px]', drawerRelatedPrice: 'text-[13px]'
+  },
+  'A++': { 
+    rowImage: 120, detailImage: 130, name: 'text-[20px]', title: 'text-[18px]', price: 'text-[22px]', body: 'text-[18px]', tag: 'text-[15px] px-3 py-1.5', promoTag: 'text-[14px] px-2.5 py-1.5', icon: 'h-4 w-4',
+    promoTitle: 'text-[19px]', promoBody: 'text-[16px]', promoDate: 'text-[14px] px-3 py-1', promoStatus: 'text-[14px] px-3 py-1', promoFilter: 'text-[16px] px-4 py-2', drawerTitle: 'text-[24px]', drawerDate: 'text-[16px]', drawerBody: 'text-[19px]', drawerRelatedTitle: 'text-[18px]', drawerRelatedName: 'text-[17px]', drawerRelatedPrice: 'text-[15px]'
+  },
 }
 
 const PROMO_STATUS_META = {
@@ -424,8 +434,10 @@ function SettingsPanel({ open, onClose, theme, setTheme, scale, setScale }) {
   )
 }
 
-function PromoCarousel({ items, onOpenPromo }) {
+function PromoCarousel({ items, onOpenPromo, scale }) {
   if (!items.length) return null
+  const preset = SCALE_PRESETS[scale]
+
   return (
     <section id="promo" data-spy-section className="scroll-mt-[185px]">
       <SectionTitle title="🔥 促銷焦點" subtitle="左右滑動檢視近期活動" />
@@ -438,25 +450,25 @@ function PromoCarousel({ items, onOpenPromo }) {
               <button onClick={() => onOpenPromo(promo)} className="flex h-full w-full flex-col text-left">
                 <div className="relative h-[120px] w-full shrink-0 bg-slate-100 overflow-hidden">
                   {promoImage ? <img src={promoImage} alt={promo.title} className="h-full w-full object-cover" /> : <div className="flex h-full items-center justify-center text-slate-400"><BadgePercent className="h-10 w-10" /></div>}
-                  <div className={`absolute left-2 top-2 rounded-full border px-2.5 py-0.5 text-[10px] font-bold shadow-sm backdrop-blur-sm ${statusMeta.className}`}>
+                  <div className={`absolute left-2 top-2 rounded-full border font-bold shadow-sm backdrop-blur-sm ${statusMeta.className} ${preset.promoStatus}`}>
                     {statusMeta.label}
                   </div>
-                  <div className="absolute right-2 top-2 rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-bold shadow-sm backdrop-blur-sm" style={{ color: 'var(--promo)' }}>
+                  <div className={`absolute right-2 top-2 rounded-full bg-white/90 font-bold shadow-sm backdrop-blur-sm ${preset.promoDate}`} style={{ color: 'var(--promo)' }}>
                     {promo.endDate || promo.startDate}
                   </div>
                 </div>
                 <div className="flex flex-1 flex-col p-3">
-                  <h3 className="line-clamp-2 text-[15px] font-black leading-tight text-[var(--text)]">{promo.shortTitle || promo.title}</h3>
-                  <p className="mt-1.5 line-clamp-2 flex-1 text-xs leading-relaxed text-[var(--muted)]">{promo.content}</p>
+                  <h3 className={`line-clamp-2 font-black leading-tight text-[var(--text)] ${preset.promoTitle}`}>{promo.shortTitle || promo.title}</h3>
+                  <p className={`mt-1.5 line-clamp-2 flex-1 leading-relaxed text-[var(--muted)] ${preset.promoBody}`}>{promo.content}</p>
                   
                   <div className="mt-2 flex flex-wrap items-center gap-1.5">
                     {promo.channel && (
-                      <span className="flex items-center gap-0.5 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-bold text-slate-500">
-                        <Store className="h-3 w-3" /> {promo.channel}
+                      <span className={`flex items-center gap-0.5 rounded bg-slate-100 font-bold text-slate-500 ${preset.promoTag}`}>
+                        <Store className={preset.icon} /> {promo.channel}
                       </span>
                     )}
                     {getPromoGroups(promo).slice(0,2).map((group) => (
-                      <span key={group} className="rounded-full px-2 py-0.5 text-[10px] font-bold" style={{ background: 'var(--promo-soft)', color: 'var(--promo)' }}>
+                      <span key={group} className={`rounded-full font-bold ${preset.promoTag}`} style={{ background: 'var(--promo-soft)', color: 'var(--promo)' }}>
                         {group}
                       </span>
                     ))}
@@ -834,8 +846,10 @@ function FabMenu({ onScrollTop, onGotoPromo, onToggleSettings, onGotoSection }) 
   )
 }
 
-function PromoDrawer({ promo, onClose, onNavigateToProduct }) {
+function PromoDrawer({ promo, onClose, onNavigateToProduct, scale }) {
   if (!promo) return null
+  const preset = SCALE_PRESETS[scale]
+
   return (
     <AnimatePresence>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[74] bg-black/70 backdrop-blur-sm" onClick={onClose}>
@@ -843,25 +857,25 @@ function PromoDrawer({ promo, onClose, onNavigateToProduct }) {
           <div className="flex shrink-0 items-start justify-between border-b border-slate-100 p-4 pb-3">
             <div>
               <div className="flex flex-wrap items-center gap-2 mb-1">
-                <p className="text-[12px] font-bold text-[var(--primary)]">{promo.startDate} ~ {promo.endDate}</p>
+                <p className={`font-bold text-[var(--primary)] ${preset.drawerDate}`}>{promo.startDate} ~ {promo.endDate}</p>
                 {promo.channel && (
-                  <span className="flex items-center gap-0.5 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-500">
-                    <Store className="h-3 w-3" /> {promo.channel}
+                  <span className={`flex items-center gap-0.5 rounded-full bg-slate-100 font-bold text-slate-500 ${preset.promoTag}`}>
+                    <Store className={preset.icon} /> {promo.channel}
                   </span>
                 )}
               </div>
-              <h3 className="text-[20px] font-black text-[var(--text)] leading-tight">{promo.title}</h3>
+              <h3 className={`font-black text-[var(--text)] leading-tight ${preset.drawerTitle}`}>{promo.title}</h3>
             </div>
             <button onClick={onClose} className="rounded-full bg-slate-100 p-2 text-slate-500 shrink-0"><X className="h-5 w-5" /></button>
           </div>
           <div className="flex-1 overflow-y-auto p-4 pb-[calc(20px+env(safe-area-inset-bottom))]">
             {getPromoImage(promo) && <div className="mb-4 overflow-hidden rounded-xl bg-black"><img src={getPromoImage(promo)} className="w-full object-contain max-h-[40vh]" alt="活動" /></div>}
-            <p className="whitespace-pre-line text-[15px] leading-relaxed text-[var(--text)]">{promo.content}</p>
+            <p className={`whitespace-pre-line leading-relaxed text-[var(--text)] ${preset.drawerBody}`}>{promo.content}</p>
             
             {promo.relatedProducts && promo.relatedProducts.length > 0 && (
               <div className="mt-8 border-t border-slate-100 pt-5">
-                <h4 className="mb-3 flex items-center gap-1.5 text-[14px] font-bold text-[var(--primary)]">
-                  <Gift className="h-4 w-4" /> 適用此活動的商品
+                <h4 className={`mb-3 flex items-center gap-1.5 font-bold text-[var(--primary)] ${preset.drawerRelatedTitle}`}>
+                  <Gift className={preset.icon} /> 適用此活動的商品
                 </h4>
                 <div className="grid gap-2">
                   {promo.relatedProducts.map(product => (
@@ -875,8 +889,8 @@ function PromoDrawer({ promo, onClose, onNavigateToProduct }) {
                           <SafeImage src={product.photo} alt={product.name} fallbackLabel={product.name} contain className="h-full w-full p-0.5" />
                         </div>
                         <div className="text-left min-w-0">
-                          <p className="line-clamp-1 text-[13px] font-bold text-[var(--text)]">{product.name}</p>
-                          <p className="text-[11px] font-bold text-[var(--price)]">${product.price.toLocaleString()}</p>
+                          <p className={`line-clamp-1 font-bold text-[var(--text)] ${preset.drawerRelatedName}`}>{product.name}</p>
+                          <p className={`font-bold text-[var(--price)] ${preset.drawerRelatedPrice}`}>${product.price.toLocaleString()}</p>
                         </div>
                       </div>
                       <ChevronDown className="mr-1 h-5 w-5 shrink-0 -rotate-90 text-[var(--primary)]" />
@@ -892,7 +906,7 @@ function PromoDrawer({ promo, onClose, onNavigateToProduct }) {
   )
 }
 
-function PromoCenterPanel({ open, items, statusFilter, setStatusFilter, groupFilter, setGroupFilter, onOpenPromo, onClose }) {
+function PromoCenterPanel({ open, items, statusFilter, setStatusFilter, groupFilter, setGroupFilter, onOpenPromo, onClose, scale }) {
   if (!open) return null
   const availableGroups = ['all', ...CATEGORY_META.filter((item) => item.key !== 'all' && item.key !== '其他').map((item) => item.key)]
   const filtered = items.filter((promo) => {
@@ -900,6 +914,9 @@ function PromoCenterPanel({ open, items, statusFilter, setStatusFilter, groupFil
     const groupOk = groupFilter === 'all' || getPromoGroups(promo).includes(groupFilter)
     return statusOk && groupOk
   })
+  
+  const preset = SCALE_PRESETS[scale]
+
   return (
     <AnimatePresence>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[73] bg-black/60 backdrop-blur-sm" onClick={onClose}>
@@ -917,7 +934,7 @@ function PromoCenterPanel({ open, items, statusFilter, setStatusFilter, groupFil
                 const active = statusFilter === status
                 const label = status === 'all' ? '全部' : (PROMO_STATUS_META[status]?.label || status)
                 return (
-                  <button key={status} onClick={() => setStatusFilter(status)} className={`rounded-full border px-3 py-1.5 text-xs font-bold transition ${active ? 'text-white shadow-sm' : 'bg-white text-[var(--muted)]'}`} style={active ? { background: 'var(--promo)', borderColor: 'var(--promo)' } : { borderColor: 'var(--border)' }}>
+                  <button key={status} onClick={() => setStatusFilter(status)} className={`rounded-full border font-bold transition ${active ? 'text-white shadow-sm' : 'bg-white text-[var(--muted)]'} ${preset.promoFilter}`} style={active ? { background: 'var(--promo)', borderColor: 'var(--promo)' } : { borderColor: 'var(--border)' }}>
                     {label}
                   </button>
                 )
@@ -928,7 +945,7 @@ function PromoCenterPanel({ open, items, statusFilter, setStatusFilter, groupFil
                 const active = groupFilter === group
                 const label = group === 'all' ? '全部品類' : group
                 return (
-                  <button key={group} onClick={() => setGroupFilter(group)} className={`rounded-full border px-3 py-1.5 text-xs font-bold transition ${active ? 'text-white shadow-sm' : 'bg-white text-[var(--muted)]'}`} style={active ? { background: 'var(--primary)', borderColor: 'var(--primary)' } : { borderColor: 'var(--border)' }}>
+                  <button key={group} onClick={() => setGroupFilter(group)} className={`rounded-full border font-bold transition ${active ? 'text-white shadow-sm' : 'bg-white text-[var(--muted)]'} ${preset.promoFilter}`} style={active ? { background: 'var(--primary)', borderColor: 'var(--primary)' } : { borderColor: 'var(--border)' }}>
                     {label}
                   </button>
                 )
@@ -944,25 +961,25 @@ function PromoCenterPanel({ open, items, statusFilter, setStatusFilter, groupFil
                   <button key={promo.promoId} onClick={() => onOpenPromo(promo)} className="overflow-hidden rounded-2xl border border-[var(--border)] bg-white text-left shadow-sm">
                     <div className="relative h-[130px] bg-slate-100 overflow-hidden">
                       {promoImage ? <img src={promoImage} alt={promo.title} className="h-full w-full object-cover" /> : <div className="flex h-full items-center justify-center text-slate-400"><BadgePercent className="h-9 w-9" /></div>}
-                      <div className={`absolute left-2 top-2 rounded-full border px-2.5 py-0.5 text-[10px] font-bold shadow-sm backdrop-blur-sm ${statusMeta.className}`}>
+                      <div className={`absolute left-2 top-2 rounded-full border font-bold shadow-sm backdrop-blur-sm ${statusMeta.className} ${preset.promoStatus}`}>
                         {statusMeta.label}
                       </div>
                     </div>
                     <div className="space-y-2 p-3">
                       <div className="flex items-start justify-between gap-3">
-                        <h4 className="line-clamp-2 text-[15px] font-black leading-tight text-[var(--text)]">{promo.title}</h4>
-                        <span className="shrink-0 text-[10px] font-bold text-[var(--muted)]">{promo.endDate || promo.startDate}</span>
+                        <h4 className={`line-clamp-2 font-black leading-tight text-[var(--text)] ${preset.promoTitle}`}>{promo.title}</h4>
+                        <span className={`shrink-0 font-bold text-[var(--muted)] ${preset.promoDate}`}>{promo.endDate || promo.startDate}</span>
                       </div>
-                      <p className="line-clamp-3 text-[12px] leading-relaxed text-[var(--muted)]">{promo.content}</p>
+                      <p className={`line-clamp-3 leading-relaxed text-[var(--muted)] ${preset.promoBody}`}>{promo.content}</p>
                       
                       <div className="flex flex-wrap items-center gap-1.5">
                         {promo.channel && (
-                          <span className="flex items-center gap-0.5 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-bold text-slate-500">
-                            <Store className="h-3 w-3" /> {promo.channel}
+                          <span className={`flex items-center gap-0.5 rounded bg-slate-100 font-bold text-slate-500 ${preset.promoTag}`}>
+                            <Store className={preset.icon} /> {promo.channel}
                           </span>
                         )}
                         {getPromoGroups(promo).map((group) => (
-                          <span key={group} className="rounded-full px-2 py-0.5 text-[10px] font-bold" style={{ background: 'var(--promo-soft)', color: 'var(--promo)' }}>
+                          <span key={group} className={`rounded-full font-bold ${preset.promoTag}`} style={{ background: 'var(--promo-soft)', color: 'var(--promo)' }}>
                             {group}
                           </span>
                         ))}
@@ -1090,7 +1107,6 @@ export default function App() {
     return promotions.map((promo) => {
       const chs = []
       
-      // 優先使用 ch 物件進行精準判斷
       if (promo.ch) {
         if (promo.ch.show) chs.push('展售中心')
         if (promo.ch.mart) chs.push('便利店')
@@ -1098,7 +1114,6 @@ export default function App() {
         if (promo.ch.office) chs.push('營業所')
       }
       
-      // 若完全沒有 ch 屬性，才降級使用原本的 channelLabels
       let channelText = chs.length > 0 
         ? chs.join('、') 
         : (Array.isArray(promo.channelLabels) ? promo.channelLabels.join('、') : '')
@@ -1324,7 +1339,7 @@ export default function App() {
         </header>
 
         <main className="px-4 pt-4 space-y-6">
-          <PromoCarousel items={promoItems} onOpenPromo={(promo) => { setPromoDrawer(promo); window.history.pushState({ ui: 'promo', promoId: promo.promoId }, '') }} />
+          <PromoCarousel items={promoItems} onOpenPromo={(promo) => { setPromoDrawer(promo); window.history.pushState({ ui: 'promo', promoId: promo.promoId }, '') }} scale={scale} />
           <RankingCarousel items={visibleHotProducts} onOpenProduct={openProductByCode} subtitle={keyword || activeTag ? '已依目前篩選條件保留相關熱銷品' : '依據實際銷售數據即時更新'} />
 
           {groupedProducts.length > 0 ? groupedProducts.map((group) => (
@@ -1371,11 +1386,13 @@ export default function App() {
         setGroupFilter={setPromoGroupFilter} 
         onOpenPromo={(promo) => { setPromoDrawer(promo); window.history.pushState({ ui: 'promo', promoId: promo.promoId }, '') }} 
         onClose={() => { if (window.history.state?.ui === 'promo-center') window.history.back(); else setPromoCenterOpen(false); }} 
+        scale={scale}
       />
       <PromoDrawer 
         promo={promoDrawer} 
         onClose={() => { if (window.history.state?.ui === 'promo') window.history.back(); else setPromoDrawer(null); }} 
         onNavigateToProduct={navigateToProductFromPromo}
+        scale={scale}
       />
       <FabMenu onScrollTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })} onGotoPromo={() => { setPromoCenterOpen(true); window.history.pushState({ ui: 'promo-center' }, '') }} onToggleSettings={() => { setSettingsOpen(true); window.history.pushState({ ui: 'settings' }, '') }} onGotoSection={handleGotoSection} />
       <ToastMessage />
