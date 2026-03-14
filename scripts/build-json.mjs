@@ -1,117 +1,47 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
-const DEFAULT_SOURCE_URLS = {
-  products: process.env.SOURCE_PRODUCTS_CSV || 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQBtV8q3Ank7Bnhs83IbOb97U46juV-RKeL3NpdFiNcSu-ifI21fQYo1-io62S3JIrXEO5MiDArc1Lr/pub?gid=1623055155&single=true&output=csv',
-  pitch: process.env.SOURCE_PITCH_CSV || 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQJaiIUkmBPfRcFADAoW4-_zbWB78gZb1yR_2gM9oORqRwCx8vb844cP-KcE58FgTVynptYk6L6o9pm/pub?gid=0&single=true&output=csv',
-  promotions: process.env.SOURCE_PROMOTIONS_CSV || 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT3hvcNJNEfLugUcwQdHTTu0NZcy2QHyMPvMaPpfU6g_p0MTrw3muXIGn3SPkISSPnbW9ou1GlHzRc6/pub?gid=74407584&single=true&output=csv',
-  rank: process.env.SOURCE_RANK_CSV || 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQj5QLrtaWikGcLNwMawbjiN8ZQDgFzW1RV7UECFgLzECWj16I2ugE_B6tzzLICCynsk1L6lAuJfccS/pub?gid=93142219&single=true&output=csv',
+const OUTPUT_DIR = path.resolve(process.cwd(), 'public')
+
+const SOURCE_URLS = {
+  products:
+    process.env.PRODUCTS_CSV_URL ||
+    'https://docs.google.com/spreadsheets/d/e/2PACX-1vQBtV8q3Ank7Bnhs83IbOb97U46juV-RKeL3NpdFiNcSu-ifI21fQYo1-io62S3JIrXEO5MiDArc1Lr/pub?gid=1623055155&single=true&output=csv',
+  pitch:
+    process.env.PITCH_CSV_URL ||
+    'https://docs.google.com/spreadsheets/d/e/2PACX-1vQJaiIUkmBPfRcFADAoW4-_zbWB78gZb1yR_2gM9oORqRwCx8vb844cP-KcE58FgTVynptYk6L6o9pm/pub?gid=0&single=true&output=csv',
+  promotions:
+    process.env.PROMOTIONS_CSV_URL ||
+    'https://docs.google.com/spreadsheets/d/e/2PACX-1vT3hvcNJNEfLugUcwQdHTTu0NZcy2QHyMPvMaPpfU6g_p0MTrw3muXIGn3SPkISSPnbW9ou1GlHzRc6/pub?gid=74407584&single=true&output=csv',
+  rank:
+    process.env.RANKINGS_CSV_URL ||
+    'https://docs.google.com/spreadsheets/d/e/2PACX-1vQj5QLrtaWikGcLNwMawbjiN8ZQDgFzW1RV7UECFgLzECWj16I2ugE_B6tzzLICCynsk1L6lAuJfccS/pub?gid=93142219&single=true&output=csv',
 }
 
-const OUTPUT_DIR = process.env.OUTPUT_DIR || process.cwd()
-const TZ = process.env.PIPELINE_TIMEZONE || 'Asia/Taipei'
+const nowIso = new Date().toISOString()
+const buildId = nowIso.replace(/[-:TZ.]/g, '').slice(0, 14)
 
-const HEADER_ALIASES = {
-  productCode: ['code', 'product_code', 'productcode', 'item_code', 'itemcode', 'sku', '商品編號', '商品代碼', '品號', '料號', '編號'],
-  productName: ['name', 'product_name', 'productname', 'item_name', 'itemname', '商品名稱', '品名', '名稱'],
-  category: ['category', 'category_name', 'categoryname', '分類', '商品分類', '類別', '大類'],
-  price: ['price', 'list_price', 'listprice', 'unit_price', 'unitprice', 'sale_price', 'saleprice', '價格', '售價', '單價', '建議售價'],
-  spec: ['spec', 'specification', '商品規格', '規格', '規格說明'],
-  photo: ['photo', 'image', 'image_url', 'imageurl', 'photo_url', 'photourl', '圖片', '圖片連結', '商品圖', '商品圖片'],
-  videoUrl: ['video_url', 'videourl', 'video', '影音連結', '影片連結', '影片', '影音'],
-  moreLinksRaw: ['more_links_raw', 'morelinksraw', 'more_links', 'morelinks', '更多素材', '更多素材連結', '素材連結'],
-
-  pitchCode: ['code', 'product_code', 'productcode', 'item_code', 'itemcode', 'sku', '商品編號', '商品代碼', '品號', '料號', '編號'],
-  pitchName: ['name', 'product_name', 'productname', 'item_name', 'itemname', '商品名稱', '品名', '名稱'],
-  pitchTitle: ['title', 'pitch_title', 'pitchtitle', '主訴求', '標題', '話術標題'],
-  pitchContent: ['content', 'pitch_content', 'pitchcontent', '文案', '內容', '話術內容'],
-  pitchTags: ['tags', 'tag', '標籤', '關鍵字', 'hashtags'],
-  pitchIsNew: ['is_new', 'isnew', '新品', 'new', '新品標記', '新品註記'],
-
-  promoId: ['promo_id', 'promoid', 'id', '活動編號', '活動id'],
-  promoTitle: ['title', 'promo_title', 'promotitle', '活動標題', '標題'],
-  promoShortTitle: ['short_title', 'shorttitle', 'promo_short_title', 'promoshorttitle', '短標題', '短標', '活動短標'],
-  promoContent: ['content', 'promo_content', 'promocontent', '活動說明', '說明', '內容'],
-  promoImgUrl: ['img_url', 'imgurl', 'image_url', 'imageurl', 'banner_url', 'bannerurl', '圖片', '圖片連結', '活動圖片', '活動圖'],
-  promoRelatedCodes: ['related_codes', 'relatedcodes', '商品代碼', '適用商品', '連動商品', '相關商品', '商品編號'],
-  promoStartDate: ['start_date', 'startdate', '開始日期', '活動開始', 'start'],
-  promoEndDate: ['end_date', 'enddate', '結束日期', '活動結束', 'end'],
-  promoStatus: ['status', '狀態', '活動狀態'],
-  promoBgColor: ['bg_color', 'bgcolor', '背景色', '背景顏色'],
-  channelShow: ['channel_showroom', 'showroom', 'show', '展售中心'],
-  channelMart: ['channel_mart', 'mart', '便利店'],
-  channelEshop: ['channel_eshop', 'eshop', '購物網', '網購'],
-  channelOffice: ['channel_office', 'office', '營業所'],
-  channelLabels: ['channel_labels', 'channellabels', '通路', '通路標籤', '通路名稱'],
-
-  rankCode: ['code', 'product_code', 'productcode', 'item_code', 'itemcode', 'sku', '商品編號', '商品代碼', '品號', '料號', '編號'],
-  rankName: ['name', 'product_name', 'productname', 'item_name', 'itemname', '商品名稱', '品名', '名稱'],
-  rankSales: ['sales_twd_2025', 'salestwd2025', 'sales_2025', 'sales', '銷售額', '銷售金額', '業績'],
-  rankQty: ['qty_2025', 'qty2025', 'quantity_2025', 'quantity2025', 'qty', '數量', '銷量', '件數'],
-  rankValue: ['rank', '排名'],
-}
-
-function normalizeHeader(value) {
-  return String(value ?? '')
-    .trim()
+function normalizeKey(value) {
+  return String(value || '')
     .replace(/^\uFEFF/, '')
+    .trim()
     .toLowerCase()
-    .replace(/[\s\-\/（）()【】\[\]．。·_:：]+/g, '')
-}
-
-function buildHeaderMap(headers) {
-  const map = new Map()
-  headers.forEach((header) => {
-    const normalized = normalizeHeader(header)
-    if (normalized && !map.has(normalized)) {
-      map.set(normalized, header)
-    }
-  })
-  return map
-}
-
-function getValue(row, aliases) {
-  for (const alias of aliases) {
-    const normalized = normalizeHeader(alias)
-    for (const [key, value] of Object.entries(row)) {
-      if (normalizeHeader(key) === normalized) {
-        const stringValue = String(value ?? '').trim()
-        if (stringValue !== '') return stringValue
-      }
-    }
-  }
-  return ''
+    .replace(/[\s_\-／/（）()\[\]【】「」『』:：]+/g, '')
 }
 
 function parseCsv(text) {
   const rows = []
-  const currentRow = []
-  let currentCell = ''
+  let row = []
+  let cell = ''
   let inQuotes = false
 
-  const pushCell = () => {
-    currentRow.push(currentCell)
-    currentCell = ''
-  }
+  for (let i = 0; i < text.length; i += 1) {
+    const ch = text[i]
+    const next = text[i + 1]
 
-  const pushRow = () => {
-    if (currentRow.length === 1 && currentRow[0] === '' && rows.length === 0) {
-      currentRow.length = 0
-      return
-    }
-    rows.push([...currentRow])
-    currentRow.length = 0
-  }
-
-  const normalized = String(text ?? '').replace(/\r\n/g, '\n').replace(/\r/g, '\n')
-
-  for (let i = 0; i < normalized.length; i += 1) {
-    const char = normalized[i]
-    const next = normalized[i + 1]
-
-    if (char === '"') {
+    if (ch === '"') {
       if (inQuotes && next === '"') {
-        currentCell += '"'
+        cell += '"'
         i += 1
       } else {
         inQuotes = !inQuotes
@@ -119,353 +49,302 @@ function parseCsv(text) {
       continue
     }
 
-    if (char === ',' && !inQuotes) {
-      pushCell()
+    if (ch === ',' && !inQuotes) {
+      row.push(cell)
+      cell = ''
       continue
     }
 
-    if (char === '\n' && !inQuotes) {
-      pushCell()
-      pushRow()
+    if ((ch === '\n' || ch === '\r') && !inQuotes) {
+      if (ch === '\r' && next === '\n') i += 1
+      row.push(cell)
+      rows.push(row)
+      row = []
+      cell = ''
       continue
     }
 
-    currentCell += char
+    cell += ch
   }
 
-  pushCell()
-  if (currentRow.length) pushRow()
+  if (cell.length > 0 || row.length > 0) {
+    row.push(cell)
+    rows.push(row)
+  }
 
   if (!rows.length) return []
 
-  const [headerRow, ...dataRows] = rows
-  const headers = headerRow.map((header) => String(header ?? '').replace(/^\uFEFF/, '').trim())
-
-  return dataRows
-    .filter((row) => row.some((cell) => String(cell ?? '').trim() !== ''))
-    .map((row) => {
+  const headers = rows[0].map((h) => String(h || '').replace(/^\uFEFF/, '').trim())
+  return rows
+    .slice(1)
+    .filter((r) => r.some((v) => String(v || '').trim() !== ''))
+    .map((r) => {
       const obj = {}
-      headers.forEach((header, index) => {
-        obj[header] = String(row[index] ?? '').trim()
+      headers.forEach((header, idx) => {
+        obj[header] = (r[idx] ?? '').trim()
       })
       return obj
     })
 }
 
-function parseBoolean(value) {
-  const normalized = String(value ?? '').trim().toLowerCase()
-  if (!normalized) return false
-  return ['1', 'true', 'yes', 'y', 'on', 'ok', 'o', 'v', '✓', '✔', '是', '有', '開', '啟用'].includes(normalized)
-}
-
-function parseNumber(value, fallback = 0) {
-  const normalized = String(value ?? '').replace(/[,$\s]/g, '')
-  if (!normalized) return fallback
-  const numeric = Number(normalized)
-  return Number.isFinite(numeric) ? numeric : fallback
-}
-
-function normalizeDateString(value) {
-  const text = String(value ?? '').trim()
-  if (!text) return ''
-  const direct = text.replace(/[.]/g, '/').replace(/年/g, '/').replace(/月/g, '/').replace(/日/g, '')
-  const compact = direct.match(/^(\d{4})[\/-]?(\d{1,2})[\/-]?(\d{1,2})$/)
-  if (compact) {
-    const [, year, month, day] = compact
-    return `${year}/${month.padStart(2, '0')}/${day.padStart(2, '0')}`
+function buildValueGetter(row) {
+  const entries = Object.entries(row || {})
+  const normalized = new Map(entries.map(([key, value]) => [normalizeKey(key), value]))
+  return (...candidates) => {
+    for (const candidate of candidates.flat()) {
+      const value = normalized.get(normalizeKey(candidate))
+      if (value !== undefined && String(value).trim() !== '') return String(value).trim()
+    }
+    return ''
   }
-  const date = new Date(text)
-  if (!Number.isNaN(date.getTime())) {
-    const y = date.getFullYear()
-    const m = String(date.getMonth() + 1).padStart(2, '0')
-    const d = String(date.getDate()).padStart(2, '0')
-    return `${y}/${m}/${d}`
-  }
-  return text
 }
 
-function toDateValue(value) {
-  const normalized = normalizeDateString(value)
-  if (!normalized) return null
-  const safe = normalized.replace(/\//g, '-')
-  const date = new Date(`${safe}T00:00:00+08:00`)
-  return Number.isNaN(date.getTime()) ? null : date
+function toNumber(value) {
+  const cleaned = String(value || '').replace(/[,\sNT$元]/gi, '')
+  if (!cleaned) return 0
+  const num = Number(cleaned)
+  return Number.isFinite(num) ? num : 0
 }
 
-function todayKeyInTz(timeZone = TZ) {
-  const parts = new Intl.DateTimeFormat('en-CA', {
-    timeZone,
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).formatToParts(new Date())
-  const year = parts.find((part) => part.type === 'year')?.value ?? '0000'
-  const month = parts.find((part) => part.type === 'month')?.value ?? '01'
-  const day = parts.find((part) => part.type === 'day')?.value ?? '01'
-  return `${year}-${month}-${day}`
-}
-
-function derivePromoStatus({ explicitStatus, startDate, endDate }) {
-  const normalizedExplicit = String(explicitStatus ?? '').trim().toLowerCase()
-  if (['active', 'upcoming', 'ended'].includes(normalizedExplicit)) return normalizedExplicit
-
-  const today = new Date(`${todayKeyInTz()}T00:00:00+08:00`)
-  const start = toDateValue(startDate)
-  const end = toDateValue(endDate)
-
-  if (start && start > today) return 'upcoming'
-  if (end && end < today) return 'ended'
-  return 'active'
+function toBool(value) {
+  const raw = String(value || '').trim().toLowerCase()
+  return ['1', 'true', 'yes', 'y', '是', '有', '上架', 'active', 'x', 'v', '✓'].includes(raw)
 }
 
 function splitList(value) {
-  return String(value ?? '')
-    .split(/[\n,，;；、|]+/)
-    .map((item) => item.trim())
+  return String(value || '')
+    .split(/[\n\r,，;；、|]+/)
+    .map((v) => v.trim())
     .filter(Boolean)
 }
 
-function stableStringify(value) {
-  const seen = new WeakSet()
-  return JSON.stringify(value, (key, val) => {
-    if (val && typeof val === 'object' && !Array.isArray(val)) {
-      if (seen.has(val)) return val
-      seen.add(val)
-      return Object.keys(val).sort().reduce((acc, current) => {
-        acc[current] = val[current]
-        return acc
-      }, {})
-    }
-    return val
-  })
+function normalizeDateString(value) {
+  return String(value || '').trim().replace(/[.]/g, '/').replace(/-/g, '/')
 }
 
-async function fetchCsv(url) {
-  const response = await fetch(url, {
-    headers: { 'cache-control': 'no-cache' },
-  })
-  if (!response.ok) {
-    throw new Error(`Failed to fetch CSV: ${response.status} ${response.statusText} (${url})`)
-  }
-  const text = await response.text()
-  if (!text.trim()) {
-    throw new Error(`Fetched empty CSV from ${url}`)
-  }
-  if (/^<!doctype html/i.test(text.trim())) {
-    throw new Error(`Unexpected HTML response from ${url}`)
-  }
-  return text
+function parseLooseDate(value) {
+  const raw = normalizeDateString(value)
+  if (!raw) return null
+  const match = raw.match(/^(\d{4})\/(\d{1,2})\/(\d{1,2})$/)
+  if (!match) return null
+  const [, y, m, d] = match
+  const dt = new Date(Number(y), Number(m) - 1, Number(d))
+  return Number.isNaN(dt.getTime()) ? null : dt
 }
 
-function buildMergedFeed(productRows, pitchRows, sourceUrls) {
+function inferPromoStatus(explicitStatus, startDate, endDate) {
+  const raw = String(explicitStatus || '').trim().toLowerCase()
+  if (['active', '進行中', 'on', 'ongoing'].includes(raw)) return 'active'
+  if (['upcoming', '即將開始', 'coming', 'soon'].includes(raw)) return 'upcoming'
+  if (['ended', '已結束', 'off', 'expired'].includes(raw)) return 'ended'
+
+  const now = new Date()
+  const start = parseLooseDate(startDate)
+  const end = parseLooseDate(endDate)
+
+  if (start && start > now) return 'upcoming'
+  if (end && end < now) return 'ended'
+  return 'active'
+}
+
+function channelFlagsFromRow(get) {
+  const show = toBool(get('channel_showroom', 'showroom', 'show', '展售中心', '通路展售中心'))
+  const mart = toBool(get('channel_mart', 'mart', '便利店', '通路便利店'))
+  const eshop = toBool(get('channel_eshop', 'eshop', '購物網', '通路購物網'))
+  const office = toBool(get('channel_office', 'office', '營業所', '通路營業所'))
+  return { show, mart, eshop, office }
+}
+
+function channelLabelsFromFlags(ch) {
+  const labels = []
+  if (ch.show) labels.push('展售中心')
+  if (ch.mart) labels.push('便利店')
+  if (ch.eshop) labels.push('購物網')
+  if (ch.office) labels.push('營業所')
+  return labels
+}
+
+async function fetchCsvRows(url, label) {
+  const res = await fetch(url, {
+    headers: {
+      'cache-control': 'no-cache',
+      pragma: 'no-cache',
+    },
+  })
+
+  if (!res.ok) {
+    throw new Error(`${label} CSV 下載失敗：${res.status} ${res.statusText}`)
+  }
+
+  const text = await res.text()
+  return parseCsv(text)
+}
+
+function buildMergedFeed(productRows, pitchRows) {
   const pitchByCode = new Map()
   const pitchByName = new Map()
 
-  pitchRows.forEach((row) => {
-    const code = getValue(row, HEADER_ALIASES.pitchCode)
-    const name = getValue(row, HEADER_ALIASES.pitchName)
-    const pitch = {
-      title: getValue(row, HEADER_ALIASES.pitchTitle),
-      content: getValue(row, HEADER_ALIASES.pitchContent),
-      tags: getValue(row, HEADER_ALIASES.pitchTags),
-      isNew: parseBoolean(getValue(row, HEADER_ALIASES.pitchIsNew)),
+  for (const row of pitchRows) {
+    const get = buildValueGetter(row)
+    const code = get('code', '商品編號', '商品代號', 'item_code', '品號')
+    const name = get('name', '商品名稱', '品名')
+    const entry = {
+      title: get('title', 'pitch_title', '主訴求', '標題'),
+      content: get('content', 'pitch_content', '銷售話術', '話術內容', '文案'),
+      tags: get('tags', 'pitch_tags', '標籤', '關鍵字'),
+      isNew: toBool(get('isNew', 'is_new', '新品', 'new')),
       name,
     }
-    if (code) pitchByCode.set(code, pitch)
-    if (name) pitchByName.set(name, pitch)
-  })
+    if (code) pitchByCode.set(code, entry)
+    if (name) pitchByName.set(name.trim().toLowerCase(), entry)
+  }
 
   const items = productRows
     .map((row) => {
-      const code = getValue(row, HEADER_ALIASES.productCode)
-      const name = getValue(row, HEADER_ALIASES.productName)
+      const get = buildValueGetter(row)
+      const code = get('code', '商品編號', '商品代號', 'item_code', '品號')
+      const name = get('name', '商品名稱', '品名')
       if (!code || !name) return null
-      const pitch = pitchByCode.get(code) || pitchByName.get(name) || {
+
+      const pitch = pitchByCode.get(code) || pitchByName.get(name.trim().toLowerCase()) || {
         title: '',
         content: '',
         tags: '',
         isNew: false,
         name,
       }
+
       return {
         code,
         name,
-        category: getValue(row, HEADER_ALIASES.category),
-        price: parseNumber(getValue(row, HEADER_ALIASES.price), 0),
-        spec: getValue(row, HEADER_ALIASES.spec),
-        photo: getValue(row, HEADER_ALIASES.photo),
-        videoUrl: getValue(row, HEADER_ALIASES.videoUrl),
-        moreLinksRaw: getValue(row, HEADER_ALIASES.moreLinksRaw),
+        category: get('category', '分類', 'category_name', '大類別', '商品分類'),
+        price: toNumber(get('price', '售價', 'price_twd', '單價', '建議售價')),
+        spec: get('spec', '規格', '容量規格'),
+        photo: get('photo', 'image', 'image_url', 'img', '圖片', '商品圖片'),
+        videoUrl: get('videoUrl', 'video_url', '影片連結', '影音連結'),
+        moreLinksRaw: get('moreLinksRaw', 'more_links', '更多素材', 'more_links_raw'),
         pitch,
       }
     })
     .filter(Boolean)
 
-  if (!items.length) {
-    throw new Error('Merged feed generation aborted: no valid product rows were produced.')
-  }
-
-  const timestamp = new Date().toISOString()
-  const buildId = `merged-${timestamp.replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z')}`
-
   return {
     schemaVersion: 1,
     buildId,
-    generatedAt: timestamp,
+    generatedAt: nowIso,
     source: {
-      ...sourceUrls,
-      sourceFiles: {
-        products: 'Google Sheets published CSV',
-        pitch: 'Google Sheets published CSV',
-        promotions: 'Google Sheets published CSV',
-        rank: 'Google Sheets published CSV',
-      },
+      products: SOURCE_URLS.products,
+      pitch: SOURCE_URLS.pitch,
+      promotions: SOURCE_URLS.promotions,
+      rank: SOURCE_URLS.rank,
     },
     count: items.length,
     items,
   }
 }
 
-function buildPromotions(rows, sourceUrls) {
+function buildPromotions(rows) {
   const items = rows
     .map((row, index) => {
-      const title = getValue(row, HEADER_ALIASES.promoTitle)
+      const get = buildValueGetter(row)
+      const ch = channelFlagsFromRow(get)
+      const channelLabels = channelLabelsFromFlags(ch)
+      const title = get('title', '活動名稱', 'promo_title', '促銷名稱')
+      const shortTitle = get('shortTitle', '短標', '短標題', 'promo_short_title') || title
+      const content = get('content', '活動說明', '促銷內容', 'promo_copy', '文案')
+      const startDate = normalizeDateString(get('startDate', '開始日期', '活動開始日', 'start_date'))
+      const endDate = normalizeDateString(get('endDate', '結束日期', '活動結束日', 'end_date'))
+      const status = inferPromoStatus(get('status', '活動狀態', 'promo_status'), startDate, endDate)
+      const relatedCodes = splitList(
+        get('relatedCodes', '適用商品', '適用品號', '適用商品編號', 'product_codes', 'codes')
+      )
+
       if (!title) return null
 
-      const show = parseBoolean(getValue(row, HEADER_ALIASES.channelShow))
-      const mart = parseBoolean(getValue(row, HEADER_ALIASES.channelMart))
-      const eshop = parseBoolean(getValue(row, HEADER_ALIASES.channelEshop))
-      const office = parseBoolean(getValue(row, HEADER_ALIASES.channelOffice))
-
-      const fallbackLabels = []
-      if (show) fallbackLabels.push('展售中心')
-      if (mart) fallbackLabels.push('便利店')
-      if (eshop) fallbackLabels.push('購物網')
-      if (office) fallbackLabels.push('營業所')
-
-      const startDate = normalizeDateString(getValue(row, HEADER_ALIASES.promoStartDate))
-      const endDate = normalizeDateString(getValue(row, HEADER_ALIASES.promoEndDate))
-
       return {
-        promoId: getValue(row, HEADER_ALIASES.promoId) || `promo-${String(index + 1).padStart(3, '0')}`,
+        promoId:
+          get('promoId', '活動編號', 'id', 'promo_id') ||
+          `${new Date().getFullYear()}_${String(index + 1).padStart(3, '0')}`,
         title,
-        shortTitle: getValue(row, HEADER_ALIASES.promoShortTitle) || title,
-        content: getValue(row, HEADER_ALIASES.promoContent),
-        imgUrl: getValue(row, HEADER_ALIASES.promoImgUrl),
-        relatedCodes: splitList(getValue(row, HEADER_ALIASES.promoRelatedCodes)),
+        shortTitle,
+        content,
+        imgUrl: get('imgUrl', '圖片連結', '圖檔連結', 'image_url', 'img', 'image'),
+        relatedCodes,
         startDate,
         endDate,
-        status: derivePromoStatus({
-          explicitStatus: getValue(row, HEADER_ALIASES.promoStatus),
-          startDate,
-          endDate,
-        }),
-        bgColor: getValue(row, HEADER_ALIASES.promoBgColor) || '#fff6d5',
-        ch: { show, mart, eshop, office },
-        channelLabels: fallbackLabels.length ? fallbackLabels : splitList(getValue(row, HEADER_ALIASES.channelLabels)),
+        status,
+        bgColor: get('bgColor', '背景色', '卡片底色', 'bg_color'),
+        ch,
+        channelLabels,
       }
     })
     .filter(Boolean)
 
   return {
-    generatedAt: new Date().toISOString(),
-    source: {
-      promotions: sourceUrls.promotions,
-    },
+    generatedAt: nowIso,
     count: items.length,
     items,
   }
 }
 
-function buildRankings(rows, sourceUrls) {
-  let items = rows
+function buildRankings(rows) {
+  const items = rows
     .map((row) => {
-      const code = getValue(row, HEADER_ALIASES.rankCode)
-      const name = getValue(row, HEADER_ALIASES.rankName)
-      if (!code || !name) return null
+      const get = buildValueGetter(row)
+      const code = get('code', '商品編號', '商品代號', 'item_code', '品號')
+      if (!code) return null
       return {
         code,
-        name,
-        salesTwd2025: parseNumber(getValue(row, HEADER_ALIASES.rankSales), 0),
-        qty2025: parseNumber(getValue(row, HEADER_ALIASES.rankQty), 0),
-        rank: parseNumber(getValue(row, HEADER_ALIASES.rankValue), 0),
+        name: get('name', '商品名稱', '品名'),
+        salesTwd2025: toNumber(get('salesTwd2025', 'sales_twd_2025', '2025銷售額', '銷售額', 'sales')),
+        qty2025: toNumber(get('qty2025', 'qty_2025', '2025銷售量', '數量', 'qty')),
+        rank: toNumber(get('rank', '排名', '名次')),
       }
     })
     .filter(Boolean)
-
-  const hasExplicitRank = items.some((item) => item.rank > 0)
-  if (!hasExplicitRank) {
-    items = items
-      .sort((a, b) => b.salesTwd2025 - a.salesTwd2025 || b.qty2025 - a.qty2025 || a.code.localeCompare(b.code))
-      .map((item, index) => ({ ...item, rank: index + 1 }))
-  } else {
-    items = items.sort((a, b) => a.rank - b.rank || b.salesTwd2025 - a.salesTwd2025)
-  }
+    .sort((a, b) => {
+      if (a.rank && b.rank) return a.rank - b.rank
+      if (a.rank) return -1
+      if (b.rank) return 1
+      return b.salesTwd2025 - a.salesTwd2025
+    })
 
   return {
-    generatedAt: new Date().toISOString(),
-    source: {
-      rank: sourceUrls.rank,
-    },
+    generatedAt: nowIso,
     count: items.length,
     items,
   }
 }
 
-async function writeJsonFile(filename, data) {
-  const target = path.join(OUTPUT_DIR, filename)
-  const formatted = `${JSON.stringify(data, null, 2)}\n`
-  await fs.writeFile(target, formatted, 'utf8')
-}
-
-export async function generateJsonFiles() {
-  const [productsCsv, pitchCsv, promotionsCsv, rankCsv] = await Promise.all([
-    fetchCsv(DEFAULT_SOURCE_URLS.products),
-    fetchCsv(DEFAULT_SOURCE_URLS.pitch),
-    fetchCsv(DEFAULT_SOURCE_URLS.promotions),
-    fetchCsv(DEFAULT_SOURCE_URLS.rank),
-  ])
-
-  const productRows = parseCsv(productsCsv)
-  const pitchRows = parseCsv(pitchCsv)
-  const promotionRows = parseCsv(promotionsCsv)
-  const rankRows = parseCsv(rankCsv)
-
-  if (!productRows.length) {
-    throw new Error('Products CSV parsed to zero rows. Aborting to avoid empty deployment.')
-  }
-
-  const mergedFeed = buildMergedFeed(productRows, pitchRows, DEFAULT_SOURCE_URLS)
-  const promotions = buildPromotions(promotionRows, DEFAULT_SOURCE_URLS)
-  const rankings = buildRankings(rankRows, DEFAULT_SOURCE_URLS)
-
-  await Promise.all([
-    writeJsonFile('merged-feed.json', mergedFeed),
-    writeJsonFile('promotions.json', promotions),
-    writeJsonFile('rankings.json', rankings),
-  ])
-
-  return {
-    mergedFeed,
-    promotions,
-    rankings,
-  }
+async function writeJson(filename, payload) {
+  const outputPath = path.join(OUTPUT_DIR, filename)
+  await fs.writeFile(outputPath, `${JSON.stringify(payload, null, 2)}\n`, 'utf8')
+  console.log(`✅ 已輸出 ${outputPath}`)
 }
 
 async function main() {
-  const startedAt = new Date().toISOString()
-  console.log(`[build-json] start ${startedAt}`)
-  const result = await generateJsonFiles()
-  console.log(`[build-json] merged-feed items: ${result.mergedFeed.count}`)
-  console.log(`[build-json] promotions items: ${result.promotions.count}`)
-  console.log(`[build-json] rankings items: ${result.rankings.count}`)
-  console.log(`[build-json] wrote files to ${OUTPUT_DIR}`)
+  await fs.mkdir(OUTPUT_DIR, { recursive: true })
+
+  const [productRows, pitchRows, promotionRows, rankRows] = await Promise.all([
+    fetchCsvRows(SOURCE_URLS.products, 'products'),
+    fetchCsvRows(SOURCE_URLS.pitch, 'pitch'),
+    fetchCsvRows(SOURCE_URLS.promotions, 'promotions'),
+    fetchCsvRows(SOURCE_URLS.rank, 'rankings'),
+  ])
+
+  const mergedFeed = buildMergedFeed(productRows, pitchRows)
+  const promotions = buildPromotions(promotionRows)
+  const rankings = buildRankings(rankRows)
+
+  await Promise.all([
+    writeJson('merged-feed.json', mergedFeed),
+    writeJson('promotions.json', promotions),
+    writeJson('rankings.json', rankings),
+  ])
 }
 
-if (process.argv[1] && new URL(`file://${process.argv[1]}`).href === import.meta.url) {
-  main().catch((error) => {
-    console.error('[build-json] failed')
-    console.error(error)
-    process.exit(1)
-  })
-}
+main().catch((error) => {
+  console.error('❌ build-json 失敗')
+  console.error(error)
+  process.exit(1)
+})
