@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "build:data": "node scripts/build-json.mjs",
     "build": "vite build",
     "preview": "vite preview"
   },
