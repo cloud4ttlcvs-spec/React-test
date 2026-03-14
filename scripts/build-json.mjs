@@ -110,6 +110,16 @@ function buildValueGetter(row) {
   return { getExact, getRegex }
 }
 
+function getUnnamedColumns(row) {
+  return Object.entries(row || {})
+    .filter(([key, value]) => !String(key || '').trim() && String(value || '').trim())
+    .map(([, value]) => String(value).trim())
+}
+
+function looksLikeCode(value) {
+  return /^[A-Za-z0-9][A-Za-z0-9-]{3,}$/.test(String(value || '').trim())
+}
+
 function toNumber(value) {
   const cleaned = String(value || '').replace(/[\s,NT$元]/gi, '')
   if (!cleaned) return 0
@@ -204,10 +214,10 @@ async function fetchCsvRows(url, label) {
 function readProductFields(row) {
   const { getExact, getRegex } = buildValueGetter(row)
   const code =
-    getExact('code', '商品編號', '商品代號', 'item_code', '品號') ||
+    getExact('code', 'product_code', '商品編號', '商品代號', 'item_code', '品號') ||
     getRegex(/(^|.*)(product)?code$/, /商品(編號|代號)/, /品號/, /料號/, /sku/, /貨號/)
   const name =
-    getExact('name', '商品名稱', '品名') ||
+    getExact('name', 'product_name', '商品名稱', '品名') ||
     getRegex(/(^|.*)name$/, /商品名稱/, /品名/, /名稱/)
   return {
     code,
@@ -216,12 +226,12 @@ function readProductFields(row) {
       getExact('category', '分類', 'category_name', '大類別', '商品分類') ||
       getRegex(/category/, /分類/, /大類別/),
     price:
-      getExact('price', '售價', 'price_twd', '單價', '建議售價') ||
+      getExact('price', 'list_price', '售價', 'price_twd', '單價', '建議售價') ||
       getRegex(/price/, /售價/, /單價/),
-    spec: getExact('spec', '規格', '容量規格') || getRegex(/spec/, /規格/),
+    spec: getExact('spec', 'spec_1', '規格', '容量規格') || getRegex(/spec/, /規格/),
     photo:
-      getExact('photo', 'image', 'image_url', 'img', '圖片', '商品圖片') ||
-      getRegex(/image/, /img/, /圖片/),
+      getExact('photo', 'photos url', 'image', 'image_url', 'img', '圖片', '商品圖片') ||
+      getRegex(/image/, /img/, /圖片/, /photos?url/),
     videoUrl:
       getExact('videoUrl', 'video_url', '影片連結', '影音連結') ||
       getRegex(/video/, /影片/, /影音/),
@@ -234,9 +244,9 @@ function readProductFields(row) {
 function readPitchFields(row) {
   const { getExact, getRegex } = buildValueGetter(row)
   const code =
-    getExact('code', '商品編號', '商品代號', 'item_code', '品號') ||
+    getExact('code', 'product_code', '商品編號', '商品代號', 'item_code', '品號') ||
     getRegex(/(^|.*)(product)?code$/, /商品(編號|代號)/, /品號/, /sku/)
-  const name = getExact('name', '商品名稱', '品名') || getRegex(/(^|.*)name$/, /商品名稱/, /品名/, /名稱/)
+  const name = getExact('name', 'product_name', '商品名稱', '品名') || getRegex(/(^|.*)name$/, /商品名稱/, /品名/, /名稱/)
   return {
     code,
     name,
@@ -249,20 +259,34 @@ function readPitchFields(row) {
   }
 }
 
-function readRankingFields(row) {
+function readRankingFields(row, index = 0) {
   const { getExact, getRegex } = buildValueGetter(row)
+  const unnamed = getUnnamedColumns(row)
+  const firstUnnamed = unnamed[0] || ''
+  const explicitCode =
+    getExact('code', 'product_code', '商品編號', '商品代號', 'item_code', '品號') ||
+    getRegex(/(^|.*)(product)?code$/, /商品(編號|代號)/, /品號/, /sku/)
+  const explicitName =
+    getExact('name', 'product_name', '商品名稱', '品名') ||
+    getRegex(/(^|.*)name$/, /商品名稱/, /品名/, /名稱/)
+
+  let code = explicitCode
+  let name = explicitName
+
+  if (!code && looksLikeCode(firstUnnamed)) code = firstUnnamed
+  if (!name && firstUnnamed && !looksLikeCode(firstUnnamed)) name = firstUnnamed
+
   return {
-    code:
-      getExact('code', '商品編號', '商品代號', 'item_code', '品號') ||
-      getRegex(/(^|.*)(product)?code$/, /商品(編號|代號)/, /品號/, /sku/),
-    name: getExact('name', '商品名稱', '品名') || getRegex(/(^|.*)name$/, /商品名稱/, /品名/, /名稱/),
+    code,
+    name,
     salesTwd2025:
-      getExact('salesTwd2025', 'sales_twd_2025', '2025銷售額', '銷售額', 'sales') ||
-      getRegex(/sales/, /銷售額/, /營業額/),
+      getExact('salesTwd2025', 'sales_twd_2025', '2025銷售額', '銷售額', '實銷金額(台幣)', 'sales') ||
+      getRegex(/sales/, /銷售額/, /營業額/, /實銷金額/),
     qty2025:
-      getExact('qty2025', 'qty_2025', '2025銷售量', '數量', 'qty') ||
-      getRegex(/qty/, /數量/, /銷售量/),
+      getExact('qty2025', 'qty_2025', '2025銷售量', '數量', '開單數量(基礎單位)', 'qty') ||
+      getRegex(/qty/, /數量/, /銷售量/, /開單數量/),
     rank: getExact('rank', '排名', '名次') || getRegex(/rank/, /排名/, /名次/),
+    rowIndex: index + 1,
   }
 }
 
@@ -355,26 +379,24 @@ function buildPromotions(rows) {
   return { generatedAt: nowIso, count: items.length, items }
 }
 
-function buildRankings(rows) {
+function buildRankings(rows, mergedFeed) {
+  const nameByCode = new Map((mergedFeed.items || []).map((item) => [item.code, item.name]))
+
   const items = rows
-    .map((row) => {
-      const entry = readRankingFields(row)
-      if (!entry.code) return null
+    .map((row, index) => {
+      const entry = readRankingFields(row, index)
+      if (!entry.code && !entry.name) return null
       return {
         code: entry.code,
-        name: entry.name,
+        name: entry.name || nameByCode.get(entry.code) || '',
         salesTwd2025: toNumber(entry.salesTwd2025),
         qty2025: toNumber(entry.qty2025),
-        rank: toNumber(entry.rank),
+        rank: toNumber(entry.rank) || entry.rowIndex,
       }
     })
     .filter(Boolean)
-    .sort((a, b) => {
-      if (a.rank && b.rank) return a.rank - b.rank
-      if (a.rank) return -1
-      if (b.rank) return 1
-      return b.salesTwd2025 - a.salesTwd2025
-    })
+    .sort((a, b) => a.rank - b.rank)
+
   return { generatedAt: nowIso, count: items.length, items }
 }
 
@@ -402,7 +424,7 @@ async function main() {
 
   const mergedFeed = buildMergedFeed(productRows, pitchRows)
   const promotions = buildPromotions(promotionRows)
-  const rankings = buildRankings(rankRows)
+  const rankings = buildRankings(rankRows, mergedFeed)
 
   assertNonEmpty(mergedFeed, 'merged-feed.json')
   assertNonEmpty(rankings, 'rankings.json')
