@@ -168,8 +168,10 @@ const PROMO_STATUS_META = {
 
 function normalizeCategory(raw) {
   const value = raw || ''
-  if (value.includes('美容') || value.includes('保養')) return '美容產品'
+  // 🚀 關鍵修正：將「清潔/洗沐」拉到「美容/保養」之前進行判斷
+  // 避免遇到「美容洗沐」這類複合字串時，洗沐商品被誤判入美容分類
   if (value.includes('清潔') || value.includes('洗沐')) return '清潔產品'
+  if (value.includes('美容') || value.includes('保養')) return '美容產品'
   if (value.includes('飲品') || value.includes('黑麥汁')) return '保健飲品'
   if (value.includes('保健食品') || value.includes('健康') || value.includes('買一送一')) return '保健食品'
   return '其他'
@@ -1115,6 +1117,7 @@ export default function App() {
         const pitch = item.pitch || {}
         const rank = rankMap.get(item.code)
         
+        // 防呆判斷：過濾掉 is_hidden_pp 為 true、'true'、'TRUE' 或 '1' 的商品
         const isHidden = pitch.is_hidden_pp === true || String(pitch.is_hidden_pp).toLowerCase() === 'true' || String(pitch.is_hidden_pp) === '1' ||
                          item.is_hidden_pp === true || String(item.is_hidden_pp).toLowerCase() === 'true' || String(item.is_hidden_pp) === '1'
 
@@ -1136,7 +1139,7 @@ export default function App() {
           rank: rank?.rank || null,
         }
       })
-      .filter((item) => !item.isHidden)
+      .filter((item) => !item.isHidden) // 🚀 在源頭徹底剔除隱藏商品
   }, [products, rankings])
 
   const productMap = useMemo(() => new Map(normalizedProducts.map((item) => [item.code, item])), [normalizedProducts])
