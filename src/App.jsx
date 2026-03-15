@@ -1047,10 +1047,11 @@ export default function App() {
         setLoading(true)
         setStage('載入商品主檔...')
         setProgress(20)
+        const fetchJson = (file) => fetch(`${BASE_URL}${file}`, { cache: 'no-store' })
         const [mergedRes, promoRes, rankRes] = await Promise.allSettled([
-          fetch(`${BASE_URL}merged-feed.json`),
-          fetch(`${BASE_URL}promotions.json`),
-          fetch(`${BASE_URL}rankings.json`)
+          fetchJson('merged-feed.json'),
+          fetchJson('promotions.json'),
+          fetchJson('rankings.json')
         ])
         if (cancelled) return
         setProgress(60)
@@ -1078,31 +1079,38 @@ export default function App() {
 
   const normalizedProducts = useMemo(() => {
     const rankMap = new Map(rankings.map((item) => [item.code, item]))
-    return products.map((item) => {
-      const pitch = item.pitch || {}
-      const rank = rankMap.get(item.code)
-      return {
-        code: item.code,
-        name: item.name,
-        category: item.category,
-        group: normalizeCategory(item.category),
-        price: Number(item.price || 0),
-        photo: item.photo,
-        title: pitch.title || '',
-        content: pitch.content || '',
-        tags: parseTags(pitch.tags),
-        isNew: Boolean(pitch.isNew),
-        spec: item.spec || '',
-        videoUrl: item.videoUrl || '',
-        moreLinks: parseMoreLinks(item.moreLinksRaw),
-        rank: rank?.rank || null,
-      }
-    })
+    return products
+      .map((item) => {
+        const pitch = item.pitch || {}
+        const rank = rankMap.get(item.code)
+        
+        // 防呆判斷：過濾掉 is_hidden_pp 為 true、'true'、'TRUE' 或 '1' 的商品
+        const isHidden = pitch.is_hidden_pp === true || String(pitch.is_hidden_pp).toLowerCase() === 'true' || String(pitch.is_hidden_pp) === '1' ||
+                         item.is_hidden_pp === true || String(item.is_hidden_pp).toLowerCase() === 'true' || String(item.is_hidden_pp) === '1'
+
+        return {
+          code: item.code,
+          name: item.name,
+          category: item.category,
+          group: normalizeCategory(item.category),
+          price: Number(item.price || 0),
+          photo: item.photo,
+          title: pitch.title || '',
+          content: pitch.content || '',
+          tags: parseTags(pitch.tags),
+          isNew: Boolean(pitch.isNew),
+          isHidden: isHidden,
+          spec: item.spec || '',
+          videoUrl: item.videoUrl || '',
+          moreLinks: parseMoreLinks(item.moreLinksRaw),
+          rank: rank?.rank || null,
+        }
+      })
+      .filter((item) => !item.isHidden) // 🚀 在源頭徹底剔除隱藏商品
   }, [products, rankings])
 
   const productMap = useMemo(() => new Map(normalizedProducts.map((item) => [item.code, item])), [normalizedProducts])
 
-  // --- 關鍵修正：支援活動規則的複合關鍵字 ---
   const enrichedPromotions = useMemo(() => {
     return promotions.map((promo) => {
       const chs = []
@@ -1121,15 +1129,11 @@ export default function App() {
       const rawRules = promo.relatedCodes || []
       
       rawRules.forEach(rawRule => {
-        // 關鍵修正：將 "美容 沐浴 皂" 這樣的複合規則切開成獨立關鍵字
         const keywords = String(rawRule).split(/[\s\u3000,，、]+/).filter(Boolean)
-        
         keywords.forEach(kw => {
-          // 1. 先嘗試精準對應商品代碼
           if (productMap.has(kw)) {
             relatedSet.add(productMap.get(kw))
           } else {
-            // 2. 否則進行模糊比對 (分類、名稱、標題、標籤)
             normalizedProducts.forEach(p => {
               if (
                 p.group.includes(kw) ||
