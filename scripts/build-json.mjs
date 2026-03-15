@@ -1,4 +1,3 @@
-
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
@@ -228,6 +227,15 @@ function readProductFields(row) {
   const name =
     getExact('name', 'product_name', '商品名稱', '品名') ||
     getRegex(/(^|.*)name$/, /商品名稱/, /品名/, /名稱/)
+
+  const isHiddenPPRaw =
+    getExact('is_hidden_pp', 'is hidden pp', '隱藏pp', '隱藏_pp', 'pp_hidden', 'hidden_pp') ||
+    getRegex(/ishiddenpp/, /hiddenpp/, /pphidden/, /隱藏pp/)
+
+  const isHiddenRaw =
+    getExact('is_hidden', 'is hidden', '隱藏', 'hidden') ||
+    getRegex(/ishidden$/, /^hidden$/, /商品隱藏/, /隱藏/)
+
   return {
     code,
     name,
@@ -247,6 +255,10 @@ function readProductFields(row) {
     moreLinksRaw:
       getExact('moreLinksRaw', 'more_links', '更多素材', 'more_links_raw') ||
       getRegex(/morelinks?/, /素材/),
+    isHiddenPP: toBool(isHiddenPPRaw),
+    isHiddenPPRaw,
+    isHidden: toBool(isHiddenRaw),
+    isHiddenRaw,
   }
 }
 
@@ -307,6 +319,8 @@ function buildMergedFeed(productRows, pitchRows) {
         photo: entry.photo,
         videoUrl: entry.videoUrl,
         moreLinksRaw: entry.moreLinksRaw,
+        is_hidden_pp: entry.isHiddenPP,
+        is_hidden: entry.isHidden,
         pitch,
       }
     })
@@ -361,7 +375,7 @@ function buildRankingsFromMatrix(matrix, mergedFeed) {
   const nameByCode = new Map((mergedFeed.items || []).map((item) => [item.code, item.name]))
 
   const dataRows = matrix
-    .slice(3) // A4 開始才是資料列
+    .slice(3)
     .filter((row) => row.some((v) => String(v || '').trim() !== ''))
 
   const normalizedRows = dataRows
@@ -405,24 +419,20 @@ function buildRankingsFromMatrix(matrix, mergedFeed) {
 
 async function writeJson(filename, payload) {
   const outputPath = path.join(OUTPUT_DIR, filename)
-  
-  // 1. 嘗試讀取舊檔案進行比對
+
   try {
     const oldContent = await fs.readFile(outputPath, 'utf8')
     const oldData = JSON.parse(oldContent)
-    
-    // 2. 忽略 generatedAt，只比對核心資料 (items) 是否完全相同
     const isDataSame = JSON.stringify(oldData.items) === JSON.stringify(payload.items)
-    
+
     if (isDataSame) {
       console.log(`⏩ [跳過] ${filename} 資料無變動，保留原檔案以避免觸發 Git Commit`)
-      return // 直接結束，不覆寫檔案
+      return
     }
   } catch (e) {
     // 檔案不存在或解析失敗，屬正常現象，繼續往下執行寫入
   }
 
-  // 3. 資料確實有變動（或首次建立），才覆寫檔案
   await fs.writeFile(outputPath, `${JSON.stringify(payload, null, 2)}\n`, 'utf8')
   console.log(`✅ [更新] 已輸出新的 ${outputPath}`)
 }
