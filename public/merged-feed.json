@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "buildId": "20260314162104",
-  "generatedAt": "2026-03-14T16:21:04.328Z",
+  "buildId": "20260315060915",
+  "generatedAt": "2026-03-15T06:09:15.724Z",
   "source": {
     "products": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQBtV8q3Ank7Bnhs83IbOb97U46juV-RKeL3NpdFiNcSu-ifI21fQYo1-io62S3JIrXEO5MiDArc1Lr/pub?gid=1623055155&single=true&output=csv",
     "pitch": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQJaiIUkmBPfRcFADAoW4-_zbWB78gZb1yR_2gM9oORqRwCx8vb844cP-KcE58FgTVynptYk6L6o9pm/pub?gid=0&single=true&output=csv",
@@ -19,6 +19,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/%E7%83%8F%E6%A2%85%E9%BB%91%E9%BA%A5%E6%B1%816%E5%85%A5.jpeg",
       "videoUrl": "https://www.youtube.com/watch?v=mhA9rstibRA",
       "moreLinksRaw": "YT|氣泡調飲篇|https://www.youtube.com/watch?v=KZ7uELxCmjc\nYT|健康科學篇|https://www.youtube.com/watch?v=yjt6RsndLmk\nYT|純淨標章篇|https://www.youtube.com/watch?v=jR62F1Bbosg\nYT|健康蔬食篇|https://www.youtube.com/watch?v=1aWb-17lmi4",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "黑麥氣泡飲．烏梅",
         "content": "添加烏梅風味，酸甜開胃。",
@@ -36,6 +38,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/%E7%B4%85%E9%BA%B4%E9%BB%91%E9%BA%A5%E6%B1%816%E5%85%A5.jpeg",
       "videoUrl": "https://www.youtube.com/watch?v=mhA9rstibRA",
       "moreLinksRaw": "YT|氣泡調飲篇|https://www.youtube.com/watch?v=KZ7uELxCmjc\nYT|健康科學篇|https://www.youtube.com/watch?v=yjt6RsndLmk\nYT|純淨標章篇|https://www.youtube.com/watch?v=jR62F1Bbosg\nYT|健康蔬食篇|https://www.youtube.com/watch?v=1aWb-17lmi4",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "黑麥氣泡飲．紅麴",
         "content": "添加紅麴成分，風味更有層次。",
@@ -53,6 +57,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/%E6%A1%82%E5%9C%93%E9%BB%91%E9%BA%A5%E6%B1%816%E5%85%A5.jpeg",
       "videoUrl": "https://www.youtube.com/watch?v=1aWb-17lmi4",
       "moreLinksRaw": "YT|氣泡調飲篇|https://www.youtube.com/watch?v=KZ7uELxCmjc\nYT|健康科學篇|https://www.youtube.com/watch?v=yjt6RsndLmk\nYT|純淨標章篇|https://www.youtube.com/watch?v=jR62F1Bbosg\nYT|健康蔬食篇|https://www.youtube.com/watch?v=1aWb-17lmi4",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "黑麥氣泡飲．桂圓",
         "content": "添加桂圓風味，口感溫潤順口。",
@@ -70,6 +76,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/%E5%8E%9F%E5%91%B3%E9%BB%91%E9%BA%A5%E6%B1%816%E5%85%A5.jpeg",
       "videoUrl": "https://www.youtube.com/watch?v=mhA9rstibRA",
       "moreLinksRaw": "YT|氣泡調飲篇|https://www.youtube.com/watch?v=KZ7uELxCmjc\nYT|健康科學篇|https://www.youtube.com/watch?v=yjt6RsndLmk\nYT|純淨標章篇|https://www.youtube.com/watch?v=jR62F1Bbosg\nYT|健康蔬食篇|https://www.youtube.com/watch?v=1aWb-17lmi4",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "黑麥氣泡飲．原味",
         "content": "經典原味黑麥汁，減糖好喝。",
@@ -87,6 +95,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/main/%E7%BA%96%E9%BA%A5%E6%B1%81-%E5%85%AD%E5%85%A5.jpg",
       "videoUrl": "https://www.youtube.com/watch?v=0gosGCK6im8",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "啤酒花．胜肽．麥汁氣泡飲",
         "content": "添加機能性異麥芽寡醣、大麥苗粉、大豆胜肽與啤酒花，作為日常飲用的多元搭配。",
@@ -104,6 +114,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/9252229dd4c45dc2f475b07dffe32591b5fb1af0/%E5%AE%89%E5%8F%AF%E5%81%A5%E7%B4%8D%E8%B1%86%E7%B4%85%E9%BA%B4%2B%E9%89%BB%E9%9B%99%E6%95%88%E8%86%A0%E5%9B%8A.png",
       "videoUrl": "https://www.facebook.com/share/r/1D8ouLLYPY/",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "紅麴．納豆．Q10",
         "content": "選用 MIT 紅麴、納豆激酶、天然來源 Q10 與鉻配方，成分組合完整，日常補給更方便。",
@@ -121,6 +133,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/main/%E7%9B%8A%E7%AB%8B%E6%8D%B7.png",
       "videoUrl": "https://www.facebook.com/share/r/1CdVqkkZRS/",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "活力不卡卡．關鍵成分足量添加",
         "content": "添加UCII®、橄欖多酚與啤酒花萃取，一天一錠，食用便利，舒適有感。",
@@ -138,6 +152,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/%E5%AE%89%E5%8F%AF%E5%81%A5%E7%B4%85%E9%BA%B4%E8%86%A0%E5%9B%8A.png",
       "videoUrl": "https://www.youtube.com/watch?v=TmDK2hf3PQE",
       "moreLinksRaw": "YT|台酒生技嚴謹檢驗為食安把關|https://www.youtube.com/watch?v=ow5rQU67kXQ",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "紅麴．膠囊",
         "content": "選用經篩選的紅麴菌種製成，品質控管嚴謹，作為日常補給選擇。",
@@ -155,6 +171,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/%E5%AE%89%E5%8F%AF%E5%81%A5%E7%B4%8D%E8%B1%86%E7%B4%85%E9%BA%B4%E8%86%A0%E5%9B%8A.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "紅麴．納豆",
         "content": "結合紅麴菌種與高安定性納豆菌孢子，成分搭配完整，日常食用方便。",
@@ -172,6 +190,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/%E6%B7%B1%E6%B5%B7%E9%AD%9A%E6%B2%B9%E8%BB%9F%E8%86%A0%E5%9B%8A.png",
       "videoUrl": "https://www.facebook.com/TTL.BIOTECH/videos/%E6%AF%8F%E5%88%86%E9%8C%A2%E9%83%BD%E4%B8%8D%E6%B5%AA%E8%B2%BB%E6%B7%B1%E6%B5%B7%E9%AD%9A%E6%B2%B9%E8%BB%9F%E8%86%A0%E5%9B%8A-httpseshop-ttlcomyzv0k-5%E5%A4%A7%E5%A5%BD%E8%99%95%E8%B2%BC%E5%BF%83%E5%AE%88%E8%AD%B7-%E5%90%AB%E9%87%8F%E6%8E%8C%E6%8E%A7-epadha-%E6%AF%8F%E4%BB%BD%E5%90%AB%E9%87%8F574-mg%E5%89%9B%E5%89%9B%E5%A5%BD%E5%A4%AA%E5%A4%9A%E4%B9%9F%E4%B8%8D%E5%A5%BD-%E6%8C%AA%E5%A8%81/1417774013301535/",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "魚油．Omega-3",
         "content": "內含 Omega-3 不飽和脂肪酸，提供 EPA 與 DHA。符合國際魚油五星標準（IFOS 5 star），品質安心。",
@@ -189,6 +209,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/%E8%91%A1%E8%90%84%E7%B3%96%E8%83%BA%E8%86%A0%E9%8C%A0.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "葡萄糖胺．胜肽．營養",
         "content": "選用葡萄糖胺與酪蛋白水解物含 CPP 等成分，作為日常營養補給搭配。",
@@ -206,6 +228,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/%E8%91%89%E9%BB%83%E7%B4%A0%E8%BB%9F%E8%86%A0%E5%9B%8A.png",
       "videoUrl": "https://www.facebook.com/TTL.BIOTECH/videos/%E8%91%89%E9%BB%83%E7%B4%A0%E8%BB%9F%E8%86%A0%E5%9B%8A-%E5%B8%B6%E6%82%A8%E8%B5%B0%E9%80%B2%E7%99%82%E7%99%92%E7%9A%84%E5%A4%A7%E8%87%AA%E7%84%B6/858779522437881/",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "葉黃素．魚油．DHA",
         "content": "含魚油（DHA、EPA）、大豆油、葉黃素與維生素 E 等成分，作為日常補給選擇。",
@@ -223,6 +247,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/%E8%8C%84%E7%B4%85%E5%8D%97%E7%93%9C%E5%AD%90%E6%B2%B9%E8%BB%9F%E8%86%A0%E5%9B%8A.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "南瓜子油．茄紅",
         "content": "南瓜子油含多種不飽和脂肪酸，搭配蕃茄萃取物，成分搭配完整。",
@@ -240,6 +266,8 @@
       "photo": "https://lh3.googleusercontent.com/d/1gsaZbxZJPYIDNGzzpWjsGPfFEhmFt6xT=w600-h400",
       "videoUrl": "https://www.youtube.com/watch?v=2otb_-ExFH4",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "β-聚葡萄糖．酵母",
         "content": "健字號認證，採台酒專利酵母破壁技術，提萃 β-聚葡萄糖，適合作為日常補給。",
@@ -257,6 +285,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/%E9%87%91%E7%89%8C%E5%95%A4%E9%85%92%E9%85%B5%E6%AF%8D%E7%B2%89.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "啤酒酵母．膳食纖維",
         "content": "富含膳食纖維，搭配啤酒酵母，作為日常營養補給更方便。",
@@ -274,6 +304,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/main/S11%20%E7%9B%8A%E7%94%9F%E8%8F%8C.png",
       "videoUrl": "https://www.facebook.com/Dr.KatrinaC/videos/%E4%BD%A0%E7%9F%A5%E9%81%93%E7%9B%8A%E7%94%9F%E8%8F%8C%E6%80%8E%E9%BA%BC%E6%8C%91%E6%89%8D%E7%9C%9F%E6%AD%A3%E5%B0%8D%E6%88%91%E5%80%91%E6%9C%89%E5%B9%AB%E5%8A%A9%E5%97%8E%E7%9B%8A%E7%94%9F%E8%8F%8C%E5%B0%8D%E6%88%91%E5%80%91%E5%8F%88%E6%9C%89%E4%BB%80%E9%BA%BC%E5%A5%BD%E8%99%95%E5%91%A2%E8%AE%93%E6%BD%94%E9%9B%AF%E9%86%AB%E5%B8%AB%E6%8F%90%E9%86%92%E4%B8%89%E5%A4%A7%E9%97%9C%E9%8D%B5-httpseshop-ttlcoms11-shopee-%E8%8F%8C%E7%A8%AE%E8%A6%81%E5%A4%A0%E5%A4%9A%E5%85%83%E6%89%8D%E8%83%BD/2015684955838615/",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "益生菌．寡醣",
         "content": "嚴選 11 種乳酸菌，並添加台酒專利異麥芽寡醣，適合日常補給。",
@@ -291,6 +323,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/%E5%8F%B0%E5%95%A4%E9%85%B5%E6%AF%8D%E9%8C%A0.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "酵母．乳酸菌",
         "content": "含台啤酵母及乳酸菌，提供多元成分補給，食用方便。",
@@ -308,6 +342,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/HIMO%20%E5%8F%B0%E9%85%92%E7%95%B0%E9%BA%A5%E8%8A%BD%E5%AF%A1%E9%86%A3.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "異麥芽寡醣．益生元",
         "content": "台酒專利研發，含異麥芽寡醣，適合搭配日常飲食。",
@@ -325,6 +361,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/%E9%A2%A8%E6%B7%A8%E7%9B%8A%E7%94%9F%E8%8F%8C.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "益生菌．維生素B群",
         "content": "添加魚肉濃縮粉、薑黃萃取物、幾丁聚糖、生薑萃取物與維生素 B 群，成分搭配完整。",
@@ -342,6 +380,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/%E4%BF%9D%E8%9C%9C%E7%9B%8A%E7%94%9F%E8%8F%8C.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "益生菌．日常保養",
         "content": "含益生菌等成分，適合忙碌生活中的日常補給。",
@@ -359,6 +399,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/%E4%BF%9D%E6%9A%A2%E7%9B%8A%E7%94%9F%E8%8F%8C.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "益生菌．膳食纖維",
         "content": "含消化性麥芽糊精及後生元（大豆發酵物），成分搭配完整，日常食用方便。",
@@ -376,6 +418,8 @@
       "photo": "",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": true,
+      "is_hidden": false,
       "pitch": {
         "title": "",
         "content": "",
@@ -393,6 +437,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/%E6%98%93%E6%B4%97%E6%A8%82%E6%B4%97%E6%BD%94%E7%B2%BE.png",
       "videoUrl": "https://drive.google.com/file/d/1f1AKm4rRjS-UPX-SPfYq_VF3Wm24wT07/view?usp=drive_link",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "好沖洗．成分來源天然",
         "content": "△美國USDA綠色產品；\n△FDA認證實驗室低敏驗證；\n△歐盟無添加一星。\n\n成分來源天然，對環境友善，好沖好洗。\n啤酒花獨家配方，驚奇的洗淨能力，讓碗盤多一層防護，廣受主婦的好評。\n潔淨、不易殘留特性，不傷手配方不再擔心「咬手」問題。\n絕不含環境荷爾蒙。",
@@ -410,6 +456,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/%E6%98%93%E6%B4%97%E6%A8%82%E6%B4%97%E6%BD%94%E7%B2%BE%E8%A3%9C%E5%85%85%E5%8C%85.png",
       "videoUrl": "https://drive.google.com/file/d/1f1AKm4rRjS-UPX-SPfYq_VF3Wm24wT07/view?usp=drive_link",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "好沖洗．成分來源天然",
         "content": "△美國USDA綠色產品；\n△FDA認證實驗室低敏驗證；\n△歐盟無添加一星。\n\n成分來源天然，對環境友善，好沖好洗。\n啤酒花獨家配方，驚奇的洗淨能力，讓碗盤多一層防護，廣受主婦的好評。\n潔淨、不易殘留特性，不傷手配方不再擔心「咬手」問題。\n絕不含環境荷爾蒙。",
@@ -427,6 +475,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/%E6%98%93%E6%B4%97%E6%A8%82%E6%B4%97%E6%BD%94%E7%B5%84%E5%90%88.png",
       "videoUrl": "https://drive.google.com/file/d/1f1AKm4rRjS-UPX-SPfYq_VF3Wm24wT07/view?usp=drive_link",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "好沖洗．成分來源天然",
         "content": "△美國USDA綠色產品；\n△FDA認證實驗室低敏驗證；\n△歐盟無添加一星。\n\n成分來源天然，對環境友善，好沖好洗。\n啤酒花獨家配方，驚奇的洗淨能力，讓碗盤多一層防護，廣受主婦的好評。\n潔淨、不易殘留特性，不傷手配方不再擔心「咬手」問題。\n絕不含環境荷爾蒙。",
@@ -444,6 +494,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/%E6%98%93%E6%B4%97%E6%A8%82%E6%8A%97%E8%8F%8C%E9%98%B2%E8%9F%8E%E6%B4%97%E8%A1%A3%E7%B2%BE.png",
       "videoUrl": "https://drive.google.com/file/d/12Z_2uNx1BuK-Y_gJzEOXZYtlmIGKJkkX/view?usp=drive_link",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "潔淨．低泡．柑橘香氛",
         "content": "△美國USDA綠色產品；\n△FDA認證實驗室低敏驗證；\n△歐盟無添加一星。\n\n「橘子精油」與「啤酒花萃取物」植萃成分\n抗菌防蟎，具防止細菌孳生及抑制塵蟎功效，潔淨去污、低泡省水，散發柑橘香氛。\n絕不含環境荷爾蒙。",
@@ -461,6 +513,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/%E6%98%93%E6%B4%97%E6%A8%82%E6%8A%97%E8%8F%8C%E9%98%B2%E8%9F%8E%E6%B4%97%E8%A1%A3%E7%B2%BE%E8%A3%9C%E5%85%85%E5%8C%85.png",
       "videoUrl": "https://drive.google.com/file/d/12Z_2uNx1BuK-Y_gJzEOXZYtlmIGKJkkX/view?usp=drive_link",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "潔淨．低泡．柑橘香氛",
         "content": "△美國USDA綠色產品；\n△FDA認證實驗室低敏驗證；\n△歐盟無添加一星。\n\n「橘子精油」與「啤酒花萃取物」植萃成分\n抗菌防蟎，具防止細菌孳生及抑制塵蟎功效，潔淨去污、低泡省水，散發柑橘香氛。\n絕不含環境荷爾蒙。",
@@ -478,6 +532,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/%E9%85%92%E5%A5%BD%E7%9A%82(%E6%9D%BE%E7%82%AD).png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "松炭．清潔．清爽",
         "content": "添加松炭成分，泡沫綿密，洗後清爽。",
@@ -495,6 +551,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/%E9%85%92%E5%A5%BD%E7%9A%82(%E6%B8%85%E9%85%92%E7%B2%95).png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "清酒粕．柔嫩膚觸",
         "content": "添加清酒粕精華，洗感細緻，洗後不乾澀。",
@@ -512,6 +570,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/%E9%85%92%E5%A5%BD%E7%9A%82(%E7%B4%85%E9%85%92%E6%B3%A5).png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "紅酒多酚．潤澤",
         "content": "添加紅酒泥精華，洗感細緻，洗後保有潤澤感。",
@@ -529,6 +589,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/%E9%85%92%E5%A5%BD%E7%9A%82%E7%A6%AE%E7%9B%92.png",
       "videoUrl": "https://youtube.com/shorts/uIYQsUnT2fs?si=ed2Y22xNfqQ8jRT5",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "清潔．香氛．禮盒",
         "content": "包含松炭皂與紅酒泥皂，搭配沐浴手皂套，起泡更快速細緻。",
@@ -546,6 +608,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/VINATA%20%E4%BF%9D%E6%BF%95%E6%8A%97%E7%9A%BA%E7%B2%BE%E8%8F%AF%E6%B6%B2.png",
       "videoUrl": "https://www.youtube.com/watch?v=J84DC9k6rPE",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "保濕．潤澤",
         "content": "為肌膚補充水分，帶來潤澤感受，適合日常保養使用。",
@@ -563,6 +627,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/VINATA%E6%8A%97%E7%9A%BA%E6%B4%BB%E8%86%9A%E9%9C%9C.png",
       "videoUrl": "https://www.youtube.com/watch?v=O-d1-rEV2Tk",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "彈潤．鎖水",
         "content": "精華後薄擦鎖水，帶來彈潤與潤澤感，日常保養更完整。",
@@ -580,6 +646,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/VINATA%20%E7%B7%8A%E7%B7%BB%E6%BF%80%E6%B4%BB%E8%86%A0%E5%9B%8A.png",
       "videoUrl": "https://www.youtube.com/watch?v=lrZVlle3y8I",
       "moreLinksRaw": "YT|藝人子玄推薦|https://www.youtube.com/watch?v=lrZVlle3y8I\nIG|@hui0908推薦|https://www.instagram.com/reel/DTxFWTaDw3q/",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "早米晚心．日間保養",
         "content": "白天使用，展現自然光澤。小小一顆封存高濃度活性，日常保養使用方便。\n\n1.清潔臉部後均勻塗抹，尤其易生細紋及眼袋處，至完全吸收。\n2.如有其他保養程序，建議於化妝水、精華液及乳液後使用。\n3.搭配小金心夜間加強保養。早晚分工，保養步驟更完整。",
@@ -597,6 +665,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/main/VINATA%E6%BF%80%E9%80%8F%E5%85%89%E7%B1%B3%E6%A4%8D%E9%86%87%E7%89%B9%E6%BD%A4%E8%86%A0%E5%9B%8A(15%E9%A1%86).png",
       "videoUrl": "https://youtu.be/6UM71EybWbw?si=CHWw-JT25vSQITe5&t=31",
       "moreLinksRaw": "YT|藝人子玄推薦|https://www.youtube.com/watch?v=lrZVlle3y8I\nIG|@hui0908推薦|https://www.instagram.com/reel/DTxFWTaDw3q/",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "早米晚心．夜間保養",
         "content": "專利超臨界米植醇技術，添加植物固醇，夜間保養使用方便，帶來彈潤感。\n\n1.清潔臉部後均勻塗抹，尤其易生細紋及眼袋處，至完全吸收。\n2.如有其他保養程序，建議於化妝水、精華液及乳液後使用。\n3.搭配小米粒日間加強保養。早晚分工，保養步驟更完整。",
@@ -614,6 +684,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/VINATA%20%E6%BF%80%E9%80%8F%E5%85%89%E7%B1%B3%E6%A4%8D%E9%86%87%E7%89%B9%E6%BD%A4%E8%86%A0%E5%9B%8A.png",
       "videoUrl": "https://youtu.be/6UM71EybWbw?si=CHWw-JT25vSQITe5&t=31",
       "moreLinksRaw": "YT|藝人子玄推薦|https://www.youtube.com/watch?v=lrZVlle3y8I\nIG|@hui0908推薦|https://www.instagram.com/reel/DTxFWTaDw3q/",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "早米晚心．夜間保養",
         "content": "專利超臨界米植醇技術，添加植物固醇，夜間保養使用方便，帶來彈潤感。\n\n1.清潔臉部後均勻塗抹，尤其易生細紋及眼袋處，至完全吸收。\n2.如有其他保養程序，建議於化妝水、精華液及乳液後使用。\n3.搭配小米粒日間加強保養。早晚分工，保養步驟更完整。",
@@ -631,6 +703,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/VINATA%20%E5%AF%86%E9%9B%86%E7%BE%8E%E7%99%BD%E7%B2%BE%E8%8F%AF%E6%B6%B2.png",
       "videoUrl": "https://www.youtube.com/watch?v=rId8e18a-80",
       "moreLinksRaw": "FB|夏日輕爽保養術|https://www.facebook.com/vinatalady/videos/%E5%A4%8F%E6%97%A5%E8%BC%95%E7%88%BD%E4%BF%9D%E9%A4%8A%E8%A1%93v%E7%B7%A8pick-vinata%E5%AF%86%E9%9B%86%E7%BE%8E%E7%99%BD%E7%B3%BB%E5%88%97%E5%AF%86%E9%9B%86%E7%BE%8E%E7%99%BD%E7%B2%BE%E8%8F%AF%E6%B6%B2%E5%AF%86%E9%9B%86%E7%BE%8E%E7%99%BD%E4%B9%B3%E6%B6%B2-%E9%85%92%E8%90%83%E9%9B%99%E5%9B%A0%E5%AD%90%E4%BA%AE%E7%99%BD%E5%B0%88%E5%88%A9melaclear2%E5%9C%8B%E9%9A%9B%E5%93%81%E8%B3%AA%E9%8A%85%E7%8D%8E%E8%82%AF%E5%AE%9A%E9%80%9F%E9%85%B5%E4%BA%AE%E7%99%BDa-v%E7%B7%A8%E6%9C%80%E6%84%9B%E7%94%A8%E6%B3%95%E5%85%A9/590499906586005/",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "透亮．保濕",
         "content": "雙精萃（酵母賦活×紅酒多酚）打底調理 + 複合淨白成份，帶來保濕與透亮感。",
@@ -648,6 +722,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/VINATA%20%E5%AF%86%E9%9B%86%E7%BE%8E%E7%99%BD%E4%B9%B3%E6%B6%B2.png",
       "videoUrl": "https://www.youtube.com/watch?v=LsntC4sgBJU",
       "moreLinksRaw": "FB|夏日輕爽保養術|https://www.facebook.com/vinatalady/videos/%E5%A4%8F%E6%97%A5%E8%BC%95%E7%88%BD%E4%BF%9D%E9%A4%8A%E8%A1%93v%E7%B7%A8pick-vinata%E5%AF%86%E9%9B%86%E7%BE%8E%E7%99%BD%E7%B3%BB%E5%88%97%E5%AF%86%E9%9B%86%E7%BE%8E%E7%99%BD%E7%B2%BE%E8%8F%AF%E6%B6%B2%E5%AF%86%E9%9B%86%E7%BE%8E%E7%99%BD%E4%B9%B3%E6%B6%B2-%E9%85%92%E8%90%83%E9%9B%99%E5%9B%A0%E5%AD%90%E4%BA%AE%E7%99%BD%E5%B0%88%E5%88%A9melaclear2%E5%9C%8B%E9%9A%9B%E5%93%81%E8%B3%AA%E9%8A%85%E7%8D%8E%E8%82%AF%E5%AE%9A%E9%80%9F%E9%85%B5%E4%BA%AE%E7%99%BDa-v%E7%B7%A8%E6%9C%80%E6%84%9B%E7%94%A8%E6%B3%95%E5%85%A9/590499906586005/",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "柔嫩．鎖水",
         "content": "先精華後乳液，層層鎖水，肌膚觸感細滑。",
@@ -665,6 +741,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/VINATA%20%E6%B4%97%E5%8D%B8%E6%BD%94%E9%A1%8F%E9%9C%B2.png",
       "videoUrl": "https://www.youtube.com/watch?v=pyoZy-YglqE",
       "moreLinksRaw": "IG|17秒介紹|https://www.instagram.com/reel/C-HPWFpRHvx/\nIG|Reels|https://www.instagram.com/reel/DQWI0XZEkr7/\nFB|短片|https://www.facebook.com/vinatalady/videos/%E6%B4%97%E8%87%89x%E5%8D%B8%E5%A6%9Dx%E4%BF%9D%E9%A4%8A-%E4%B8%80%E7%93%B6%E6%90%9E%E5%AE%9A/1011053397217108/\nIG|美好研究院|https://www.instagram.com/reel/DUR4hc0iUx6/",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "洗＋卸＋保養三效合一",
         "content": "清爽不緊繃。適合防曬淡妝卸除，或運動後快速清潔。洗後滑而不乾。",
@@ -682,6 +760,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/VINATA%20%E9%85%B5%E6%AF%8D%E8%B3%A6%E6%B4%BB%E7%B2%BE%E8%8F%AF%E8%BC%95%E7%9B%88%E8%BA%AB%E9%AB%94%E4%B9%B3%20-%20%E8%BC%95%E5%B7%A7%E7%93%B6.png",
       "videoUrl": "https://www.youtube.com/watch?v=PljwofWsd6Y",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "酵母賦活．輕潤",
         "content": "添加酵母賦活精華，質地輕盈好吸收，帶來柔嫩水潤膚觸。",
@@ -699,6 +779,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/VINATA%20%E9%85%B5%E6%AF%8D%E8%B3%A6%E6%B4%BB%E7%B2%BE%E8%8F%AF%E8%BC%95%E7%9B%88%E8%BA%AB%E9%AB%94%E4%B9%B3.png",
       "videoUrl": "https://www.youtube.com/watch?v=PljwofWsd6Y",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "酵母賦活．輕潤",
         "content": "添加酵母賦活精華，質地輕盈好吸收，帶來柔嫩水潤膚觸。",
@@ -716,6 +798,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/main/%E5%95%A4%E9%85%92%E8%8A%B1%E6%B4%97%E9%9D%A2%E4%B9%B3.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "清潔．水潤",
         "content": "添加啤酒花萃取精華，搭配甘油、糖類同分異構物與醣基海藻糖，泡沫細緻，洗後清爽不緊繃。",
@@ -733,6 +817,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/VINATA%20%E5%95%A4%E9%85%92%E8%8A%B1%E6%B2%90%E6%B5%B4%E9%9C%B2.png",
       "videoUrl": "https://www.instagram.com/reel/DT2LFrljwky/",
       "moreLinksRaw": "IG|有限的預算洗出無限的質感|https://www.instagram.com/reel/DUUdfxKjw8t/\nFB|植萃洗淨 專業守護|https://www.facebook.com/TTL.BIOTECH/videos/%E6%A4%8D%E8%90%83%E6%B4%97%E6%B7%A8-%E5%B0%88%E6%A5%AD%E5%AE%88%E8%AD%B7/1498515948077947/",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "木質香氛．舒適洗感",
         "content": "白樺木×薰衣草×雪松木，後調香根草。洗後留有舒適香氣，彷彿漫步森林。",
@@ -750,6 +836,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/VINATA%20%E5%95%A4%E9%85%92%E8%8A%B1%E6%B4%97%E9%AB%AE%E7%B2%BE.png",
       "videoUrl": "https://www.facebook.com/TTL.BIOTECH/videos/%E5%95%A4%E9%85%92%E8%8A%B1%E6%A4%8D%E8%90%83%E6%BD%94%E6%B7%A8%E6%B8%85%E6%96%B0/2306420706463892/",
       "moreLinksRaw": "FB|植萃洗淨 專業守護|https://www.facebook.com/TTL.BIOTECH/videos/%E6%A4%8D%E8%90%83%E6%B4%97%E6%B7%A8-%E5%B0%88%E6%A5%AD%E5%AE%88%E8%AD%B7/1498515948077947/",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "清新花香．蓬鬆柔順",
         "content": "無矽靈配方。清新茉莉花香，洗後頭皮清爽，髮絲蓬鬆。",
@@ -767,6 +855,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/VINATA%20%E5%95%A4%E9%85%92%E8%8A%B1%E6%B4%97%E9%AB%AE%E7%B2%BE%20(%E5%A4%8F%E8%96%B0%E8%8A%B1%E6%9E%9C%E9%A6%99).png",
       "videoUrl": "https://www.facebook.com/TTL.BIOTECH/videos/%E5%95%A4%E9%85%92%E8%8A%B1%E6%A4%8D%E8%90%83%E6%BD%94%E6%B7%A8%E6%B8%85%E6%96%B0/2306420706463892/",
       "moreLinksRaw": "FB|植萃洗淨 專業守護|https://www.facebook.com/TTL.BIOTECH/videos/%E6%A4%8D%E8%90%83%E6%B4%97%E6%B7%A8-%E5%B0%88%E6%A5%AD%E5%AE%88%E8%AD%B7/1498515948077947/",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "草木森林．清新不膩",
         "content": "鈴蘭與草木森林香調，後調苔蘚。添加獨特啤酒花萃取，洗感清新不膩，髮絲清爽柔順，男女皆宜。",
@@ -784,6 +874,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/main/%E5%95%A4%E9%85%92%E8%8A%B1%E6%B4%97%E6%89%8B%E9%9C%B2.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "清潔．洗手",
         "content": "清潔手部肌膚。用法：雙手淋濕後，取適量搓揉再以清水沖淨。",
@@ -801,6 +893,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/main/%E7%B1%B3%E6%A4%8D%E9%86%87%E8%AD%B7%E9%AB%AE%E7%B4%A0.png",
       "videoUrl": "https://www.facebook.com/TTL.BIOTECH/videos/%E7%9B%A1%E6%83%85%E7%94%A9%E9%AB%AE%E4%B8%8D%E7%B3%BE%E7%B5%90%E6%89%93%E9%80%A0%E8%BC%95%E7%9B%88%E5%A5%B3%E7%A5%9E%E5%85%89/1659477201527796/",
       "moreLinksRaw": "FB|玫瑰香氛輕盈修護，打造自帶光圈女神髮！|https://www.facebook.com/TTL.BIOTECH/videos/%E7%8E%AB%E7%91%B0%E9%A6%99%E6%B0%9B%E8%BC%95%E7%9B%88%E4%BF%AE%E8%AD%B7%E6%89%93%E9%80%A0%E8%87%AA%E5%B8%B6%E5%85%89%E5%9C%88%E5%A5%B3%E7%A5%9E%E9%AB%AE/2980975455439341/",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "光澤．柔順",
         "content": "添加酵母賦活精華 Sapitide 與專利超臨界米植醇，搭配乳木果油與維生素 B5，帶來柔順光澤感。",
@@ -818,6 +912,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/VINATA%20%E5%95%A4%E9%85%92%E8%8A%B1%E8%88%92%E6%B4%BB%E9%A6%99%E6%B0%9B%E7%9A%82-%E8%96%B0%E8%A1%A3%E8%8D%89.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "薰衣草香氛．清爽潔淨",
         "content": "清爽留香、好沖不殘留。薰衣草香氣為沐浴時光增添放鬆氛圍。",
@@ -835,6 +931,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/VINATA%20%E5%95%A4%E9%85%92%E8%8A%B1%E8%88%92%E6%B4%BB%E9%A6%99%E6%B0%9B%E7%9A%82-%E5%B0%8F%E8%92%BC%E8%98%AD.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "優雅香氛．清爽潔淨",
         "content": "清爽留香、好沖不殘留。經典小蒼蘭香氣，沐浴同時享受香氛。",
@@ -852,6 +950,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/VINATA%20%E5%95%A4%E9%85%92%E8%8A%B1%E8%88%92%E6%B4%BB%E9%A6%99%E6%B0%9B%E7%9A%82-%E8%93%AE%E9%A6%99.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "優雅香氛．清爽潔淨",
         "content": "清爽留香、好沖不殘留。經典蓮香氣，沐浴同時享受香氛。",
@@ -869,6 +969,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/main/%E9%AB%98%E6%A9%9F%E8%83%BD%E9%85%92%E7%B2%95%E7%84%A1%E7%91%95%E6%B0%B4%E7%B2%89%E5%BA%95SPF50%E2%98%85%E2%98%85%E2%98%85(%E8%87%AA%E5%94%AE).png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "遮瑕．防曬．輕透",
         "content": "添加專利酵母賦活精華 Sapitide 及神經醯胺，兼具遮瑕修容與防曬需求。質地輕薄服貼不卡粉，呈現柔霧妝感。",
@@ -886,6 +988,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/main/VINATA%20%E9%85%92%E7%B2%95%E7%B6%AD%E4%BB%96%E5%91%BD%E4%BA%AE%E7%99%BD%E9%9D%A2%E8%86%9C.png",
       "videoUrl": "https://www.youtube.com/watch?v=4qbOqSwfllI",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": true,
       "pitch": {
         "title": "透亮．保濕",
         "content": "酵母賦活精華 Sapitide®，搭配維他命 B3 與熊果素，帶來保濕與透亮感。",
@@ -903,6 +1007,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/main/VINATA%20%E9%85%92%E7%B2%95%E6%B0%B4%E5%AB%A9%E4%BF%9D%E6%BF%95%E9%9D%A2%E8%86%9C.png",
       "videoUrl": "https://www.youtube.com/watch?v=BPuUesSl6Jw",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": true,
       "pitch": {
         "title": "保濕．水潤",
         "content": "酵母賦活精華 Sapitide®，搭配雙重玻尿酸與植萃保濕成分，帶來水潤膚觸。",
@@ -920,6 +1026,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/main/VINATA%20%E7%B4%85%E9%85%92%E7%B2%BE%E8%8F%AF%E5%A4%9A%E9%87%8D%E4%BF%AE%E8%AD%B7%E9%9D%A2%E8%86%9C.png",
       "videoUrl": "https://www.youtube.com/watch?v=g9Z2VoqBjSI",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": true,
       "pitch": {
         "title": "保濕．彈潤",
         "content": "紅酒多酚萃取精華搭配長效保濕成分與非洲生命樹葉精華，帶來彈潤與保濕感受。",
@@ -937,6 +1045,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/VINATA%20%E9%85%B5%E6%AF%8D%E8%B3%A6%E6%B4%BB%E7%B2%BE%E8%8F%AF%E8%BC%95%E7%9B%88%E8%BA%AB%E9%AB%94%E4%B9%B3%20-%20%E8%BC%95%E5%B7%A7%E7%93%B6.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": true,
+      "is_hidden": false,
       "pitch": {
         "title": "酵母賦活．輕潤",
         "content": "添加酵母賦活精華，質地輕盈好吸收，帶來柔嫩水潤膚觸。",
@@ -954,6 +1064,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/main/%E5%95%A4%E9%85%92%E8%8A%B1%E6%B4%97%E9%9D%A2%E4%B9%B3.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": true,
+      "is_hidden": false,
       "pitch": {
         "title": "清潔．水潤",
         "content": "添加啤酒花萃取精華，搭配甘油、糖類同分異構物與醣基海藻糖，泡沫細緻，洗後清爽不緊繃。",
@@ -971,6 +1083,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/main/%E5%95%A4%E9%85%92%E8%8A%B1%E6%B4%97%E6%89%8B%E9%9C%B2.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": true,
+      "is_hidden": false,
       "pitch": {
         "title": "清潔．洗手",
         "content": "清潔手部肌膚。用法：雙手淋濕後，取適量搓揉再以清水沖淨。",
@@ -988,6 +1102,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/main/%E7%B1%B3%E6%A4%8D%E9%86%87%E8%AD%B7%E9%AB%AE%E7%B4%A0.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": true,
+      "is_hidden": false,
       "pitch": {
         "title": "光澤．柔順",
         "content": "添加酵母賦活精華 Sapitide 與專利超臨界米植醇，搭配乳木果油與維生素 B5，帶來柔順光澤感。",
@@ -1005,6 +1121,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/VINATA%20%E6%B4%97%E5%8D%B8%E6%BD%94%E9%A1%8F%E9%9C%B2.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": true,
+      "is_hidden": false,
       "pitch": {
         "title": "洗＋卸＋保養三效合一",
         "content": "清爽不緊繃。適合防曬淡妝卸除，或運動後快速清潔。洗後滑而不乾。",
@@ -1022,6 +1140,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/%E5%B0%8F%E7%B1%B3%E7%B2%922%E5%85%A5%E7%B5%84.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": true,
+      "is_hidden": false,
       "pitch": {
         "title": "",
         "content": "",
@@ -1039,6 +1159,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/%E5%B0%8F%E9%87%91%E5%BF%832%E5%85%A5%E7%B5%84.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": true,
+      "is_hidden": false,
       "pitch": {
         "title": "",
         "content": "",
@@ -1056,6 +1178,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/%E6%97%A9%E7%B1%B3%E6%99%9A%E5%BF%83%E7%B5%84.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": true,
+      "is_hidden": false,
       "pitch": {
         "title": "",
         "content": "",
@@ -1073,6 +1197,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/%E9%9D%A2%E8%86%9C%E4%BB%BB%E9%81%B8%E8%B2%B7%E4%B8%80%E9%80%81%E4%B8%80.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": true,
+      "is_hidden": false,
       "pitch": {
         "title": "",
         "content": "",
@@ -1090,6 +1216,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/%E6%B4%97%E5%8D%B8%E6%BD%94%E9%A1%8F%E9%9C%B23%E5%85%A5%E7%B5%84.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": true,
+      "is_hidden": false,
       "pitch": {
         "title": "",
         "content": "",
@@ -1107,6 +1235,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/main/%E6%A5%B5%E8%87%B4%E4%BF%9D%E9%A4%8A%E7%B5%84.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": true,
+      "is_hidden": false,
       "pitch": {
         "title": "",
         "content": "",
@@ -1124,6 +1254,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/main/%E5%95%A4%E9%85%92%E8%8A%B1%E6%B4%97%E6%B2%90%E7%B5%84.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": true,
+      "is_hidden": false,
       "pitch": {
         "title": "",
         "content": "",
@@ -1141,6 +1273,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/main/%E9%BA%A5%E6%B1%81%E6%8F%90%E8%A2%8B.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "",
         "content": "",
@@ -1158,6 +1292,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/main/%E6%9D%AF%E5%88%B7%E7%A4%BA%E6%84%8F%E5%9C%96.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "",
         "content": "",
@@ -1175,6 +1311,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/main/%E9%A6%99%E6%B0%9B%E6%B4%97%E8%A1%A3%E7%90%83_5%E5%85%A5.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "",
         "content": "",
@@ -1192,6 +1330,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/main/%E6%8B%89%E9%9C%B8%E6%A9%9F.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "",
         "content": "",
@@ -1209,6 +1349,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/VINATA%20%E9%85%B5%E6%AF%8D%E8%B3%A6%E6%B4%BB%E7%B2%BE%E8%8F%AF%E8%BC%95%E7%9B%88%E8%BA%AB%E9%AB%94%E4%B9%B3%20-%20%E8%BC%95%E5%B7%A7%E7%93%B6.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "",
         "content": "",
@@ -1226,6 +1368,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/main/%E6%B5%B7%E6%B4%8B%E6%9D%AF.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "",
         "content": "",
@@ -1243,6 +1387,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/%E6%B7%B1%E6%B5%B7%E9%AD%9A%E6%B2%B9%E8%BB%9F%E8%86%A0%E5%9B%8A.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "",
         "content": "",
@@ -1260,6 +1406,8 @@
       "photo": "https://lh3.googleusercontent.com/d/1gsaZbxZJPYIDNGzzpWjsGPfFEhmFt6xT=w600-h400",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "",
         "content": "",
@@ -1277,6 +1425,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/main/%E7%9B%8A%E7%AB%8B%E6%8D%B7.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "",
         "content": "",
@@ -1294,6 +1444,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/main/%E5%AF%86%E9%9B%86%E7%BE%8E%E7%99%BD%E9%AB%94%E9%A9%97%E7%B5%84.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "",
         "content": "",
@@ -1311,6 +1463,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/%E9%85%92%E7%B2%95%E7%B2%BE%E8%90%83%E9%80%86%E9%BD%A1%E6%B4%BB%E8%86%9A%E9%9D%92%E6%98%A5%E9%9C%B2.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "",
         "content": "",
@@ -1328,6 +1482,8 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/VINATA%20%E6%B4%97%E5%8D%B8%E6%BD%94%E9%A1%8F%E9%9C%B2.png",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "",
         "content": "",
@@ -1345,6 +1501,8 @@
       "photo": "",
       "videoUrl": "",
       "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
       "pitch": {
         "title": "",
         "content": "",
