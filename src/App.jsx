@@ -168,8 +168,6 @@ const PROMO_STATUS_META = {
 
 function normalizeCategory(raw) {
   const value = raw || ''
-  // 🚀 關鍵修正：將「清潔/洗沐」拉到「美容/保養」之前進行判斷
-  // 避免遇到「美容洗沐」這類複合字串時，洗沐商品被誤判入美容分類
   if (value.includes('清潔') || value.includes('洗沐')) return '清潔產品'
   if (value.includes('美容') || value.includes('保養')) return '美容產品'
   if (value.includes('飲品') || value.includes('黑麥汁')) return '保健飲品'
@@ -1035,7 +1033,7 @@ export default function App() {
   const [stage, setStage] = useState('準備啟動系統...')
   const [inputValue, setInputValue] = useState('') 
   const [keyword, setKeyword] = useState('')       
-  const [activeCategory, setActiveCategory] = useState('all')
+  // 移除多餘的 activeCategory 狀態，回歸純淨錨點設計
   const [activeTag, setActiveTag] = useState('')
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [promoDrawer, setPromoDrawer] = useState(null)
@@ -1044,7 +1042,6 @@ export default function App() {
   const [promoGroupFilter, setPromoGroupFilter] = useState('all')
   const [tagReturnCode, setTagReturnCode] = useState(null)
   
-  // 熱銷排行專屬的分類頁籤 State
   const [rankCategory, setRankCategory] = useState('all')
   
   const navRef = useRef(null)
@@ -1117,7 +1114,6 @@ export default function App() {
         const pitch = item.pitch || {}
         const rank = rankMap.get(item.code)
         
-        // 防呆判斷：過濾掉 is_hidden_pp 為 true、'true'、'TRUE' 或 '1' 的商品
         const isHidden = pitch.is_hidden_pp === true || String(pitch.is_hidden_pp).toLowerCase() === 'true' || String(pitch.is_hidden_pp) === '1' ||
                          item.is_hidden_pp === true || String(item.is_hidden_pp).toLowerCase() === 'true' || String(item.is_hidden_pp) === '1'
 
@@ -1139,7 +1135,7 @@ export default function App() {
           rank: rank?.rank || null,
         }
       })
-      .filter((item) => !item.isHidden) // 🚀 在源頭徹底剔除隱藏商品
+      .filter((item) => !item.isHidden)
   }, [products, rankings])
 
   const productMap = useMemo(() => new Map(normalizedProducts.map((item) => [item.code, item])), [normalizedProducts])
@@ -1204,16 +1200,16 @@ export default function App() {
     return keyword.split(/[\s\u3000,，、]+/).filter(Boolean)
   }, [keyword])
 
+  // 修復過濾邏輯：移除 activeCategory 的參與，回歸純粹的關鍵字與標籤搜尋
   const filteredProducts = useMemo(() => {
     return productsWithPromos.filter((item) => {
-      const categoryOk = activeCategory === 'all' || item.group === activeCategory
       const tagOk = !activeTag || item.tags.includes(activeTag)
       const haystack = [item.name, item.title, item.content, item.code, ...item.tags].join(' ').toLowerCase()
       const keywordOk = parsedKeywords.length === 0 || parsedKeywords.every(k => haystack.includes(k.toLowerCase()))
       
-      return categoryOk && tagOk && keywordOk
+      return tagOk && keywordOk
     })
-  }, [productsWithPromos, parsedKeywords, activeCategory, activeTag])
+  }, [productsWithPromos, parsedKeywords, activeTag])
 
   const groupedProducts = useMemo(() => {
     const groups = new Map()
@@ -1224,11 +1220,8 @@ export default function App() {
     return CATEGORY_META.filter((meta) => meta.key !== 'all').map((meta) => ({ ...meta, items: groups.get(meta.key) || [] })).filter((item) => item.items.length)
   }, [filteredProducts])
 
-  // --- 關鍵修正：熱銷排行的智慧防呆與自動補名次機制 ---
   const allRankedProducts = useMemo(() => {
-    // 1. 將有排名的商品依序排列
     const ranked = productsWithPromos.filter(p => p.rank !== null).sort((a, b) => a.rank - b.rank);
-    // 2. 將未排名的商品附在後方（用以隨時遞補不足 10 名的空缺）
     const unranked = productsWithPromos.filter(p => p.rank === null);
     return [...ranked, ...unranked];
   }, [productsWithPromos]);
@@ -1236,20 +1229,16 @@ export default function App() {
   const visibleHotProducts = useMemo(() => {
     let list = allRankedProducts;
 
-    // 如果使用者正在搜尋或篩選標籤，只顯示符合條件的熱銷品
     if (keyword || activeTag) {
       const codeSet = new Set(filteredProducts.map(item => item.code));
       const matched = list.filter(item => codeSet.has(item.code));
-      // 如果搜尋結果有東西，才切換；否則保持預設排行
       if (matched.length > 0) list = matched;
     }
     
-    // 根據使用者在「熱銷排行」選擇的頁籤進行篩選
     if (rankCategory !== 'all') {
       list = list.filter(item => item.group === rankCategory);
     }
     
-    // 擷取前 10 名，並重新賦予連續的 displayRank (1~10)
     return list.slice(0, 10).map((item, index) => ({
       ...item,
       displayRank: index + 1
@@ -1272,12 +1261,11 @@ export default function App() {
       if (promoDrawer) { setPromoDrawer(null); return }
       if (promoCenterOpen) { setPromoCenterOpen(false); return }
       if (settingsOpen) { setSettingsOpen(false); return }
-      if (activeTag || keyword || activeCategory !== 'all') {
+      if (activeTag || keyword) {
         const restoreCode = tagReturnCode
         setActiveTag('')
         setKeyword('')
         setInputValue('')
-        setActiveCategory('all')
         if (restoreCode) {
           setExpandedCardId(restoreCode)
           window.setTimeout(() => {
@@ -1297,7 +1285,7 @@ export default function App() {
     }
     window.addEventListener('popstate', handlePopState)
     return () => window.removeEventListener('popstate', handlePopState)
-  }, [activeModal, mediaSheetProduct, promoDrawer, promoCenterOpen, settingsOpen, expandedCardId, activeTag, keyword, activeCategory, tagReturnCode, closeExpandedCard, closeFab, closeModal, setExpandedCardId])
+  }, [activeModal, mediaSheetProduct, promoDrawer, promoCenterOpen, settingsOpen, expandedCardId, activeTag, keyword, tagReturnCode, closeExpandedCard, closeFab, closeModal, setExpandedCardId])
 
   const scrollToId = useCallback((id) => {
     const el = document.getElementById(id)
@@ -1308,17 +1296,10 @@ export default function App() {
     }
   }, [])
 
-  const handleGotoSection = useCallback((anchorId) => {
-    const meta = CATEGORY_META.find(m => m.anchor === anchorId)
-    if (meta) setActiveCategory(meta.key)
-    scrollToId(anchorId)
-  }, [scrollToId])
-
   const clearFilters = useCallback(() => {
     setInputValue('')
     setKeyword('')
     setActiveTag('')
-    setActiveCategory('all')
     setTagReturnCode(null)
   }, [])
 
@@ -1327,7 +1308,6 @@ export default function App() {
     setActiveTag(tag)
     setInputValue('')
     setKeyword('')
-    setActiveCategory('all')
     setExpandedCardId(code)
     showToast(`已套用標籤：#${tag}`)
     if (typeof window !== 'undefined') window.history.pushState({ ui: 'tag-filter', code, tag }, '')
@@ -1354,6 +1334,12 @@ export default function App() {
     }, 280) 
   }, [setExpandedCardId])
 
+  // 新增：從排行榜與活動點擊時，自動清除所有過濾條件，還原乾淨畫面的全域導航函式
+  const handleOpenFromGlobal = useCallback((code) => {
+    clearFilters();
+    openProductByCode(code);
+  }, [clearFilters, openProductByCode]);
+
   const navigateToProductFromPromo = useCallback((code) => {
     let steps = 0;
     if (promoDrawer) steps++;
@@ -1365,11 +1351,12 @@ export default function App() {
     
     setPromoDrawer(null);
     setPromoCenterOpen(false);
+    clearFilters(); // 自動重置回「全部商品列表」
     
     setTimeout(() => {
       openProductByCode(code);
     }, 350);
-  }, [promoDrawer, promoCenterOpen, openProductByCode]);
+  }, [promoDrawer, promoCenterOpen, clearFilters, openProductByCode]);
 
   return (
     <div style={themeConfig.colors} className="min-h-screen bg-[var(--bg)] text-[var(--text)] font-sans antialiased">
@@ -1414,12 +1401,12 @@ export default function App() {
           {activeTag ? <div className="mt-2 flex items-center gap-2 px-1"><span className="rounded-full px-3 py-1 text-[11px] font-bold" style={{ background: 'var(--primary-soft)', color: 'var(--primary)' }}>#{activeTag}</span><button onClick={clearFilters} className="text-[11px] font-bold text-[var(--muted)] underline underline-offset-2">返回全部</button></div> : null}
           <div ref={navRef} className="mt-3 flex gap-2 overflow-x-auto pb-1">
             {[{ label: '全部', anchor: 'promo' }, ...CATEGORY_META.filter((item) => item.key !== 'all').map((item) => ({ label: item.label, anchor: item.anchor, category: item.key }))].map((item) => {
-              const active = activeSection === item.anchor || (item.category && activeCategory === item.category)
+              const active = activeSection === item.anchor
               return (
                 <button
                   key={item.anchor}
                   data-anchor={item.anchor}
-                  onClick={() => { if (item.category) setActiveCategory(item.category); else setActiveCategory('all'); scrollToId(item.anchor) }}
+                  onClick={() => scrollToId(item.anchor)}
                   className={`whitespace-nowrap rounded-full px-4 py-1.5 text-[14px] font-bold transition ${active ? 'bg-[var(--primary)] text-white shadow-md shadow-[var(--primary)]/30' : 'bg-slate-100 text-slate-500'}`}
                 >
                   {item.label}
@@ -1432,10 +1419,9 @@ export default function App() {
         <main className="px-4 pt-4 space-y-6">
           <PromoCarousel items={promoItems} onOpenPromo={(promo) => { setPromoDrawer(promo); window.history.pushState({ ui: 'promo', promoId: promo.promoId }, '') }} scale={scale} />
           
-          {/* 將 rankCategory 傳入 RankingCarousel 讓其支援切換 */}
           <RankingCarousel 
             items={visibleHotProducts} 
-            onOpenProduct={openProductByCode} 
+            onOpenProduct={handleOpenFromGlobal} 
             subtitle={keyword || activeTag ? '已依目前篩選條件保留相關熱銷品' : '依實際銷售數據更新'} 
             category={rankCategory}
             setCategory={setRankCategory}
@@ -1493,7 +1479,7 @@ export default function App() {
         onNavigateToProduct={navigateToProductFromPromo}
         scale={scale}
       />
-      <FabMenu onScrollTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })} onGotoPromo={() => { setPromoCenterOpen(true); window.history.pushState({ ui: 'promo-center' }, '') }} onToggleSettings={() => { setSettingsOpen(true); window.history.pushState({ ui: 'settings' }, '') }} onGotoSection={handleGotoSection} />
+      <FabMenu onScrollTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })} onGotoPromo={() => { setPromoCenterOpen(true); window.history.pushState({ ui: 'promo-center' }, '') }} onToggleSettings={() => { setSettingsOpen(true); window.history.pushState({ ui: 'settings' }, '') }} onGotoSection={scrollToId} />
       <ToastMessage />
     </div>
   )
