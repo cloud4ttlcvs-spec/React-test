@@ -489,7 +489,7 @@ function RankingCarousel({ items, onOpenProduct, subtitle, category, setCategory
     { key: 'all', label: '全部' },
     { key: '保健食品', label: '保健' },
     { key: '美容產品', label: '美容' },
-    { key: '清潔產品', label: '洗沐' }
+    { key: '清潔產品', label: '清潔' }
   ]
 
   return (
@@ -1433,7 +1433,7 @@ export default function App() {
           <RankingCarousel 
             items={visibleHotProducts} 
             onOpenProduct={openProductByCode} 
-            subtitle={keyword || activeTag ? '已依目前篩選條件保留相關熱銷品' : '依實際銷售數據即時更新'} 
+            subtitle={keyword || activeTag ? '已依目前篩選條件保留相關熱銷品' : '依實際銷售數據更新'} 
             category={rankCategory}
             setCategory={setRankCategory}
           />
