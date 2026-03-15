@@ -482,25 +482,52 @@ function PromoCarousel({ items, onOpenPromo, scale }) {
   )
 }
 
-function RankingCarousel({ items, onOpenProduct, subtitle = '依據實際銷售數據即時更新' }) {
-  if (!items.length) return null
+function RankingCarousel({ items, onOpenProduct, subtitle, category, setCategory }) {
+  if (!items.length && category === 'all') return null
+  
+  const tabs = [
+    { key: 'all', label: '全部' },
+    { key: '保健食品', label: '保健' },
+    { key: '美容產品', label: '美容' },
+    { key: '清潔產品', label: '洗沐' }
+  ]
+
   return (
     <section id="hot" data-spy-section className="scroll-mt-[185px]">
-      <SectionTitle title="👑 熱銷排行" subtitle={subtitle} />
+      <div className="mb-3 flex items-end justify-between gap-3 border-l-4 border-[var(--primary)] pl-2">
+        <div>
+          <h2 className="text-[18px] font-black text-[var(--text)]">👑 熱銷排行</h2>
+          {subtitle ? <p className="mt-1 text-xs text-[var(--muted)]">{subtitle}</p> : null}
+        </div>
+        <div className="flex shrink-0 gap-1 pr-4">
+          {tabs.map(tab => (
+            <button
+              key={tab.key}
+              onClick={() => setCategory(tab.key)}
+              className={`rounded-full px-2.5 py-1 text-[11px] font-bold transition active:scale-95 ${category === tab.key ? 'bg-[var(--primary)] text-white shadow-sm' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </div>
+      
       <div className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-4 md:-mx-0 md:px-0">
-        {items.map((product) => (
+        {items.length > 0 ? items.map((product) => (
           <div key={product.code} className="w-[110px] shrink-0 snap-start">
             <button onClick={() => onOpenProduct(product.code)} className="flex w-full flex-col items-center gap-2 text-center transition-transform active:scale-95">
               <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-2xl border border-[var(--border)] bg-white p-2 shadow-sm">
                 <SafeImage src={product.photo} alt={product.name} fallbackLabel={product.name} contain className="h-full w-full" />
-                <div className={`absolute left-0 top-0 flex h-6 w-6 items-center justify-center rounded-br-lg text-[12px] font-black text-white shadow-sm ${product.rank === 1 ? 'bg-[#ffd700] text-[#3e2723]' : product.rank === 2 ? 'bg-[#cfd8dc] text-[#37474f]' : product.rank === 3 ? 'bg-[#d7ccc8] text-[#3e2723]' : 'bg-black/60'}`}>
-                  {product.rank}
+                <div className={`absolute left-0 top-0 flex h-6 w-6 items-center justify-center rounded-br-lg text-[12px] font-black text-white shadow-sm ${product.displayRank === 1 ? 'bg-[#ffd700] text-[#3e2723]' : product.displayRank === 2 ? 'bg-[#cfd8dc] text-[#37474f]' : product.displayRank === 3 ? 'bg-[#d7ccc8] text-[#3e2723]' : 'bg-black/60'}`}>
+                  {product.displayRank}
                 </div>
               </div>
               <p className="line-clamp-2 text-[12px] font-bold leading-tight text-[var(--text)]">{product.name}</p>
             </button>
           </div>
-        ))}
+        )) : (
+          <div className="py-6 w-full text-center text-sm text-[var(--muted)]">此分類暫無熱銷商品</div>
+        )}
       </div>
     </section>
   )
@@ -1014,6 +1041,10 @@ export default function App() {
   const [promoStatusFilter, setPromoStatusFilter] = useState('active')
   const [promoGroupFilter, setPromoGroupFilter] = useState('all')
   const [tagReturnCode, setTagReturnCode] = useState(null)
+  
+  // 熱銷排行專屬的分類頁籤 State
+  const [rankCategory, setRankCategory] = useState('all')
+  
   const navRef = useRef(null)
 
   const expandedCardId = useAppStore((state) => state.expandedCardId)
@@ -1084,7 +1115,6 @@ export default function App() {
         const pitch = item.pitch || {}
         const rank = rankMap.get(item.code)
         
-        // 防呆判斷：過濾掉 is_hidden_pp 為 true、'true'、'TRUE' 或 '1' 的商品
         const isHidden = pitch.is_hidden_pp === true || String(pitch.is_hidden_pp).toLowerCase() === 'true' || String(pitch.is_hidden_pp) === '1' ||
                          item.is_hidden_pp === true || String(item.is_hidden_pp).toLowerCase() === 'true' || String(item.is_hidden_pp) === '1'
 
@@ -1106,7 +1136,7 @@ export default function App() {
           rank: rank?.rank || null,
         }
       })
-      .filter((item) => !item.isHidden) // 🚀 在源頭徹底剔除隱藏商品
+      .filter((item) => !item.isHidden)
   }, [products, rankings])
 
   const productMap = useMemo(() => new Map(normalizedProducts.map((item) => [item.code, item])), [normalizedProducts])
@@ -1191,13 +1221,38 @@ export default function App() {
     return CATEGORY_META.filter((meta) => meta.key !== 'all').map((meta) => ({ ...meta, items: groups.get(meta.key) || [] })).filter((item) => item.items.length)
   }, [filteredProducts])
 
-  const hotProducts = useMemo(() => productsWithPromos.filter((item) => item.rank && item.rank <= 10).sort((a, b) => a.rank - b.rank), [productsWithPromos])
+  // --- 關鍵修正：熱銷排行的智慧防呆與自動補名次機制 ---
+  const allRankedProducts = useMemo(() => {
+    // 1. 將有排名的商品依序排列
+    const ranked = productsWithPromos.filter(p => p.rank !== null).sort((a, b) => a.rank - b.rank);
+    // 2. 將未排名的商品附在後方（用以隨時遞補不足 10 名的空缺）
+    const unranked = productsWithPromos.filter(p => p.rank === null);
+    return [...ranked, ...unranked];
+  }, [productsWithPromos]);
+
   const visibleHotProducts = useMemo(() => {
-    if (!filteredProducts.length) return hotProducts
-    const codeSet = new Set(filteredProducts.map((item) => item.code))
-    const matched = hotProducts.filter((item) => codeSet.has(item.code))
-    return matched.length ? matched : hotProducts
-  }, [filteredProducts, hotProducts])
+    let list = allRankedProducts;
+
+    // 如果使用者正在搜尋或篩選標籤，只顯示符合條件的熱銷品
+    if (keyword || activeTag) {
+      const codeSet = new Set(filteredProducts.map(item => item.code));
+      const matched = list.filter(item => codeSet.has(item.code));
+      // 如果搜尋結果有東西，才切換；否則保持預設排行
+      if (matched.length > 0) list = matched;
+    }
+    
+    // 根據使用者在「熱銷排行」選擇的頁籤進行篩選
+    if (rankCategory !== 'all') {
+      list = list.filter(item => item.group === rankCategory);
+    }
+    
+    // 擷取前 10 名，並重新賦予連續的 displayRank (1~10)
+    return list.slice(0, 10).map((item, index) => ({
+      ...item,
+      displayRank: index + 1
+    }));
+  }, [allRankedProducts, filteredProducts, keyword, activeTag, rankCategory]);
+
   const promoItems = useMemo(() => enrichedPromotions.filter((promo) => promo.status !== 'ended').slice(0, 10), [enrichedPromotions])
 
   const sectionIds = useMemo(() => ['promo', 'hot', ...CATEGORY_META.filter((item) => item.key !== 'all').map((item) => item.anchor)], [])
@@ -1373,7 +1428,15 @@ export default function App() {
 
         <main className="px-4 pt-4 space-y-6">
           <PromoCarousel items={promoItems} onOpenPromo={(promo) => { setPromoDrawer(promo); window.history.pushState({ ui: 'promo', promoId: promo.promoId }, '') }} scale={scale} />
-          <RankingCarousel items={visibleHotProducts} onOpenProduct={openProductByCode} subtitle={keyword || activeTag ? '已依目前篩選條件保留相關熱銷品' : '依據實際銷售數據即時更新'} />
+          
+          {/* 將 rankCategory 傳入 RankingCarousel 讓其支援切換 */}
+          <RankingCarousel 
+            items={visibleHotProducts} 
+            onOpenProduct={openProductByCode} 
+            subtitle={keyword || activeTag ? '已依目前篩選條件保留相關熱銷品' : '依實際銷售數據即時更新'} 
+            category={rankCategory}
+            setCategory={setRankCategory}
+          />
 
           {groupedProducts.length > 0 ? groupedProducts.map((group) => (
             <section key={group.key} id={group.anchor} data-spy-section className={`scroll-mt-[185px]`}>
