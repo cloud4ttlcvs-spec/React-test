@@ -1,4 +1,4 @@
-name: Deploy React Sandbox to Pages
+name: Deploy pitch to Pages
 
 on:
   push:
@@ -63,20 +63,18 @@ jobs:
           git push
 
       - name: Build site
-        if: github.event_name != 'schedule' || steps.json_changes.outputs.changed == 'true'
         run: npm run build
+        env:
+          VITE_BASE_PATH: /pitch/
 
       - name: Setup Pages
-        if: github.event_name != 'schedule' || steps.json_changes.outputs.changed == 'true'
         uses: actions/configure-pages@v5
 
       - name: Upload artifact
-        if: github.event_name != 'schedule' || steps.json_changes.outputs.changed == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
 
       - name: Deploy to GitHub Pages
-        if: github.event_name != 'schedule' || steps.json_changes.outputs.changed == 'true'
         id: deployment
         uses: actions/deploy-pages@v4
