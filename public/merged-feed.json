@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "buildId": "20260526031910",
-  "generatedAt": "2026-05-26T03:19:10.611Z",
+  "buildId": "20260526032410",
+  "generatedAt": "2026-05-26T03:24:10.648Z",
   "source": {
     "products": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQBtV8q3Ank7Bnhs83IbOb97U46juV-RKeL3NpdFiNcSu-ifI21fQYo1-io62S3JIrXEO5MiDArc1Lr/pub?gid=1623055155&single=true&output=csv",
     "pitch": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQJaiIUkmBPfRcFADAoW4-_zbWB78gZb1yR_2gM9oORqRwCx8vb844cP-KcE58FgTVynptYk6L6o9pm/pub?gid=0&single=true&output=csv",
@@ -818,7 +818,7 @@
       "videoUrl": "https://youtu.be/6UM71EybWbw?si=CHWw-JT25vSQITe5&t=31",
       "moreLinksRaw": "YT|藝人子玄推薦|https://www.youtube.com/watch?v=lrZVlle3y8I\nIG|@hui0908推薦|https://www.instagram.com/reel/DTxFWTaDw3q/",
       "is_hidden_pp": false,
-      "is_hidden": false,
+      "is_hidden": true,
       "pitch": {
         "title": "夜間修護膠囊，滋養修護更集中，小容量方便攜帶使用",
         "content": "集結專利原料超臨界米植醇與多重發酵精華，主打集中滋養與修護感。可作為晚間保養加強步驟，特別適合乾燥、暗沉與熟齡保養需求。\n提供全方位的抗老修護，同時深層滋養肌膚。\n\n△超臨界米植醇：精選台灣在地稻米，使用超臨界二氧化碳作為萃取溶劑，以純淨製程萃取保留穀維素、植物固醇等成分，可調理肌膚，潤澤保濕、修護肌膚。*專利成分\n△美國FDA認證實驗室低敏驗證",
@@ -932,7 +932,7 @@
       "videoUrl": "https://www.youtube.com/watch?v=PljwofWsd6Y",
       "moreLinksRaw": "",
       "is_hidden_pp": false,
-      "is_hidden": false,
+      "is_hidden": true,
       "pitch": {
         "title": "輕巧瓶身隨身帶著走的酵母賦活身體乳",
         "content": "以酵母賦活精華搭配蜂蜜萃取、鎖水磁石與植萃保濕成分，輕巧瓶身方便隨身補擦。很適合旅行、試用推廣或作為身體乳入門款。\n\n△酵母賦活精華 Sapitide®：含胜肽、胺基酸、有機酸及微量元素，使肌膚水嫩、亮麗光澤。",
@@ -1141,7 +1141,7 @@
       "videoUrl": "",
       "moreLinksRaw": "",
       "is_hidden_pp": false,
-      "is_hidden": false,
+      "is_hidden": true,
       "pitch": {
         "title": "",
         "content": "",
@@ -1160,7 +1160,7 @@
       "videoUrl": "",
       "moreLinksRaw": "",
       "is_hidden_pp": false,
-      "is_hidden": false,
+      "is_hidden": true,
       "pitch": {
         "title": "",
         "content": "",
@@ -1179,7 +1179,7 @@
       "videoUrl": "",
       "moreLinksRaw": "",
       "is_hidden_pp": false,
-      "is_hidden": false,
+      "is_hidden": true,
       "pitch": {
         "title": "",
         "content": "",
