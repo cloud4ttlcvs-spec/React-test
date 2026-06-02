@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "buildId": "20260602073411",
-  "generatedAt": "2026-06-02T07:34:11.818Z",
+  "buildId": "20260602073914",
+  "generatedAt": "2026-06-02T07:39:14.064Z",
   "source": {
     "products": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQBtV8q3Ank7Bnhs83IbOb97U46juV-RKeL3NpdFiNcSu-ifI21fQYo1-io62S3JIrXEO5MiDArc1Lr/pub?gid=1623055155&single=true&output=csv",
     "pitch": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQJaiIUkmBPfRcFADAoW4-_zbWB78gZb1yR_2gM9oORqRwCx8vb844cP-KcE58FgTVynptYk6L6o9pm/pub?gid=0&single=true&output=csv",
@@ -121,7 +121,7 @@
         "content": "",
         "tags": "",
         "isNew": true,
-        "name": ""
+        "name": "台酒生技鹼性離子水"
       }
     },
     {
@@ -630,9 +630,9 @@
       "is_hidden_pp": false,
       "is_hidden": true,
       "pitch": {
-        "title": "",
-        "content": "",
-        "tags": "",
+        "title": "啤酒花植萃洗衣球，潔淨、便利與香氛體驗｜一顆搞定",
+        "content": "△美國USDA綠色產品；\n△FDA認證實驗室低敏驗證；\n抗菌、防蟎、防霉功效\n採用啤酒花萃取物植萃配方，搭配再生界面活性劑與單顆定量設計，使用時不沾手、洗衣更俐落方便；再結合前中後調香氛層次，讓日常洗衣不只是清潔，更是更輕鬆、更有質感的洗衣體驗。",
+        "tags": "易洗樂,洗衣,啤酒花萃取,香氛洗衣,單顆定量,不沾手,抗菌,防蟎,防霉,低敏",
         "isNew": true,
         "name": "易洗樂香氛洗衣球-5入"
       }
@@ -653,7 +653,7 @@
         "content": "",
         "tags": "",
         "isNew": false,
-        "name": ""
+        "name": "清酒粕潤膚皂"
       }
     },
     {
@@ -802,7 +802,7 @@
       "is_hidden": false,
       "pitch": {
         "title": "小米粒日間膠囊保養，妝前也能透亮服貼",
-        "content": "日間膠囊封存米植醇、類深海鮫鯊烯、海茴香萃取與維他命C，妝前使用也能幫助後續更服貼。適合喜歡單次用量明確、追求透亮妝感的人。\n有助改善肌膚暗沉，同時緊緻透亮。\n\n△米植醇純淨米油精華：源自花蓮酒廠米糠油，含植物固醇，能增加肌膚水嫩透亮感，撫平細紋，使肌膚散發光采。",
+        "content": "日間膠囊封存米植醇、類深海鮫鯊烯、海茴香萃取與維他命C，妝前使用也能幫助後續更服貼。適合喜歡單次用量明確、追求透亮妝感的人。\n有助改善肌膚暗沉，同時緊緻透亮。\n\n△米植醇純淨米油精華：源自花蓮酒廠米糠油，含植物固醇，能增加肌膚水嫩透亮感，撫平細紋，使肌膚散發光采。\n△ADVANCED SCIENCE實驗室低敏驗證",
         "tags": "VINATA,日間膠囊,米植醇,維他命C,妝前保養,透亮,小米粒,早米晚心,低敏",
         "isNew": false,
         "name": "VINATA緊緻活膚膠囊"
@@ -973,7 +973,7 @@
       "is_hidden": false,
       "pitch": {
         "title": "啤酒花洗面乳，洗後清爽又保有水潤感",
-        "content": "「啤酒花植萃」精華、甘油與長效保濕成分，泡沫細緻、洗後清爽仍保有水潤感。適合偏油肌、混合肌或想找不緊繃洗面乳的人。",
+        "content": "「啤酒花植萃」精華、甘油與長效保濕成分，泡沫細緻、洗後清爽仍保有水潤感。適合偏油肌、混合肌或想找不緊繃洗面乳的人。\n\n△ADVANCED SCIENCE實驗室低敏驗證",
         "tags": "啤酒花,低敏,洗面乳,清爽,保濕,細緻泡沫,洗沐",
         "isNew": true,
         "name": "啤酒花洗面乳"
@@ -1125,7 +1125,7 @@
       "is_hidden": false,
       "pitch": {
         "title": "雙專利護髮配方，修護毛躁更有感",
-        "content": "結合超臨界米植醇、Sapitide®與多重植物果油，針對毛躁與乾燥髮絲提供滋養修護。適合燙染後髮質、長髮族或在意光澤柔順度的人使用。",
+        "content": "結合超臨界米植醇、Sapitide®與多重植物果油，針對毛躁與乾燥髮絲提供滋養修護。適合燙染後髮質、長髮族或在意光澤柔順度的人使用。\n\n△ADVANCED SCIENCE實驗室低敏驗證",
         "tags": "VINATA,護髮,低敏,米植醇,Sapitide,修護,柔順,洗沐",
         "isNew": true,
         "name": "VINATA米植醇賦活護髮素 HAIR TREATMENT"
@@ -1299,7 +1299,7 @@
         "content": "",
         "tags": "",
         "isNew": true,
-        "name": ""
+        "name": "VINATA米植醇滋潤護手霜"
       }
     },
     {
@@ -1334,7 +1334,7 @@
       "is_hidden": false,
       "pitch": {
         "title": "啤酒花洗面乳，洗後清爽又保有水潤感",
-        "content": "「啤酒花植萃」精華、甘油與長效保濕成分，泡沫細緻、洗後清爽仍保有水潤感。適合偏油肌、混合肌或想找不緊繃洗面乳的人。",
+        "content": "「啤酒花植萃」精華、甘油與長效保濕成分，泡沫細緻、洗後清爽仍保有水潤感。適合偏油肌、混合肌或想找不緊繃洗面乳的人。\n\n△ADVANCED SCIENCE實驗室低敏驗證",
         "tags": "啤酒花,低敏,洗面乳,清爽,保濕,細緻泡沫,洗沐",
         "isNew": true,
         "name": "啤酒花洗面乳"
@@ -1372,7 +1372,7 @@
       "is_hidden": false,
       "pitch": {
         "title": "雙專利護髮配方，修護毛躁更有感",
-        "content": "結合超臨界米植醇、Sapitide®與多重植物果油，針對毛躁與乾燥髮絲提供滋養修護。適合燙染後髮質、長髮族或在意光澤柔順度的人使用。",
+        "content": "結合超臨界米植醇、Sapitide®與多重植物果油，針對毛躁與乾燥髮絲提供滋養修護。適合燙染後髮質、長髮族或在意光澤柔順度的人使用。\n\n△ADVANCED SCIENCE實驗室低敏驗證",
         "tags": "VINATA,護髮,低敏,米植醇,Sapitide,修護,柔順,洗沐",
         "isNew": true,
         "name": "VINATA米植醇賦活護髮素 HAIR TREATMENT"
