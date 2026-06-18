@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "buildId": "20260614151921",
-  "generatedAt": "2026-06-14T15:19:21.543Z",
+  "buildId": "20260618004411",
+  "generatedAt": "2026-06-18T00:44:11.190Z",
   "source": {
     "products": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQBtV8q3Ank7Bnhs83IbOb97U46juV-RKeL3NpdFiNcSu-ifI21fQYo1-io62S3JIrXEO5MiDArc1Lr/pub?gid=1623055155&single=true&output=csv",
     "pitch": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQJaiIUkmBPfRcFADAoW4-_zbWB78gZb1yR_2gM9oORqRwCx8vb844cP-KcE58FgTVynptYk6L6o9pm/pub?gid=0&single=true&output=csv",
@@ -108,14 +108,14 @@
     {
       "code": "37500011-12",
       "name": "台酒生技鹼性離子水",
-      "category": "",
-      "price": 17,
+      "category": "其他",
+      "price": 408,
       "spec": "",
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/main/%E5%8F%B0%E9%85%92%E7%94%9F%E6%8A%80%E9%B9%BC%E6%80%A7%E9%9B%A2%E5%AD%90%E6%B0%B4.png",
       "videoUrl": "",
       "moreLinksRaw": "",
       "is_hidden_pp": false,
-      "is_hidden": true,
+      "is_hidden": false,
       "pitch": {
         "title": "",
         "content": "",
