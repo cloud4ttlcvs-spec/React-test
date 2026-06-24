@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "buildId": "20260618010912",
-  "generatedAt": "2026-06-18T01:09:12.292Z",
+  "buildId": "20260624052414",
+  "generatedAt": "2026-06-24T05:24:14.709Z",
   "source": {
     "products": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQBtV8q3Ank7Bnhs83IbOb97U46juV-RKeL3NpdFiNcSu-ifI21fQYo1-io62S3JIrXEO5MiDArc1Lr/pub?gid=1623055155&single=true&output=csv",
     "pitch": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQJaiIUkmBPfRcFADAoW4-_zbWB78gZb1yR_2gM9oORqRwCx8vb844cP-KcE58FgTVynptYk6L6o9pm/pub?gid=0&single=true&output=csv",
@@ -1140,7 +1140,7 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/VINATA%20%E5%95%A4%E9%85%92%E8%8A%B1%E8%88%92%E6%B4%BB%E9%A6%99%E6%B0%9B%E7%9A%82-%E8%96%B0%E8%A1%A3%E8%8D%89.png",
       "videoUrl": "",
       "moreLinksRaw": "",
-      "is_hidden_pp": false,
+      "is_hidden_pp": true,
       "is_hidden": true,
       "pitch": {
         "title": "",
@@ -1159,7 +1159,7 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/VINATA%20%E5%95%A4%E9%85%92%E8%8A%B1%E8%88%92%E6%B4%BB%E9%A6%99%E6%B0%9B%E7%9A%82-%E5%B0%8F%E8%92%BC%E8%98%AD.png",
       "videoUrl": "",
       "moreLinksRaw": "",
-      "is_hidden_pp": false,
+      "is_hidden_pp": true,
       "is_hidden": true,
       "pitch": {
         "title": "",
@@ -1178,7 +1178,7 @@
       "photo": "https://raw.githubusercontent.com/cloud4ttlcvs-spec/product-images/refs/heads/main/VINATA%20%E5%95%A4%E9%85%92%E8%8A%B1%E8%88%92%E6%B4%BB%E9%A6%99%E6%B0%9B%E7%9A%82-%E8%93%AE%E9%A6%99.png",
       "videoUrl": "",
       "moreLinksRaw": "",
-      "is_hidden_pp": false,
+      "is_hidden_pp": true,
       "is_hidden": true,
       "pitch": {
         "title": "",
