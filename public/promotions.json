@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-21T07:59:17.545Z",
+  "generatedAt": "2026-07-21T08:04:11.522Z",
   "count": 81,
   "items": [
     {
@@ -2101,7 +2101,7 @@
       "title": "鄉民Q3-Jul 父親節愛爸回饋-爸氣暢快組",
       "shortTitle": "鄉民Q3-Jul 父親節愛爸回饋-爸氣暢快組",
       "content": "茄紅南瓜子油軟膠囊3件搭配深海魚油軟膠囊1件，優惠價1,790元（約56折）。",
-      "imgUrl": "",
+      "imgUrl": "https://lh3.googleusercontent.com/d/1a6qq9485_-QM6Jh4vq3bcj7PaCSU-weH",
       "relatedCodes": [
         "385102-12",
         "37110007-12"
@@ -2109,14 +2109,16 @@
       "startDate": "2026/7/17",
       "endDate": "2026/7/27",
       "status": "active",
-      "bgColor": "#FFFFFF",
+      "bgColor": "#e3f2fd",
       "ch": {
-        "show": false,
+        "show": true,
         "mart": false,
         "eshop": false,
         "office": false
       },
-      "channelLabels": []
+      "channelLabels": [
+        "展售中心"
+      ]
     }
   ]
 }
