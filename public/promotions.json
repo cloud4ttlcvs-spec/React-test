@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-21T08:39:15.626Z",
-  "count": 83,
+  "generatedAt": "2026-07-21T08:44:21.536Z",
+  "count": 84,
   "items": [
     {
       "promoId": "2025_Q4_01",
@@ -2149,10 +2149,34 @@
       "title": "鄉民Q3-Sep 中秋節經典特惠-雙效代謝組",
       "shortTitle": "鄉民Q3-Sep 中秋節經典特惠-雙效代謝組",
       "content": "安可健紅麴膠囊(健康食品認證)3件特價2,550元，再送風淨益生菌1件（約5折）。",
-      "imgUrl": "",
+      "imgUrl": "https://lh3.googleusercontent.com/d/1zT2Z57GuCAbhcenrzc-_qGPgnJSkPO7E",
       "relatedCodes": [
         "375156-12",
         "37510003-12"
+      ],
+      "startDate": "2026/9/18",
+      "endDate": "2026/9/28",
+      "status": "upcoming",
+      "bgColor": "#e3f2fd",
+      "ch": {
+        "show": true,
+        "mart": false,
+        "eshop": false,
+        "office": false
+      },
+      "channelLabels": [
+        "展售中心"
+      ]
+    },
+    {
+      "promoId": "P_mruepk7g",
+      "title": "鄉民Q3-Sep 教師節感恩回饋-晶亮防護組",
+      "shortTitle": "鄉民Q3-Sep 教師節感恩回饋-晶亮防護組",
+      "content": "葉黃素軟膠囊3件特價2,550元，再送β-聚葡萄糖膠囊1件（約52折）。",
+      "imgUrl": "",
+      "relatedCodes": [
+        "375165-12",
+        "375175-12"
       ],
       "startDate": "2026/9/18",
       "endDate": "2026/9/28",
