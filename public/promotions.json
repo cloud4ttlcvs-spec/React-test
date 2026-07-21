@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-21T07:24:12.399Z",
-  "count": 78,
+  "generatedAt": "2026-07-21T07:29:10.740Z",
+  "count": 79,
   "items": [
     {
       "promoId": "2025_Q4_01",
@@ -2041,6 +2041,28 @@
         "便利店",
         "購物網"
       ]
+    },
+    {
+      "promoId": "P_mrubzq1i",
+      "title": "素食者健康應援-免疫營養組",
+      "shortTitle": "素食者健康應援-免疫營養組",
+      "content": "β-聚葡萄糖膠囊(健康食品認證)2件搭配台啤酵母錠(新包裝)2件，優惠價1,650元（約59折）。",
+      "imgUrl": "",
+      "relatedCodes": [
+        "375175-12",
+        "375176-12"
+      ],
+      "startDate": "2026/7/8",
+      "endDate": "2026/8/5",
+      "status": "active",
+      "bgColor": "#FFFFFF",
+      "ch": {
+        "show": false,
+        "mart": false,
+        "eshop": false,
+        "office": false
+      },
+      "channelLabels": []
     }
   ]
 }
