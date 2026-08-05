@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-08-05T08:19:23.145Z",
-  "count": 85,
+  "generatedAt": "2026-08-05T08:24:15.765Z",
+  "count": 86,
   "items": [
     {
       "promoId": "2025_Q4_01",
@@ -2218,6 +2218,27 @@
         "購物網",
         "營業所"
       ]
+    },
+    {
+      "promoId": "P_2be972d852c74a82b408",
+      "title": "護手霜新品上市活動",
+      "shortTitle": "護手霜新品上市活動",
+      "content": "單件優惠159元（約83折），2件優惠259元（約68折）。",
+      "imgUrl": "",
+      "relatedCodes": [
+        "36330002-12"
+      ],
+      "startDate": "2026/8/5",
+      "endDate": "2027/10/31",
+      "status": "active",
+      "bgColor": "#FFFFFF",
+      "ch": {
+        "show": false,
+        "mart": false,
+        "eshop": false,
+        "office": false
+      },
+      "channelLabels": []
     }
   ]
 }
