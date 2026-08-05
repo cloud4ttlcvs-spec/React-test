@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-08-05T08:59:17.793Z",
-  "count": 87,
+  "generatedAt": "2026-08-05T09:04:13.304Z",
+  "count": 86,
   "items": [
     {
       "promoId": "2025_Q4_01",
@@ -2244,27 +2244,6 @@
         "購物網",
         "營業所"
       ]
-    },
-    {
-      "promoId": "P_e52925df11b14bfdaac0",
-      "title": "TEST",
-      "shortTitle": "TEST",
-      "content": "TEST",
-      "imgUrl": "",
-      "relatedCodes": [
-        "34130014-12"
-      ],
-      "startDate": "2026/8/5",
-      "endDate": "2027/10/31",
-      "status": "active",
-      "bgColor": "#FFFFFF",
-      "ch": {
-        "show": false,
-        "mart": false,
-        "eshop": false,
-        "office": false
-      },
-      "channelLabels": []
     }
   ]
 }
