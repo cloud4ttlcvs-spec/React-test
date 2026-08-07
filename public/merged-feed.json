@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "buildId": "20260803051914",
-  "generatedAt": "2026-08-03T05:19:14.767Z",
+  "buildId": "20260807073911",
+  "generatedAt": "2026-08-07T07:39:11.093Z",
   "source": {
     "products": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQBtV8q3Ank7Bnhs83IbOb97U46juV-RKeL3NpdFiNcSu-ifI21fQYo1-io62S3JIrXEO5MiDArc1Lr/pub?gid=1623055155&single=true&output=csv",
     "pitch": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQJaiIUkmBPfRcFADAoW4-_zbWB78gZb1yR_2gM9oORqRwCx8vb844cP-KcE58FgTVynptYk6L6o9pm/pub?gid=0&single=true&output=csv",
     "promotions": "https://docs.google.com/spreadsheets/d/e/2PACX-1vT3hvcNJNEfLugUcwQdHTTu0NZcy2QHyMPvMaPpfU6g_p0MTrw3muXIGn3SPkISSPnbW9ou1GlHzRc6/pub?gid=74407584&single=true&output=csv",
     "rank": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQj5QLrtaWikGcLNwMawbjiN8ZQDgFzW1RV7UECFgLzECWj16I2ugE_B6tzzLICCynsk1L6lAuJfccS/pub?gid=93142219&single=true&output=csv"
   },
-  "count": 95,
+  "count": 96,
   "items": [
     {
       "code": "341371-12",
@@ -369,6 +369,25 @@
         "tags": "啤酒酵母,乳酸菌,複方錠,全素,營養補給",
         "isNew": false,
         "name": "台啤酵母複方錠"
+      }
+    },
+    {
+      "code": "37310001-12",
+      "name": "台啤酵母B群 Plus",
+      "category": "保健食品\n單件9折、3件(含)以上7折",
+      "price": 0,
+      "spec": "",
+      "photo": "",
+      "videoUrl": "",
+      "moreLinksRaw": "",
+      "is_hidden_pp": false,
+      "is_hidden": false,
+      "pitch": {
+        "title": "台啤酵母 × 8種維生素B群｜營養補充、幫助消化、增強體力",
+        "content": "MIT在地台啤酵母，足量添加酵母B群（加拿大Lalmin®），完整8種維生素B群，提供全方位代謝能量。再搭配綜合蔬果酵素與凝乳芽孢桿菌，幫助消化、改變細菌叢生態，使排便順暢；每日3次、每次3錠，適合學齡期兒童、學生、上班族及銀髮族。",
+        "tags": "台啤酵母、維生素B群、Lalmin®、綜合蔬果酵素、凝乳芽孢桿菌、營養補充、幫助消化、排便順暢、錠劑",
+        "isNew": false,
+        "name": "台啤酵母B群 Plus"
       }
     },
     {
@@ -1295,9 +1314,9 @@
       "is_hidden_pp": false,
       "is_hidden": true,
       "pitch": {
-        "title": "",
-        "content": "",
-        "tags": "",
+        "title": "雙手也值得被溫柔對待｜輕盈質地、快速吸收、不黏膩",
+        "content": "結合專利超臨界米植醇與專利酵母賦活精華，修護乾燥、調理肌膚紋路，搭配維他命原B5、乳木果油與有機金盞花萃取，鎖水保濕、溫和調理舒緩，維持手部水潤柔嫩。輕盈質地、快速吸收、不黏膩，散發玫瑰香氣，隨時呵護雙手。\n\n△ 不含酒精、Paraben防腐劑、色素及礦物油。",
+        "tags": "VINATA、護手霜、米植醇、超臨界米植醇、酵母賦活精華、Sapitide、維他命原B5、乳木果油、金盞花萃取、保濕、玫瑰香氣",
         "isNew": true,
         "name": "VINATA米植醇滋潤護手霜"
       }
