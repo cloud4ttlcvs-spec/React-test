@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-08-10T03:39:19.330Z",
-  "count": 92,
+  "generatedAt": "2026-08-10T03:44:13.593Z",
+  "count": 93,
   "items": [
     {
       "promoId": "2025_Q4_01",
@@ -2407,6 +2407,33 @@
         "購物網",
         "營業所"
       ]
+    },
+    {
+      "promoId": "P_ed862bdfa305410386d4",
+      "title": "秋節全員行銷 熱門保健品專區任2件8折",
+      "shortTitle": "秋節全員行銷 熱門保健品專區任2件8折",
+      "content": "深海魚油軟膠囊、S11益生菌、β-聚葡萄糖膠囊、茄紅南瓜子油軟膠囊、金牌啤酒酵母粉、葡萄糖胺複方錠、台啤酵母B群PLUS任2件8折。",
+      "imgUrl": "",
+      "relatedCodes": [
+        "37110007-12",
+        "37110005-12",
+        "375175-12",
+        "385102-12",
+        "37510000-12",
+        "385104-12",
+        "37310001-12"
+      ],
+      "startDate": "2026/8/10",
+      "endDate": "2026/10/2",
+      "status": "active",
+      "bgColor": "#FFFFFF",
+      "ch": {
+        "show": false,
+        "mart": false,
+        "eshop": false,
+        "office": false
+      },
+      "channelLabels": []
     }
   ]
 }
