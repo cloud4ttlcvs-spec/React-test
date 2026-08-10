@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-08-10T03:34:13.907Z",
-  "count": 91,
+  "generatedAt": "2026-08-10T03:39:19.330Z",
+  "count": 92,
   "items": [
     {
       "promoId": "2025_Q4_01",
@@ -2362,6 +2362,34 @@
       "relatedCodes": [
         "37110009-12",
         "37110010-12"
+      ],
+      "startDate": "2026/8/10",
+      "endDate": "2026/10/2",
+      "status": "active",
+      "bgColor": "#E3F2FD",
+      "ch": {
+        "show": true,
+        "mart": true,
+        "eshop": true,
+        "office": true
+      },
+      "channelLabels": [
+        "展售中心",
+        "便利店",
+        "購物網",
+        "營業所"
+      ]
+    },
+    {
+      "promoId": "P_36cea6a1837344529232",
+      "title": "秋節全員行銷 指定保健品任2件79折",
+      "shortTitle": "秋節全員行銷 指定保健品任2件79折",
+      "content": "安可健納豆紅麴膠囊、安可健紅麴膠囊、葉黃素軟膠囊任2件79折。",
+      "imgUrl": "https://lh3.googleusercontent.com/d/1xJk4irLwEUg2WL11rrQ7-Zkm9US9Xvxt",
+      "relatedCodes": [
+        "375132-12",
+        "375156-12",
+        "375165-12"
       ],
       "startDate": "2026/8/10",
       "endDate": "2026/10/2",
