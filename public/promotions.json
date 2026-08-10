@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-08-10T05:59:17.632Z",
-  "count": 95,
+  "generatedAt": "2026-08-10T08:44:10.422Z",
+  "count": 98,
   "items": [
     {
       "promoId": "2025_Q4_01",
@@ -2491,6 +2491,76 @@
         "購物網",
         "營業所"
       ]
+    },
+    {
+      "promoId": "P_507d00ffe71f4dbd83cd",
+      "title": "秋節全員行銷 爆水面膜補貨組",
+      "shortTitle": "秋節全員行銷 爆水面膜補貨組",
+      "content": "紅酒/水嫩/美白面膜任選3件$888",
+      "imgUrl": "",
+      "relatedCodes": [
+        "3753AD-12",
+        "3753AE-12",
+        "3753BM-12"
+      ],
+      "startDate": "2026/8/10",
+      "endDate": "2026/10/2",
+      "status": "active",
+      "bgColor": "#FFFFFF",
+      "ch": {
+        "show": false,
+        "mart": false,
+        "eshop": false,
+        "office": false
+      },
+      "channelLabels": []
+    },
+    {
+      "promoId": "P_e03169fae0b0499581b3",
+      "title": "秋節全員行銷 高效精萃精選膠囊",
+      "shortTitle": "秋節全員行銷 高效精萃精選膠囊",
+      "content": "小米粒/小金心任選2件8折",
+      "imgUrl": "",
+      "relatedCodes": [
+        "375358-12",
+        "36130006-12"
+      ],
+      "startDate": "2026/8/10",
+      "endDate": "2026/10/2",
+      "status": "active",
+      "bgColor": "#FFFFFF",
+      "ch": {
+        "show": false,
+        "mart": false,
+        "eshop": false,
+        "office": false
+      },
+      "channelLabels": []
+    },
+    {
+      "promoId": "P_7a2dbc53f8374d7982a9",
+      "title": "秋節全員行銷 私房美肌自由配",
+      "shortTitle": "秋節全員行銷 私房美肌自由配",
+      "content": "多款美容用品任選2件8折",
+      "imgUrl": "",
+      "relatedCodes": [
+        "36130004-12",
+        "375337-12",
+        "36330000-12",
+        "37530001-12",
+        "375367-12"
+      ],
+      "startDate": "2026/8/10",
+      "endDate": "2026/10/2",
+      "status": "active",
+      "bgColor": "#FFFFFF",
+      "ch": {
+        "show": false,
+        "mart": false,
+        "eshop": false,
+        "office": false
+      },
+      "channelLabels": []
     }
   ]
 }
