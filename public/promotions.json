@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-08-10T02:59:10.764Z",
-  "count": 87,
+  "generatedAt": "2026-08-10T03:14:23.067Z",
+  "count": 89,
   "items": [
     {
       "promoId": "2025_Q4_01",
@@ -2257,6 +2257,50 @@
       ],
       "startDate": "2026/8/10",
       "endDate": "2027/12/31",
+      "status": "active",
+      "bgColor": "#FFFFFF",
+      "ch": {
+        "show": false,
+        "mart": false,
+        "eshop": false,
+        "office": false
+      },
+      "channelLabels": []
+    },
+    {
+      "promoId": "P_2cd4ae3e4133401cafd6",
+      "title": "秋節全員行銷 保暢送S11",
+      "shortTitle": "秋節全員行銷 保暢送S11",
+      "content": "買每日益刻保暢益生菌1件送S11益生菌1件。",
+      "imgUrl": "",
+      "relatedCodes": [
+        "37110002-12",
+        "37110005-12"
+      ],
+      "startDate": "2026/8/10",
+      "endDate": "2026/10/2",
+      "status": "active",
+      "bgColor": "#FFFFFF",
+      "ch": {
+        "show": false,
+        "mart": false,
+        "eshop": false,
+        "office": false
+      },
+      "channelLabels": []
+    },
+    {
+      "promoId": "P_187fb8af562448debf32",
+      "title": "秋節全員行銷 保蜜送S11",
+      "shortTitle": "秋節全員行銷 保蜜送S11",
+      "content": "買每日益刻保蜜益生菌1件送S11益生菌1件。",
+      "imgUrl": "",
+      "relatedCodes": [
+        "37510002-12",
+        "37110005-12"
+      ],
+      "startDate": "2026/8/10",
+      "endDate": "2026/10/2",
       "status": "active",
       "bgColor": "#FFFFFF",
       "ch": {
