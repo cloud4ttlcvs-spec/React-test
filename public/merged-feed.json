@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "buildId": "20260826082920",
-  "generatedAt": "2026-08-26T08:29:20.233Z",
+  "buildId": "20260826083413",
+  "generatedAt": "2026-08-26T08:34:13.630Z",
   "source": {
     "products": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQBtV8q3Ank7Bnhs83IbOb97U46juV-RKeL3NpdFiNcSu-ifI21fQYo1-io62S3JIrXEO5MiDArc1Lr/pub?gid=1623055155&single=true&output=csv",
     "pitch": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQJaiIUkmBPfRcFADAoW4-_zbWB78gZb1yR_2gM9oORqRwCx8vb844cP-KcE58FgTVynptYk6L6o9pm/pub?gid=0&single=true&output=csv",
@@ -110,7 +110,7 @@
       "name": "台酒生技鹼性離子水",
       "category": "離子水（箱購）",
       "price": 408,
-      "spec": "",
+      "spec": "400ml/瓶",
       "photo": "products/37500011-12-alkaline-ion-water.png",
       "videoUrl": "",
       "moreLinksRaw": "",
@@ -376,7 +376,7 @@
       "name": "台啤酵母B群 Plus",
       "category": "保健食品\n單件9折、3件(含)以上7折",
       "price": 600,
-      "spec": "",
+      "spec": "350毫克/錠， 270錠/盒",
       "photo": "products/37310001-12-taiwan-beer-yeast-b-complex-plus.png",
       "videoUrl": "",
       "moreLinksRaw": "",
