@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-08-31T00:04:12.570Z",
-  "count": 112,
+  "generatedAt": "2026-08-31T05:49:22.758Z",
+  "count": 113,
   "items": [
     {
       "promoId": "2025_Q4_01",
@@ -2939,6 +2939,27 @@
         "便利店",
         "購物網"
       ]
+    },
+    {
+      "promoId": "P_b7630d2d57014ff38efa",
+      "title": "台啤酵母B群Plus新品上市活動",
+      "shortTitle": "台啤酵母B群Plus新品上市活動",
+      "content": "單件優惠價534元（約89折），3件優惠價1,296元（約72折）。",
+      "imgUrl": "",
+      "relatedCodes": [
+        "37310001-12"
+      ],
+      "startDate": "2026/9/1",
+      "endDate": "2026/11/2",
+      "status": "upcoming",
+      "bgColor": "#FFFFFF",
+      "ch": {
+        "show": false,
+        "mart": false,
+        "eshop": false,
+        "office": false
+      },
+      "channelLabels": []
     }
   ]
 }
