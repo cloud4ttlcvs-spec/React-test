@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "buildId": "20260916022912",
-  "generatedAt": "2026-09-16T02:29:12.115Z",
+  "buildId": "20260916023414",
+  "generatedAt": "2026-09-16T02:34:14.713Z",
   "source": {
     "products": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQBtV8q3Ank7Bnhs83IbOb97U46juV-RKeL3NpdFiNcSu-ifI21fQYo1-io62S3JIrXEO5MiDArc1Lr/pub?gid=1623055155&single=true&output=csv",
     "pitch": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQJaiIUkmBPfRcFADAoW4-_zbWB78gZb1yR_2gM9oORqRwCx8vb844cP-KcE58FgTVynptYk6L6o9pm/pub?gid=0&single=true&output=csv",
@@ -222,9 +222,9 @@
     {
       "code": "34020019-12",
       "name": "台酒花雕雞酒粕乾麵\n-酒香炸醬風味 (袋麵 )",
-      "category": "花雕雞乾麵（箱購）",
-      "price": 699,
-      "spec": "4包/袋",
+      "category": "花雕雞乾麵",
+      "price": 180,
+      "spec": "110g/包，4包/袋",
       "photo": "products/34020019-12-x4-huadiao-chicken-sake-lees-dry-noodles-fried-sauce-flavor.jpg",
       "videoUrl": "",
       "moreLinksRaw": "",
