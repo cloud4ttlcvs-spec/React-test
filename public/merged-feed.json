@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "buildId": "20260902022913",
-  "generatedAt": "2026-09-02T02:29:13.705Z",
+  "buildId": "20260916015411",
+  "generatedAt": "2026-09-16T01:54:11.777Z",
   "source": {
     "products": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQBtV8q3Ank7Bnhs83IbOb97U46juV-RKeL3NpdFiNcSu-ifI21fQYo1-io62S3JIrXEO5MiDArc1Lr/pub?gid=1623055155&single=true&output=csv",
     "pitch": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQJaiIUkmBPfRcFADAoW4-_zbWB78gZb1yR_2gM9oORqRwCx8vb844cP-KcE58FgTVynptYk6L6o9pm/pub?gid=0&single=true&output=csv",
     "promotions": "https://docs.google.com/spreadsheets/d/e/2PACX-1vT3hvcNJNEfLugUcwQdHTTu0NZcy2QHyMPvMaPpfU6g_p0MTrw3muXIGn3SPkISSPnbW9ou1GlHzRc6/pub?gid=74407584&single=true&output=csv",
     "rank": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQj5QLrtaWikGcLNwMawbjiN8ZQDgFzW1RV7UECFgLzECWj16I2ugE_B6tzzLICCynsk1L6lAuJfccS/pub?gid=93142219&single=true&output=csv"
   },
-  "count": 96,
+  "count": 101,
   "items": [
     {
       "code": "341371-12",
-      "name": "●烏梅黑麥汁(六入) x4",
+      "name": "烏梅黑麥汁(六入) x4",
       "category": "保健飲品（箱購）",
       "price": 672,
       "spec": "0.33公升 × 6罐/組",
@@ -22,16 +22,16 @@
       "is_hidden_pp": false,
       "is_hidden": false,
       "pitch": {
-        "title": "烏梅酸甜解膩，順口耐喝的黑麥氣泡飲",
-        "content": "台灣在地新鮮生產，精選麥芽結合機能性異麥芽寡醣，並加入烏梅與山楂風味，入口酸甜開胃、清爽解膩。適合餐後、聚餐後或想來點有層次氣泡飲時作為日常補給選擇。",
-        "tags": "麥汁,烏梅,異麥芽寡醣,無添加,解膩,飲料,全素",
+        "title": "",
+        "content": "",
+        "tags": "",
         "isNew": false,
-        "name": "烏梅黑麥汁(六入)"
+        "name": "#VALUE!"
       }
     },
     {
       "code": "341368-12",
-      "name": "●紅麴黑麥汁(六入) x4",
+      "name": "紅麴黑麥汁(六入) x4",
       "category": "保健飲品（箱購）",
       "price": 672,
       "spec": "0.33公升 × 6罐/組",
@@ -41,16 +41,16 @@
       "is_hidden_pp": false,
       "is_hidden": false,
       "pitch": {
-        "title": "紅麴溫潤順口，日常補給、養生健康黑麥汁",
-        "content": "台灣在地新鮮生產，以精選麥芽搭配紅麴與機能性異麥芽寡醣，風味溫潤順口、層次更豐富。適合偏好帶點養生成熟感口味的人，作為日常補給補給健康養生。",
-        "tags": "麥汁,紅麴,異麥芽寡醣,無添加,營養補給,飲料,全素,健康養生",
+        "title": "",
+        "content": "",
+        "tags": "",
         "isNew": false,
-        "name": "紅麴黑麥汁(六入)"
+        "name": "#VALUE!"
       }
     },
     {
       "code": "341369-12",
-      "name": "●桂圓黑麥汁(六入) x4",
+      "name": "桂圓黑麥汁(六入) x4",
       "category": "保健飲品（箱購）",
       "price": 672,
       "spec": "0.33公升 × 6罐/組",
@@ -60,16 +60,16 @@
       "is_hidden_pp": false,
       "is_hidden": true,
       "pitch": {
-        "title": "桂圓甘潤清甜，暖心順口的黑麥氣泡飲",
-        "content": "台灣在地新鮮生產，結合桂圓、紅棗與機能性異麥芽寡醣，口感甘潤清甜，喝起來溫和順口。適合喜歡帶點暖感風味的人，日常補給也能多一分柔和層次，日常滋補、養顏美容最推薦。",
-        "tags": "麥汁,桂圓,異麥芽寡醣,甘潤順口,飲料,養生風味,全素,滋補養顏",
+        "title": "",
+        "content": "",
+        "tags": "",
         "isNew": false,
-        "name": "桂圓黑麥汁(六入)"
+        "name": "#VALUE!"
       }
     },
     {
       "code": "341372-12",
-      "name": "●原味黑麥汁(六入) x4",
+      "name": "原味黑麥汁(六入) x4",
       "category": "保健飲品（箱購）",
       "price": 672,
       "spec": "0.33公升 × 6罐/組",
@@ -79,16 +79,16 @@
       "is_hidden_pp": false,
       "is_hidden": false,
       "pitch": {
-        "title": "減糖25%｜清爽好喝不死甜，黑麥氣泡飲的經典款",
-        "content": "台灣在地生產新鮮麥汁，以德式工藝發酵麥芽，搭配機能性異麥芽寡醣與減糖25%配方(與紅麴黑麥汁相比)，喝起來清爽不膩。適合想找經典原味、又希望入口更輕盈的人作為日常補給，是無負擔的日常營養補給好選擇。",
-        "tags": "麥汁,原味,減糖,異麥芽寡醣,無添加,飲料,全素",
+        "title": "",
+        "content": "",
+        "tags": "",
         "isNew": false,
-        "name": "原味黑麥汁(六入)"
+        "name": "#VALUE!"
       }
     },
     {
       "code": "34130014-12",
-      "name": "●纖麥汁(六入) x4",
+      "name": "纖麥汁(六入) x4",
       "category": "保健飲品*（箱購）",
       "price": 840,
       "spec": "0.33公升 × 6罐/組",
@@ -98,11 +98,106 @@
       "is_hidden_pp": false,
       "is_hidden": false,
       "pitch": {
-        "title": "專利膳食纖維，順口好喝、幫助消化的機能麥汁",
-        "content": "以台灣啤酒原料配方為基底，添加專利膳食纖維Fibersol®-2、大麥苗粉、大豆胜肽與異麥芽寡醣，順口好喝能幫助消化。對外食族、蔬果攝取不足或想補充纖維的人尤其好切入。",
-        "tags": "麥汁,膳食纖維,異麥芽寡醣,大麥苗,大豆胜肽,飲料,全素,啤酒花萃取",
+        "title": "",
+        "content": "",
+        "tags": "",
         "isNew": false,
-        "name": "纖麥汁(六入)"
+        "name": "#VALUE!"
+      }
+    },
+    {
+      "code": "341371-12",
+      "name": "烏梅黑麥汁(單入) x24",
+      "category": "保健飲品（箱購）",
+      "price": 672,
+      "spec": "0.33公升 × 24罐",
+      "photo": "products/341371-12-ume-plum-black-malt-drink.png",
+      "videoUrl": "https://www.youtube.com/watch?v=mhA9rstibRA",
+      "moreLinksRaw": "YT|氣泡調飲篇|https://www.youtube.com/watch?v=KZ7uELxCmjc\nYT|健康科學篇|https://www.youtube.com/watch?v=yjt6RsndLmk\nYT|純淨標章篇|https://www.youtube.com/watch?v=jR62F1Bbosg\nYT|健康蔬食篇|https://www.youtube.com/watch?v=1aWb-17lmi4",
+      "is_hidden_pp": true,
+      "is_hidden": true,
+      "pitch": {
+        "title": "",
+        "content": "",
+        "tags": "",
+        "isNew": false,
+        "name": "#VALUE!"
+      }
+    },
+    {
+      "code": "341368-12",
+      "name": "紅麴黑麥汁(單入) x24",
+      "category": "保健飲品（箱購）",
+      "price": 672,
+      "spec": "0.33公升 × 24罐",
+      "photo": "products/341368-12-red-koji-black-malt-drink.png",
+      "videoUrl": "https://www.youtube.com/watch?v=mhA9rstibRA",
+      "moreLinksRaw": "YT|氣泡調飲篇|https://www.youtube.com/watch?v=KZ7uELxCmjc\nYT|健康科學篇|https://www.youtube.com/watch?v=yjt6RsndLmk\nYT|純淨標章篇|https://www.youtube.com/watch?v=jR62F1Bbosg\nYT|健康蔬食篇|https://www.youtube.com/watch?v=1aWb-17lmi4",
+      "is_hidden_pp": true,
+      "is_hidden": true,
+      "pitch": {
+        "title": "",
+        "content": "",
+        "tags": "",
+        "isNew": false,
+        "name": "#VALUE!"
+      }
+    },
+    {
+      "code": "341372-12",
+      "name": "桂圓黑麥汁(單入) x24",
+      "category": "保健飲品（箱購）",
+      "price": 672,
+      "spec": "0.33公升 × 24罐",
+      "photo": "products/341372-12-original-black-malt-drink.png",
+      "videoUrl": "https://www.youtube.com/watch?v=1aWb-17lmi4",
+      "moreLinksRaw": "YT|氣泡調飲篇|https://www.youtube.com/watch?v=KZ7uELxCmjc\nYT|健康科學篇|https://www.youtube.com/watch?v=yjt6RsndLmk\nYT|純淨標章篇|https://www.youtube.com/watch?v=jR62F1Bbosg\nYT|健康蔬食篇|https://www.youtube.com/watch?v=1aWb-17lmi4",
+      "is_hidden_pp": true,
+      "is_hidden": true,
+      "pitch": {
+        "title": "",
+        "content": "",
+        "tags": "",
+        "isNew": false,
+        "name": "#VALUE!"
+      }
+    },
+    {
+      "code": "341369-12",
+      "name": "原味黑麥汁(單入) x24",
+      "category": "保健飲品（箱購）",
+      "price": 672,
+      "spec": "0.33公升 × 24罐",
+      "photo": "products/341369-12-longan-black-malt-drink.png",
+      "videoUrl": "https://www.youtube.com/watch?v=mhA9rstibRA",
+      "moreLinksRaw": "YT|氣泡調飲篇|https://www.youtube.com/watch?v=KZ7uELxCmjc\nYT|健康科學篇|https://www.youtube.com/watch?v=yjt6RsndLmk\nYT|純淨標章篇|https://www.youtube.com/watch?v=jR62F1Bbosg\nYT|健康蔬食篇|https://www.youtube.com/watch?v=1aWb-17lmi4",
+      "is_hidden_pp": true,
+      "is_hidden": true,
+      "pitch": {
+        "title": "",
+        "content": "",
+        "tags": "",
+        "isNew": false,
+        "name": "#VALUE!"
+      }
+    },
+    {
+      "code": "34130014-12",
+      "name": "纖麥汁(單入) x24",
+      "category": "保健飲品*（箱購）",
+      "price": 840,
+      "spec": "0.33公升 × 6罐/組",
+      "photo": "products/34130014-12-fiber-malt-drink.png",
+      "videoUrl": "https://www.youtube.com/watch?v=0gosGCK6im8",
+      "moreLinksRaw": "",
+      "is_hidden_pp": true,
+      "is_hidden": true,
+      "pitch": {
+        "title": "",
+        "content": "",
+        "tags": "",
+        "isNew": false,
+        "name": "#VALUE!"
       }
     },
     {
