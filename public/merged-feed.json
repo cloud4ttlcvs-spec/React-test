@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "buildId": "20260916024909",
-  "generatedAt": "2026-09-16T02:49:09.024Z",
+  "buildId": "20260916025414",
+  "generatedAt": "2026-09-16T02:54:14.675Z",
   "source": {
     "products": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQBtV8q3Ank7Bnhs83IbOb97U46juV-RKeL3NpdFiNcSu-ifI21fQYo1-io62S3JIrXEO5MiDArc1Lr/pub?gid=1623055155&single=true&output=csv",
     "pitch": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQJaiIUkmBPfRcFADAoW4-_zbWB78gZb1yR_2gM9oORqRwCx8vb844cP-KcE58FgTVynptYk6L6o9pm/pub?gid=0&single=true&output=csv",
@@ -228,7 +228,7 @@
       "photo": "products/34020019-12-x4-huadiao-chicken-sake-lees-dry-noodles-fried-sauce-flavor.jpg",
       "videoUrl": "",
       "moreLinksRaw": "",
-      "is_hidden_pp": true,
+      "is_hidden_pp": false,
       "is_hidden": true,
       "pitch": {
         "title": "承襲台酒花雕雞麵熱銷口味｜酒香炸醬乾麵經典美味",
