@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-29T00:24:12.312Z",
+  "generatedAt": "2026-09-29T01:19:16.929Z",
   "count": 114,
   "items": [
     {
@@ -2971,7 +2971,7 @@
       "title": "歲末回饋 × 潔淨有禮",
       "shortTitle": "歲末回饋 × 潔淨有禮",
       "content": "單件85折，滿300元好禮三選一（易洗樂洗衣袋、啤酒花抹布、洗衣球－5入組），累贈送完為止。",
-      "imgUrl": "",
+      "imgUrl": "https://lh3.googleusercontent.com/d/1Kl-B7X5oCEIGcC7kHt2HFDjf-Remul-9",
       "relatedCodes": [
         "37370013-12",
         "363741-12",
@@ -2984,14 +2984,16 @@
       "startDate": "2026/10/23",
       "endDate": "2026/12/13",
       "status": "upcoming",
-      "bgColor": "#FFFFFF",
+      "bgColor": "#D8F3DC",
       "ch": {
-        "show": false,
+        "show": true,
         "mart": false,
         "eshop": false,
         "office": false
       },
-      "channelLabels": []
+      "channelLabels": [
+        "展售中心"
+      ]
     }
   ]
 }
